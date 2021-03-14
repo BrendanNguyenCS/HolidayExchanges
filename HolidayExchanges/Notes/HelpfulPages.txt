@@ -1,0 +1,82 @@
+Migrations for existing databases:
+https://channel9.msdn.com/blogs/ef/migrations-existing-databases
+https://docs.microsoft.com/en-us/ef/ef6/modeling/code-first/migrations/existing-database
+
+Existing Database Migrations:
+1. Reset application without dbcontext or entities folder
+2. Add models for existing db using EF6 wizard
+3. Enable migrations
+		Enable-Migrations -ContextTypeName (contextName here)
+4. Make initial migration addition
+		Add-Migration Initial
+5. Comment out all table creation statements
+6. Update db
+7. Uncomment table creation statements
+8. Make a change
+9. Add new migration to catch changes
+10. Update db
+
+Articles for ability to exclude certain properties when migrating
+https://github.com/dotnet/efcore/issues/2725
+https://stackoverflow.com/questions/10389595/ef-code-first-migration-ignore-property/10389688 (probably better)
+https://stackoverflow.com/questions/51982019/exclude-properties-for-migrations (same as above)
+System.ComponentModel.DataAnnotations NotMapped attribute
+
+Partial classes
+https://stackoverflow.com/questions/3601901/when-is-it-appropriate-to-use-c-sharp-partial-classes
+
+Code-First vs DB-First
+https://www.reddit.com/r/csharp/comments/78gvwh/code_first_or_db_first_for_a_new_project/
+
+Good Existing Hashing Implementations
+Bouncy Castle C# API (http://www.bouncycastle.org/csharp/index.html)
+BCrypt .NET from NuGet PMC
+
+1. Find way to have confirm password functionality (confirm password field in Login model should be eliminated)
+  - can use js to do validation between both password fields
+
+https://lab.artlung.com/compare-fields/
+https://jonhilton.net/2017/08/17/how-to-get-data-from-an-html-form-to-your-asp.net-mvc-core-controller/
+https://stackoverflow.com/questions/21727317/how-to-check-confirm-password-field-in-form-without-reloading-page/21727518
+https://stackoverflow.com/questions/34715501/validating-password-using-regex-c-sharp
+
+2. Cool password validation ui
+https://www.w3schools.com/howto/howto_js_password_validation.asp
+
+FYI remember this line for error handling
+return View("Error", new HandleErrorInfo(ex,"EmployeeInfo","Create"));
+
+3. Prevent validation on nonmapped properties
+https://stackoverflow.com/questions/7051530/how-to-prevent-ef-from-validating-properties-that-are-not-mapped-during-dbcontex
+https://stackoverflow.com/questions/50414828/exclude-property-of-model-in-insert-entity-framework
+
+4. Pairing Algorithm
+https://softwareengineering.stackexchange.com/questions/122179/random-pairing-algorithm
+https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
+https://web.archive.org/web/20150801085341/http://blog.thijssen.ch/2010/02/when-random-is-too-consistent.html
+https://stackoverflow.com/questions/273313/randomize-a-listt
+	 - Fisher–Yates shuffle
+
+Different pairing methods
+1. Randomly pair people until there are 3 remaining (and then assign accordingly)
+2. Randomize the list using Fisher-Yates shuffle and pair using adjacent indices (even or odd number of users in a list have same functionality)
+
+Different random number generators to use in shuffling
+1. System.Random
+2. System.Security.Cryptography.RandomNumberGenerator
+
+5. Shift Join view to details list (dl)
+
+6. Do fit pairing functionality, you can add a column to the userGroups table to accommodate the particular person's assigned recipient's userid
+
+7. Setting a required column for an existing nullable field
+http://testedwithf5.com/entity-framework/entity-framework-refresher-changing-nullable-to-non-nullable/
+
+8. Time sensitive function execution
+https://stackoverflow.com/questions/3243348/how-to-call-a-method-daily-at-specific-time-in-c
+
+9. Fix many to many
+https://stackoverflow.com/questions/7050404/create-code-first-many-to-many-with-additional-fields-in-association-table?rq=1
+
+10. Route configs
+https://stackoverflow.com/questions/2246481/routing-with-multiple-parameters-using-asp-net-mvc

@@ -1,0 +1,235 @@
+﻿@model HolidayExchanges.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2 class="text-center">Details</h2>
+<hr />
+
+<style>
+    ul {
+        list-style: none;
+    }
+</style>
+
+<div>
+    <dl class="dl-horizontal">
+
+        <!-- #region RemovePWSalt-->
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Password)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Salt)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Salt)
+            </dd>*@
+        <!-- #endregion -->
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+
+        <dt>
+            Address
+        </dt>
+
+        <dd>
+
+            <!-- #region Testing Information Checking -->
+            @*<p translate="no">
+                    @Model.User.Address1<br />
+                    @if (Model.User.Address2 != null)
+                    {
+                        @Model.User.Address2<br />
+                    }
+                    @Model.User.City, @Model.User.State @Model.User.Zip @Model.User.Country
+                </p>
+
+                <p>-----------------------------------------------</p>*@
+            <!-- #endregion -->
+
+            @{
+                var user = Model.User;
+                <!-- Zip is not required to have a full address -->
+                if (user.Address1 == null || user.City == null || user.State == null || user.Country == null)
+                {
+                    <p>Your address is incomplete. Please complete your contact information on your profile to view this field (other than Address Line 2)</p>
+                }
+                else
+                {
+                    var zip = Model.User.Zip == null ? Model.User.Zip : "";
+                    <p translate="no">
+                        @Model.User.Address1<br />
+                        @if (Model.User.Address2 != null)
+                        {
+                            @Model.User.Address2<br />
+                        }
+                        @Model.User.City, @Model.User.State @zip<br />
+                        @Model.User.Country
+                    </p>
+                }
+            }
+        </dd>
+
+        <!-- #region Long Address (with all fields in its own row) -->
+        @*<dt>
+                @Html.DisplayNameFor(model => model.User.Address1)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.Address1)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.User.Address2)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.Address2)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.User.City)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.City)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.User.State)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.State)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.User.Zip)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.Zip)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.User.Country)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.User.Country)
+            </dd>*@
+        <!-- #endregion -->
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Birthday)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Birthday)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Groups)
+        </dt>
+
+        <!-- #region Creating List not using ul li -->
+        @*@foreach (var group in Model.Groups)
+            {
+                <dd>
+                    - @group.Name<br />&emsp;Date: @group.ExchangeDate
+                </dd>
+            }*@
+        <!-- #endregion -->
+        <!-- #region Listing Groups With FOREACH Loop -->
+        @*<dd>
+                <ul>
+                    @foreach (var group in Model.Groups)
+                    {
+                        <li>@group.Name&nbsp;(Date: @group.ExchangeDate)</li>
+                    }
+                </ul>
+            </dd>*@
+        <!-- #endregion -->
+        <!-- #region Listing Groups with Recipients (Still testing) -->
+        <dd>
+            @if (Model.Groups.Count == 0)
+            {
+                <p>You are not in any groups.</p>
+            }
+            <ul style="padding-left: 0;">
+                @for (int i = 0; i < Model.Groups.Count; i++)
+                {
+                    var group = Model.Groups[i];
+                    <li>
+                        @group.Name&nbsp;(Date: @group.ExchangeDate)
+                        <ul>
+                            @{
+                                if (Model.Recipients[i] == null)
+                                {
+                                    <li>This group hasn't picked pairs yet.</li>
+                                }
+                                else
+                                {
+                                    <li>Recipient: @Model.Recipients[i].UserName</li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </dd>
+
+        <!-- #endregion -->
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.User.UserID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Add to wishlist", "Create", "Wish", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "btn btn-default" }) <!-- change this redirect button -->
+</div>

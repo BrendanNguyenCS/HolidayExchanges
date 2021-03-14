@@ -1,0 +1,5 @@
+﻿1. Add boolean properties to signify if a group has been paired off yet
+
+2. Add functionality for wishlists and wishes
+
+3. Work on wish views, viewmodels, and route configs (attribute routing)

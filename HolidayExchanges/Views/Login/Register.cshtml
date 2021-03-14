@@ -1,0 +1,151 @@
+﻿@model HolidayExchanges.ViewModels.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<h1 class="text-center">Register</h1>
+
+@using (Html.BeginForm("Register", "Login", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <fieldset>
+            <legend>Login Information</legend>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.UserName, new { @class = "control-label col-md-2 required" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" } })
+                    @Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Password, new { @class = "control-label col-md-2 required" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.User.Password, new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" })
+                    @Html.ValidationMessageFor(model => model.User.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmPassword, new { @class = "control-label col-md-2 required" })
+                <div class="col-md-10">
+                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" })
+                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Personal Information</legend>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.FirstName, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.User.FirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.LastName, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.User.LastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Email, new { @class = "control-label col-md-2 required" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control", type = "email", placeholder = "someone@gmail.com", required = "required", style = "border: 1px solid #d9534f;" } })
+                    @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Birthday, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.Birthday, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.ValidationMessageFor(model => model.User.Birthday, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Contact Information</legend>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Address1, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.Address1, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 1" } })
+                    <small class="help-block">Street address, P.O. box, company name, c/o</small>
+                    @Html.ValidationMessageFor(model => model.User.Address1, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Address2, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.Address2, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 2" } })
+                    <small class="help-block">Apartment, suite, unit, building, floor, etc.</small>
+                    @Html.ValidationMessageFor(model => model.User.Address2, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.City, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.City, new { htmlAttributes = new { @class = "form-control", placeholder = "City or Town" } })
+                    @Html.ValidationMessageFor(model => model.User.City, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.State, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.State, new { htmlAttributes = new { @class = "form-control", placeholder = "State or Province or Region" } })
+                    <small class="help-block">If from US, please enter 2-letter abbreviation for your state (ex. MA)</small>
+                    @Html.ValidationMessageFor(model => model.User.State, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Zip, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.Zip, new { htmlAttributes = new { @class = "form-control", placeholder = "ZIP or Postal Code" } })
+                    @Html.ValidationMessageFor(model => model.User.Zip, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Country, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.User.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Country" } })
+                    <!-- implement cool drop down -->
+                    @Html.ValidationMessageFor(model => model.User.Country, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.PhoneNumber, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input type="tel" name="@Html.NameFor(model => model.User.PhoneNumber)" value="@Model.User.PhoneNumber" id="PhoneNumber" pattern="[\(]\d{3}[\)]\d{3}[\-]\d{4}" class="form-control" placeholder="(123)456-7890" />
+                    <small class="help-block">US based Phone Number format: (123)456-7890</small>
+                    @Html.ValidationMessageFor(model => model.User.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.Button("Register", "btn btn-primary", "RegisterSubmit", HtmlExtensionsButton.HtmlButtonTypes.submit)
+            </div>
+        </div>
+    </div>
+}

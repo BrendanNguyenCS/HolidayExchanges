@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <hgroup>
+        <h1 class="text-danger">Error.</h1>
+        <h2>@ViewBag.ErrorMessage</h2>
+        <h2 class="text-danger">An error occurred while processing your request.</h2>
+        <h2>Since you failed, go get some help ASAP.</h2>
+    </hgroup>
+    <div>
+        @Html.ActionLink("Plz get me out. I want to go home.", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+        @Html.ActionLink("I'm already a user, seriously. (Login here)", "Login", "Login", routeValues: null, htmlAttributes: new { @class = "btn btn-info" })
+        @Html.ActionLink("Ok you got me. I want to become one of you. (Register here)", "Register", "Login", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+    </div>
+</body>
+</html>

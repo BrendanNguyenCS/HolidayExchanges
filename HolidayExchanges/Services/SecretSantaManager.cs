@@ -3,6 +3,7 @@ using HolidayExchanges.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 
 namespace HolidayExchanges.Services
 {
@@ -293,7 +294,7 @@ namespace HolidayExchanges.Services
         /// <param name="user">The user.</param>
         /// <param name="recipient">The recipient.</param>
         /// <param name="group">The group.</param>
-        /*public void SendMatchEmail(User user, User recipient, Group group)
+        public void SendMatchEmail(User user, User recipient, Group group)
         {
             var message = new MailMessage();
             message.To.Add(user.Email);
@@ -320,6 +321,6 @@ namespace HolidayExchanges.Services
                 Console.Error.WriteLine("{0}: {1}", ex.ToString(), ex.Message);
                 throw;
             }
-        }*/
+        }
     }
 }

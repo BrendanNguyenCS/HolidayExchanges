@@ -1,4 +1,5 @@
-﻿using HolidayExchanges.DAL;
+﻿using HolidayExchanges.Components;
+using HolidayExchanges.DAL;
 using HolidayExchanges.Models;
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
@@ -48,7 +49,12 @@ namespace HolidayExchanges.Controllers
         public ActionResult Create()
         {
             var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username)) return RedirectToAction("Login", "Login");
+            if (string.IsNullOrEmpty(username))
+            {
+                Session["RedirectLink"] = Url.Action("Create", "Group");
+                return RedirectToAction("Login", "Login");
+            }
+
             return View();
         }
 
@@ -62,6 +68,8 @@ namespace HolidayExchanges.Controllers
             {
                 var username = Session["UserName"].ToString();
                 var currentUser = _context.Users.FirstOrDefault(u => u.UserName == username);
+
+                this.ResetRedirectLink();
 
                 if (currentUser != null)
                 {
@@ -82,6 +90,12 @@ namespace HolidayExchanges.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            if (string.IsNullOrEmpty(username))
+            {
+                Session["RedirectLink"] = Url.Action("Edit", "Group", id);
+                return RedirectToAction("Login", "Login");
+            }
             Group group = _context.Groups.Find(id);
             if (group == null) return HttpNotFound();
             return View(group);
@@ -95,6 +109,10 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Session["RedirectLink"] = null;
+
+                this.ResetRedirectLink();
+
                 _context.Entry(group).State = EntityState.Modified;
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -105,6 +123,13 @@ namespace HolidayExchanges.Controllers
         // GET: Group/Delete/5
         public ActionResult Delete(int? id)
         {
+            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            if (string.IsNullOrEmpty(username))
+            {
+                Session["RedirectLink"] = Url.Action("Delete", "Group", id);
+                return RedirectToAction("Login", "Login");
+            }
+
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Group group = _context.Groups.Find(id);
             if (group == null) return HttpNotFound();
@@ -116,6 +141,8 @@ namespace HolidayExchanges.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            this.ResetRedirectLink();
+
             Group group = _context.Groups.Find(id);
             _context.Groups.Remove(group);
             _context.SaveChanges();
@@ -147,7 +174,7 @@ namespace HolidayExchanges.Controllers
             var group = _santaMgr.GetGroupById(model.GroupID);
 
             // reset for unused session variable
-            Session["RedirectLink"] = null;
+            this.ResetRedirectLink();
 
             try
             {
@@ -184,11 +211,17 @@ namespace HolidayExchanges.Controllers
             {
                 try
                 {
+                    #region Email Contacts
+
                     var user = ug.User;
                     var group = ug.Group;
                     var recipient = _context.Users.Find(ug.RecipientUserID);
                     var message = new MailMessage();
                     message.To.Add(user.Email);
+
+                    #endregion Email Contacts
+
+                    #region Email Content
 
                     message.Subject = "Your assignment for the group " + group.Name;
                     message.Body = "<h1>Secret Santa Pair Notification</h1>" + Environment.NewLine +
@@ -199,6 +232,8 @@ namespace HolidayExchanges.Controllers
                         "<p>Thank you,</p>" + Environment.NewLine +
                         "<p>From your friends at Holiday Exchanges MA</p>";
                     message.IsBodyHtml = true;
+
+                    #endregion Email Content
 
                     using (var smtp = new SmtpClient())
                     {

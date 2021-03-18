@@ -32,8 +32,7 @@ namespace HolidayExchanges.Models
         public int GroupID { get; set; }
 
         /// <summary>
-        /// The identifier of the <see cref="HolidayExchanges.Models.UserGroup.User"/>'s match (
-        /// <see cref="HolidayExchanges.Models.UserGroup.Recipient"/>)
+        /// The identifier of the <see cref="HolidayExchanges.Models.UserGroup.User"/>'s match
         /// </summary>
         /// <remarks>Not a foreign key</remarks>
         public int RecipientUserID { get; set; }

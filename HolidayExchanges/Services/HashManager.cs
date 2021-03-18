@@ -83,7 +83,7 @@ namespace HolidayExchanges.Services
         /// The combined <see cref="byte"/> array consisting of <paramref name="first"/> with
         /// <paramref name="second"/> appended on the end.
         /// </returns>
-        /*private byte[] Combine(byte[] first, byte[] second)
+        private byte[] Combine(byte[] first, byte[] second)
         {
             var result = new byte[first.Length + second.Length];
 
@@ -91,7 +91,7 @@ namespace HolidayExchanges.Services
             Buffer.BlockCopy(second, 0, result, first.Length, second.Length);
 
             return result;
-        }*/
+        }
 
         /// <summary>
         /// Private helper method for simplified password verification process.

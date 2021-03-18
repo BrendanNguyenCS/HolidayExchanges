@@ -1,0 +1,82 @@
+﻿@model HolidayExchanges.Models.Wish
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Wish Details</h2>
+<hr />
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemLink)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemLink)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchasingInstructions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchasingInstructions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HasBeenBought)
+        </dt>
+
+        <dd>
+            @{
+                if (Model.HasBeenBought)
+                {
+                    <p>Yes</p>
+                }
+                else
+                {
+                    <p>No</p>
+                }
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.WishID }, new { @class = "btn btn-default " })
+    @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+</div>

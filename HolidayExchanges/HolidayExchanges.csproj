@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\HolidayExchanges.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -161,6 +162,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Components\CheckLoginStatus.cs" />
     <Compile Include="Components\HtmlExtensionButton.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -183,6 +185,18 @@
     <Compile Include="Migrations\202103121642081_EditWishProperties.Designer.cs">
       <DependentUpon>202103121642081_EditWishProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103151937228_EditExchangeDateColumnType.cs" />
+    <Compile Include="Migrations\202103151937228_EditExchangeDateColumnType.Designer.cs">
+      <DependentUpon>202103151937228_EditExchangeDateColumnType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103161225440_RemoveNullableFromExchangeDate.cs" />
+    <Compile Include="Migrations\202103161225440_RemoveNullableFromExchangeDate.Designer.cs">
+      <DependentUpon>202103161225440_RemoveNullableFromExchangeDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103161259227_RemovingTimePartOfExchangeDate.cs" />
+    <Compile Include="Migrations\202103161259227_RemovingTimePartOfExchangeDate.Designer.cs">
+      <DependentUpon>202103161259227_RemovingTimePartOfExchangeDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\User.cs" />
@@ -192,10 +206,12 @@
     <Compile Include="Services\HashManager.cs" />
     <Compile Include="Services\SecretSantaManager.cs" />
     <Compile Include="Services\ShuffleManager.cs" />
+    <Compile Include="ViewModels\GrouplistViewModel.cs" />
     <Compile Include="ViewModels\GroupViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\WishlistViewModel.cs" />
     <Compile Include="ViewModels\WishViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +223,7 @@
     <Content Include="bin\EntityFramework.xml" />
     <Content Include="bin\HolidayExchanges.dll" />
     <Content Include="bin\HolidayExchanges.pdb" />
+    <Content Include="bin\HolidayExchanges.xml" />
     <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
     <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
     <Content Include="bin\Microsoft.Data.SqlClient.dll" />
@@ -279,6 +296,8 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Diagrams\Infrastructure3-1-21.png" />
+    <Content Include="Diagrams\Infrastructure3-12-21.png" />
+    <Content Include="Diagrams\Infrastructure3-16-21.png" />
     <Content Include="Diagrams\Infrastructure3-2-21.png" />
     <Content Include="Diagrams\Infrastructure3-4-21.png" />
     <Content Include="Diagrams\ProspectiveDiagram.png" />
@@ -446,6 +465,11 @@
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Wish\Create.cshtml" />
+    <Content Include="Views\Wish\Edit.cshtml" />
+    <Content Include="Views\Wish\Delete.cshtml" />
+    <Content Include="Views\Wish\Details.cshtml" />
+    <Content Include="Views\User\Wishlist.cshtml" />
+    <Content Include="Views\User\Grouplist.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -462,6 +486,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103121642081_EditWishProperties.resx">
       <DependentUpon>202103121642081_EditWishProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103151937228_EditExchangeDateColumnType.resx">
+      <DependentUpon>202103151937228_EditExchangeDateColumnType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103161225440_RemoveNullableFromExchangeDate.resx">
+      <DependentUpon>202103161225440_RemoveNullableFromExchangeDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103161259227_RemovingTimePartOfExchangeDate.resx">
+      <DependentUpon>202103161259227_RemovingTimePartOfExchangeDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

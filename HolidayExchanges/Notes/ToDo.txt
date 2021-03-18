@@ -3,3 +3,9 @@
 2. Add functionality for wishlists and wishes
 
 3. Work on wish views, viewmodels, and route configs (attribute routing)
+
+4. Think about how to restrict access to certain pages if you aren't the user that the page belongs to
+
+	i.e. bnuge shouldn't be able to edit the other user's profiles and so on
+
+	Same thing for certain buttons on certain pages

@@ -1,4 +1,5 @@
-﻿using HolidayExchanges.DAL;
+﻿using HolidayExchanges.Components;
+using HolidayExchanges.DAL;
 using HolidayExchanges.Models;
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
@@ -28,12 +29,6 @@ namespace HolidayExchanges.Controllers
         // GET: User/Details/5
         public ActionResult Details(int? id)
         {
-            //var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            //if (string.IsNullOrEmpty(username))
-            //{
-            //    Session["RedirectLink"] = Url.Action("Details", "User", id);
-            //    return RedirectToAction("Login", "Login");
-            //}
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -50,7 +45,7 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        /*Not needed since register acts as a user creation tool
+        /*Create not needed since Register (LoginController) acts as a user creation tool
         // GET: User/Create
         public ActionResult Create()
         {
@@ -76,12 +71,13 @@ namespace HolidayExchanges.Controllers
         // GET: User/Edit/5
         public ActionResult Edit(int? id)
         {
-            //var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            //if (string.IsNullOrEmpty(username))
-            //{
-            //    Session["RedirectLink"] = Url.Action("Edit", "User", id);
-            //    return RedirectToAction("Login", "Login");
-            //}
+            // checks for log in status
+            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            if (string.IsNullOrEmpty(username))
+            {
+                Session["RedirectLink"] = Url.Action("Edit", "User", id);
+                return RedirectToAction("Login", "Login");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -103,12 +99,15 @@ namespace HolidayExchanges.Controllers
             ModelState.Remove("Password");
             if (ModelState.IsValid)
             {
+                //Session["RedirectLink"] = null;
+                this.ResetRedirectLink();
+
                 db.Entry(user).State = EntityState.Modified;
                 db.Entry(user).Property(u => u.UserName).IsModified = false;
                 db.Entry(user).Property(u => u.Password).IsModified = false;
                 db.Entry(user).Property(u => u.Salt).IsModified = false;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", user.UserID);
             }
 
             #region Error Checking Comments
@@ -128,14 +127,14 @@ namespace HolidayExchanges.Controllers
         // GET: User/Delete/5
         public ActionResult Delete(int? id)
         {
-            // checks current login status
-            //var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            //if (string.IsNullOrEmpty(username))
-            //{
-            //    // if not currently logged in, redirect to login page
-            //    Session["RedirectLink"] = Url.Action("Delete", "User", id);
-            //    return RedirectToAction("Login", "Login");
-            //}
+            //checks current login status
+            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            if (string.IsNullOrEmpty(username))
+            {
+                // if not currently logged in, redirect to login page
+                Session["RedirectLink"] = Url.Action("Delete", "User", id);
+                return RedirectToAction("Login", "Login");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -153,10 +152,59 @@ namespace HolidayExchanges.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            this.ResetRedirectLink();
+
             User user = db.Users.Find(id);
             db.Users.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index", "Home");
+        }
+
+        // GET: User/Wishlist/1
+        public ActionResult Wishlist(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            User user = db.Users.Find(id);
+            WishlistViewModel model = new WishlistViewModel
+            {
+                UserID = id.Value,
+                UserName = user.UserName,
+                Wishlist = user.Wishes.ToList()
+            };
+            return View(model);
+        }
+
+        // GET: User/Grouplist/1
+        public ActionResult Grouplist(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            if (string.IsNullOrEmpty(username))
+            {
+                Session["RedirectLink"] = Url.Action("Grouplist", "User", id);
+                return RedirectToAction("Login", "Login");
+            }
+
+            // check to see if it has been redirected from login/register pages
+            if (Session["RedirectLink"] != null)
+            {
+                this.ResetRedirectLink();
+            }
+
+            User user = db.Users.Find(id);
+            GrouplistViewModel model = new GrouplistViewModel
+            {
+                UserID = id.Value,
+                UserName = user.UserName,
+                Groups = santaMgr.GetAllGroupsForUser(id.Value)
+            };
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)

@@ -1,0 +1,96 @@
+﻿@model HolidayExchanges.ViewModels.WishlistViewModel
+
+@{
+    ViewBag.Title = "Wishlist";
+}
+
+<style>
+    details {
+        border: 1px solid black;
+        border-radius: 4px;
+        padding: .5em .5em 0;
+        margin: 0.5em;
+    }
+
+    summary {
+        font-weight: bold;
+        margin: -.5em -.5em 0;
+        padding: 0.5em;
+    }
+
+    details[open] {
+        padding: 0.5em;
+    }
+
+        details[open] summary {
+            border-bottom: 1px solid black;
+            margin-bottom: 0.5em;
+        }
+
+    details summary:focus {
+        display: none;
+    }
+</style>
+
+<h2>Wishlist for @Model.UserName</h2>
+<hr />
+<div>
+    @foreach (var wish in Model.Wishlist)
+    {
+        <details>
+            <summary>@wish.ItemName</summary>
+            <div>
+                <dl class="dl-horizontal">
+                    <dt>
+                        Description
+                    </dt>
+                    <dd>
+                        @wish.Description
+                    </dd>
+                    <dt>
+                        Quantity
+                    </dt>
+                    <dd>
+                        @wish.Quantity
+                    </dd>
+                    <dt>
+                        Special Instructions
+                    </dt>
+                    <dd>
+                        @wish.PurchasingInstructions
+                    </dd>
+                    <dt>
+                        Already Bought?
+                    </dt>
+                    <dd>
+                        @{
+                            if (wish.HasBeenBought)
+                            {
+                                <p>Yes</p>
+                            }
+                            else
+                            {
+                                <p>No</p>
+                            }
+                        }
+                    </dd>
+                </dl>
+            </div>
+            <div>
+                @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-default" })
+            </div>
+        </details>
+    }
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+</div>

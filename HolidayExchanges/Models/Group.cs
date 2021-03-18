@@ -27,12 +27,16 @@ namespace HolidayExchanges.Models
         /// <summary>
         /// The date of the gift exchange
         /// </summary>
-        [Column(TypeName = "datetime")]
+        [Column(TypeName = "date")]
         [DataType(DataType.Date)]
         [Display(Name = "Exchange Date")]
-        public DateTime? ExchangeDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime ExchangeDate { get; set; }
 
         //public bool HasBeenPaired { get; set; }
+
+        // represents username of user that created the group
+        //public string Creator { get; set; }
 
         /// <summary>
         /// The list of <see cref="HolidayExchanges.Models.UserGroup"/> that are currently in the group.

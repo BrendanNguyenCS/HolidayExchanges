@@ -22,6 +22,7 @@ namespace HolidayExchanges.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
@@ -71,6 +72,7 @@ namespace HolidayExchanges.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -130,6 +132,11 @@ namespace HolidayExchanges.Controllers
                 }
 
                 Session["UserName"] = user.UserName;
+                if (Session["RedirectLink"] != null)
+                {
+                    return Redirect(Session["RedirectLink"].ToString());
+                }
+
                 return RedirectToAction("Success", "Home");
             }
 

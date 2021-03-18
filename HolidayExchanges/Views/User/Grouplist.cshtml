@@ -1,0 +1,79 @@
+﻿@model HolidayExchanges.ViewModels.GrouplistViewModel
+
+@{
+    ViewBag.Title = "Grouplist";
+}
+
+<style>
+    details {
+        border: 1px solid black;
+        border-radius: 4px;
+        padding: .5em .5em 0;
+        margin: 0.5em;
+    }
+
+    summary {
+        font-weight: bold;
+        margin: -.5em -.5em 0;
+        padding: 0.5em;
+    }
+
+    details[open] {
+        padding: 0.5em;
+    }
+
+        details[open] summary {
+            border-bottom: 1px solid black;
+            margin-bottom: 0.5em;
+        }
+
+    details summary:focus {
+        display: none;
+    }
+</style>
+
+<h2>All groups for @Model.UserName</h2>
+<hr />
+<div>
+    @foreach (var group in Model.Groups)
+    {
+        <details>
+            <summary>@group.Name</summary>
+            <div>
+                <dl class="dl-horizontal">
+                    <dd>
+                        @group.Name
+                    </dd>
+                    <dt>
+                        Exchange Date
+                    </dt>
+                    <dd>
+                        @group.ExchangeDate
+                    </dd>
+                    @*<dt>
+                            Has Been Paired?
+                        </dt>
+                        <dd>
+                            @group.HasBeenPaired
+                        </dd>
+                    *@
+                </dl>
+            </div>
+            <div>
+                @Html.ActionLink("View", "Details", "Group", new { id = group.GroupID }, htmlAttributes: new { @class = "btn btn-default" })
+            </div>
+        </details>
+    }
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Count)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Count)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+</div>

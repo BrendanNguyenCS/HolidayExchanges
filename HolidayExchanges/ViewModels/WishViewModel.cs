@@ -4,6 +4,10 @@ namespace HolidayExchanges.ViewModels
 {
     public class WishViewModel
     {
+        public WishViewModel()
+        {
+        }
+
         public WishViewModel(int userId)
         {
             UserId = userId;

@@ -4,7 +4,8 @@
     ViewBag.Title = "Details";
 }
 
-<h2 class="text-center">Details</h2>
+<h2 class="text-center">Details for @Model.User.UserName</h2>
+<h4 class="text-danger">@ViewBag.NotAuthorizedMessage</h4>
 <hr />
 
 <style>
@@ -31,7 +32,8 @@
 
             <dd>
                 @Html.DisplayFor(model => model.Salt)
-            </dd>*@
+            </dd>
+        *@
         <!-- #endregion -->
 
         <dt>
@@ -74,7 +76,8 @@
                     @Model.User.City, @Model.User.State @Model.User.Zip @Model.User.Country
                 </p>
 
-                <p>-----------------------------------------------</p>*@
+                <p>-----------------------------------------------</p>
+            *@
             <!-- #endregion -->
 
             @{
@@ -231,5 +234,6 @@
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.User.UserID }, new { @class = "btn btn-default" })
     @Html.ActionLink("Add to wishlist", "Create", "Wish", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "btn btn-default" }) <!-- change this redirect button -->
+    @Html.ActionLink("View Wishlist", "Wishlist", new { id = Model.User.UserID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "btn btn-default disabled" }) <!-- change this redirect button -->
 </div>

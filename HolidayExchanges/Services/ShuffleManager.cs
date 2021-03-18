@@ -14,11 +14,7 @@ namespace HolidayExchanges.Services
         /// cref="RNGCryptoServiceProvider"/> and its <see cref="RandomNumberGenerator"/> by getting
         /// a random number and then swapping that random index with a looped value.
         /// </summary>
-        /// <typeparam name="User">The data type of list being shuffled.</typeparam>
-        /// <param name="list">The sequence from which to return random elements.</param>
-        /// <remarks>
-        /// Uses a while loop to iterate through the list from the last element to the first element.
-        /// </remarks>
+        /// <param name="list">The list.</param>
         /// <exception cref="ArgumentNullException"></exception>
         public static void CsprngShuffle(this List<User> list)
         {
@@ -42,8 +38,7 @@ namespace HolidayExchanges.Services
         /// <summary>
         /// Returns <paramref name="list"/> with its elements shuffled using <see cref="Guid"/>.
         /// </summary>
-        /// <typeparam name="User">The data type of list being shuffled.</typeparam>
-        /// <param name="list">The sequence from which to return random elements.</param>
+        /// <param name="list">The list.</param>
         /// <remarks>
         /// FYI: This is not a true shuffling as it is considered "ordering by random" because of
         ///      <see cref="Guid.NewGuid"/> only guarantees a unique <see cref="Guid"/>.
@@ -59,7 +54,6 @@ namespace HolidayExchanges.Services
         /// Returns <paramref name="list"/> with its elements shuffled using <see
         /// cref="MoreEnumerable.Shuffle"/> from the <see cref="MoreLinq"/> namespace and NuGet package.
         /// </summary>
-        /// <typeparam name="User">The data type of list being shuffled.</typeparam>
         /// <param name="list">The sequence from which to return random elements.</param>
         /// <returns>A <see cref="List{User}"/> with its elements randomized.</returns>
         /// <remarks>

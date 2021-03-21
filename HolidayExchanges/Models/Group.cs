@@ -33,7 +33,8 @@ namespace HolidayExchanges.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ExchangeDate { get; set; }
 
-        //public bool HasBeenPaired { get; set; }
+        [Display(Name = "Already Paired?")]
+        public bool HasBeenPaired { get; set; }
 
         // represents username of user that created the group
         //public string Creator { get; set; }

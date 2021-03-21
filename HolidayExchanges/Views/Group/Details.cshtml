@@ -26,6 +26,23 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.Group.HasBeenPaired)
+        </dt>
+
+        <dd>
+            @{
+                if (Model.Group.HasBeenPaired)
+                {
+                    <p>Yes</p>
+                }
+                else
+                {
+                    <p>No</p>
+                }
+            }
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Users)
         </dt>
 
@@ -39,7 +56,14 @@
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Group.GroupID }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Pair", "Pair", new { id = Model.Group.GroupID }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Send Assignments", "SendAssignments", new { id = Model.Group.GroupID }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+    @if (!Model.Group.HasBeenPaired)
+    {
+        @Html.ActionLink("Pair", "Pair", new { id = Model.Group.GroupID }, new { @class = "btn btn-default" })
+    }
+    @if (Model.Group.HasBeenPaired)
+    {
+        @Html.ActionLink("Pair Again", "Pair", new { id = Model.Group.GroupID }, new { @class = "btn btn-danger" })
+        @Html.ActionLink("Send Assignments", "SendAssignments", new { id = Model.Group.GroupID }, new { @class = "btn btn-info" })
+    }
+    @Html.ActionLink("Back to Home", "Index", "Home", htmlAttributes: new { @class = "btn btn-default disabled" })
 </div>

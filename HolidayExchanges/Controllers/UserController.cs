@@ -29,6 +29,12 @@ namespace HolidayExchanges.Controllers
         // GET: User/Details/5
         public ActionResult Details(int? id)
         {
+            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            if (string.IsNullOrEmpty(username))
+            {
+                Session["RedirectLink"] = Url.Action("Edit", "User", id);
+                return RedirectToAction("Login", "Login");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

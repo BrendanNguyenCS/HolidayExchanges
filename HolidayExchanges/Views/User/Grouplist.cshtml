@@ -50,13 +50,21 @@
                     <dd>
                         @group.ExchangeDate
                     </dd>
-                    @*<dt>
-                            Has Been Paired?
-                        </dt>
-                        <dd>
-                            @group.HasBeenPaired
-                        </dd>
-                    *@
+                    <dt>
+                        Has Been Paired?
+                    </dt>
+                    <dd>
+                        @{
+                            if (group.HasBeenPaired)
+                            {
+                                <p>Yes</p>
+                            }
+                            else
+                            {
+                                <p>No</p>
+                            }
+                        }
+                    </dd>
                 </dl>
             </div>
             <div>

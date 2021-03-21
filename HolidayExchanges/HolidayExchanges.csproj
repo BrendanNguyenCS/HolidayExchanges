@@ -197,6 +197,10 @@
     <Compile Include="Migrations\202103161259227_RemovingTimePartOfExchangeDate.Designer.cs">
       <DependentUpon>202103161259227_RemovingTimePartOfExchangeDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103181940028_AddGroupPairedBoolean.cs" />
+    <Compile Include="Migrations\202103181940028_AddGroupPairedBoolean.Designer.cs">
+      <DependentUpon>202103181940028_AddGroupPairedBoolean.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\User.cs" />
@@ -495,6 +499,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103161259227_RemovingTimePartOfExchangeDate.resx">
       <DependentUpon>202103161259227_RemovingTimePartOfExchangeDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103181940028_AddGroupPairedBoolean.resx">
+      <DependentUpon>202103181940028_AddGroupPairedBoolean.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

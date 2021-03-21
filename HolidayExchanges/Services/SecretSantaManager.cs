@@ -286,6 +286,10 @@ namespace HolidayExchanges.Services
                     throw;
                 }
             }
+
+            _context.Groups.Attach(currentGroup);
+            currentGroup.HasBeenPaired = true;
+            _context.SaveChanges();
         }
 
         /// <summary>

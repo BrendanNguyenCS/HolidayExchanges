@@ -17,6 +17,9 @@
         <th>
             @Html.DisplayNameFor(model => model.ExchangeDate)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HasBeenPaired)
+        </th>
         <th></th>
     </tr>
 
@@ -28,6 +31,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ExchangeDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasBeenPaired)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.GroupID }) |

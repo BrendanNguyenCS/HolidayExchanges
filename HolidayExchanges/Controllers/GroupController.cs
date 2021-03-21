@@ -62,7 +62,7 @@ namespace HolidayExchanges.Controllers
         // you want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "GroupID,Name,ExchangeDate")] Group group)
+        public ActionResult Create([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired")] Group group)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace HolidayExchanges.Controllers
         // you want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "GroupID,Name,ExchangeDate")] Group group)
+        public ActionResult Edit([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired")] Group group)
         {
             if (ModelState.IsValid)
             {
@@ -114,6 +114,7 @@ namespace HolidayExchanges.Controllers
                 this.ResetRedirectLink();
 
                 _context.Entry(group).State = EntityState.Modified;
+                _context.Entry(group).Property(g => g.HasBeenPaired).IsModified = false;
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }

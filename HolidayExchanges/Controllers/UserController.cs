@@ -51,6 +51,18 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
+        // GET: User/Details/bnuge
+        [ActionName("DetailsByUsername")]
+        public ActionResult Details(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            int id = db.Users.Single(u => u.UserName == username).UserID;
+            return RedirectToAction("Details", new { id });
+        }
+
         /*Create not needed since Register (LoginController) acts as a user creation tool
         // GET: User/Create
         public ActionResult Create()
@@ -180,6 +192,54 @@ namespace HolidayExchanges.Controllers
                 UserName = user.UserName,
                 Wishlist = user.Wishes.ToList()
             };
+            return View(model);
+        }
+
+        // GET: User/Wishlist/bnuge
+        [ActionName("WishlistByUsername")]
+        public ActionResult Wishlist(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                return RedirectToAction("Login", "Login");
+            }
+            int id = db.Users.Single(u => u.UserName == username).UserID;
+            return RedirectToAction("Wishlist", new { id });
+        }
+
+        //TODO: Finish implementation of user wishlist search
+        [HttpPost]
+        public ActionResult Wishlist(WishlistViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (string.IsNullOrEmpty(model.SearchUserName) && string.IsNullOrEmpty(model.SearchEmail))
+                {
+                    return View(model);
+                }
+
+                User user;
+                if (!string.IsNullOrEmpty(model.UserName))
+                {
+                    user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("SearchUserName", "This user doesn't exist.");
+                        return View(model);
+                    }
+                    return RedirectToAction("Wishlist", new { id = user.UserID });
+                }
+
+                // email must be filled at this point
+                user = db.Users.SingleOrDefault(u => u.Email == model.SearchEmail);
+                if (user == null)
+                {
+                    ModelState.AddModelError("SearchEmail", "This email doesn't exist");
+                    return View(model);
+                }
+                return RedirectToAction("Wishlist", new { id = user.UserID });
+            }
+
             return View(model);
         }
 

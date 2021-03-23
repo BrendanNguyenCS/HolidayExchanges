@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Wishlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -35,62 +36,122 @@
 <h2>Wishlist for @Model.UserName</h2>
 <hr />
 <div>
-    @foreach (var wish in Model.Wishlist)
-    {
-        <details>
-            <summary>@wish.ItemName</summary>
-            <div>
-                <dl class="dl-horizontal">
-                    <dt>
-                        Description
-                    </dt>
-                    <dd>
-                        @wish.Description
-                    </dd>
-                    <dt>
-                        Quantity
-                    </dt>
-                    <dd>
-                        @wish.Quantity
-                    </dd>
-                    <dt>
-                        Special Instructions
-                    </dt>
-                    <dd>
-                        @wish.PurchasingInstructions
-                    </dd>
-                    <dt>
-                        Already Bought?
-                    </dt>
-                    <dd>
-                        @{
-                            if (wish.HasBeenBought)
-                            {
-                                <p>Yes</p>
-                            }
-                            else
-                            {
-                                <p>No</p>
-                            }
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="body-content">
+                        @foreach (var wish in Model.Wishlist)
+                        {
+                            <div>
+                                <details>
+                                    <summary>@wish.ItemName</summary>
+                                    <div>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                Description
+                                            </dt>
+                                            <dd>
+                                                @wish.Description
+                                            </dd>
+                                            <dt>
+                                                Quantity
+                                            </dt>
+                                            <dd>
+                                                @wish.Quantity
+                                            </dd>
+                                            <dt>
+                                                Special Instructions
+                                            </dt>
+                                            <dd>
+                                                @wish.PurchasingInstructions
+                                            </dd>
+                                            <dt>
+                                                Already Bought?
+                                            </dt>
+                                            <dd>
+                                                @{
+                                                    if (wish.HasBeenBought)
+                                                    {
+                                                        <p>Yes</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>No</p>
+                                                    }
+                                                }
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-default" })
+                                    </div>
+                                </details>
+                            </div>
                         }
-                    </dd>
-                </dl>
-            </div>
-            <div>
-                @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-default" })
-            </div>
-        </details>
-    }
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Count)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Count)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+                        <div class="row">
+                            <dl class="dl-horizontal">
+                                <dt class="">
+                                    @Html.DisplayNameFor(model => model.Count)
+                                </dt>
+                                <dd>
+                                    @Html.DisplayFor(model => model.Count)
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <div class="row">
+                            @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr />
+
+    <!-- TODO: finish implementing user wishlist search area -->
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Search below to view another user's wishlist</p>
+                </div>
+            </div>
+            @using (Html.BeginForm("Wishlist", "User", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal" style="margin-top: 10px;">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SearchUserName, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.SearchUserName, htmlAttributes: new { @class = "form-control", @type = "search", placeholder = "Their username" })
+                            @Html.ValidationMessageFor(model => model.SearchUserName, "", htmlAttributes: new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin: 10px 0 10px 0;">
+                        <p class="margin-right: 10px;">Or</p>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SearchEmail, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.SearchEmail, htmlAttributes: new { @class = "form-control", @type = "search", placeholder = "Their email" })
+                            @Html.ValidationMessageFor(model => model.SearchEmail, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-2 left">
+                            @Html.Button("Search", "btn", "WishlistSearch", HtmlExtensionsButton.HtmlButtonTypes.submit)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
 </div>

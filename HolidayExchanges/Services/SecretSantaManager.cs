@@ -235,13 +235,13 @@ namespace HolidayExchanges.Services
                     int userId = users[i].UserID;
                     var currentUser = _context.Users
                         .Where(u => u.UserID == userId)
-                        .Single();
+                        .SingleOrDefault();
                     if (currentUser == null) throw new InvalidOperationException("A user could not be found.");
                     // assign pairs
                     var userGroup = _context.UserGroups
                         .Where(ug => ug.UserID == currentUser.UserID)
                         .Where(ug => ug.GroupID == currentGroup.GroupID)
-                        .Single();
+                        .SingleOrDefault();
                     if (userGroup == null) throw new InvalidOperationException("It seems that a user doesn't belong in this group.");
                     //_context.Entry(userGroup).State = EntityState.Modified;
                     _context.UserGroups.Attach(userGroup);

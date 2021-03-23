@@ -2,20 +2,29 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <div class="container text-left">
-        <div class="row">
-            <div class="col-lg-4">
-                <img src="~/Images/cartoon-gift-exchange.jpg" alt="" class="img-responsive pull-right" />
-            </div>
-            <div class="col-lg-8">
-                <h1>Holiday Exchanges</h1>
-                <p class="lead">Exchange gifts with family and friends for all occasions: Yankee Swaps, Secret Santa, even birthdays!</p>
+<style>
+    .jumbotron {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<div class="jumbotronHome">
+    <div class="jumbotron mb-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <img src="~/Images/cartoon-gift-exchange.jpg" alt="" class="img-fluid" />
+                </div>
+                <div class="col-md-7">
+                    <h1 class="display-4">Holiday Exchanges</h1>
+                    <p class="lead">Exchange gifts with family and friends for all occasions: Yankee Swaps, Secret Santa, even birthdays!</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 @*<div class="row">
         <div class="col-md-4">
             <h2>Getting started</h2>

@@ -3,67 +3,80 @@
 @{
     ViewBag.Title = "Edit";
 }
-
-<h2>Edit This Group</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.GroupID)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+<div class="container">
+    <section id="GroupEditTitle">
+        <div class="row">
+            <div class="page-header col-md-12">
+                <h1 class="text-center display-5">Edit This Group</h1>
+                <hr />
             </div>
         </div>
+    </section>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExchangeDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ExchangeDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                @Html.ValidationMessageFor(model => model.ExchangeDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <section id="GroupEditForm">
+        <div class="container body-content">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.HasBeenPaired, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.HasBeenPaired, htmlAttributes: new { @class = "disabled" })
-                @Html.ValidationMessageFor(model => model.HasBeenPaired, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="container-fluid form-horizontal">
+                    <div class="row">
+                        <div class="col-12">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.GroupID)
 
-        <!-- #region Trying to fix date time issue -->
-        @*<div class="form-group">
-                @Html.LabelFor(model => model.ExchangeDate.Value.Date, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ExchangeDate.Value.Date, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                    @Html.ValidationMessageFor(model => model.ExchangeDate.Value.Date, "", new { @class = "text-danger" })
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-5 offset-md-1 col-md-3 offset-lg-2 col-lg-2 offset-xl-3" })
+                                <div class="col-9 col-md-6 col-lg-5 col-xl-4">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.ExchangeDate, htmlAttributes: new { @class = "col-form-label col-7 offset-md-1 col-md-3 offset-lg-2 col-lg-2 offset-xl-3" })
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    @Html.EditorFor(model => model.ExchangeDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                                    @Html.ValidationMessageFor(model => model.ExchangeDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                @Html.LabelFor(model => model.HasBeenPaired, htmlAttributes: new { @class = "col-form-label col-5 offset-md-1 col-md-3 offset-lg-2 col-lg-2 offset-xl-3" })
+                                <div class="col-3">
+                                    @Html.CheckBoxFor(model => model.HasBeenPaired, htmlAttributes: new { @class = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.HasBeenPaired, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <!-- #region Trying to fix date time issue -->
+                            @*<div class="form-group">
+                                    @Html.LabelFor(model => model.ExchangeDate.Value.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ExchangeDate.Value.Date, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                                        @Html.ValidationMessageFor(model => model.ExchangeDate.Value.Date, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ExchangeDate.Value.TimeOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ExchangeDate.Value.TimeOfDay, new { htmlAttributes = new { @class = "form-control", type = "time" } })
+                                        @Html.ValidationMessageFor(model => model.ExchangeDate.Value.TimeOfDay, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            *@
+                            <!-- #endregion -->
+
+                            <div class="form-group row">
+                                <div class="offset-md-4 col-md-5 offset-xl-5">
+                                    <input type="submit" value="Save" class="btn btn-primary" />
+                                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-sm">Back To Home</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.ExchangeDate.Value.TimeOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ExchangeDate.Value.TimeOfDay, new { htmlAttributes = new { @class = "form-control", type = "time" } })
-                    @Html.ValidationMessageFor(model => model.ExchangeDate.Value.TimeOfDay, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
-        <!-- #endregion -->
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+            }
         </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    </section>
 </div>

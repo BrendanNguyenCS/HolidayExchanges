@@ -5,16 +5,30 @@
     <title>Error</title>
 </head>
 <body>
-    <hgroup>
-        <h1 class="text-danger">Error.</h1>
-        <h2>@ViewBag.ErrorMessage</h2>
-        <h2 class="text-danger">An error occurred while processing your request.</h2>
-        <h2>Since you failed, go get some help ASAP.</h2>
-    </hgroup>
-    <div>
-        @Html.ActionLink("Plz get me out. I want to go home.", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
-        @Html.ActionLink("I'm already a user, seriously. (Login here)", "Login", "Login", routeValues: null, htmlAttributes: new { @class = "btn btn-info" })
-        @Html.ActionLink("Ok you got me. I want to become one of you. (Register here)", "Register", "Login", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+    <div class="container">
+        <section id="ErrorMessageSection">
+            <div class="row">
+                <div class="col-12">
+                    <hgroup class="text-center">
+                        <h1 class=" page-header display-4 text-danger font-weight-bold">Error.</h1>
+                        <h2>@ViewBag.ErrorMessage</h2>
+                        <h2 class="text-danger">An error occurred while processing your request.</h2>
+                        <h2>Since you failed, go get some help ASAP.</h2>
+                    </hgroup>
+                </div>
+            </div>
+        </section>
+        <section id="RedirectButtons">
+            <div class="row">
+                <div class="container">
+                    <div class="btn-group-vertical offset-md-1 col-md-10 offset-lg-2 col-lg-8" role="group">
+                        @Html.ActionLink("Plz get me out. I want to go home.", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "btn btn-primary ml-0 mb-0" })
+                        @Html.ActionLink("I'm already a user, seriously. (Login here)", "Login", "Login", routeValues: null, htmlAttributes: new { @class = "btn btn-info mb-0" })
+                        @Html.ActionLink("Ok you got me. I want to become one of you. (Register here)", "Register", "Login", routeValues: null, htmlAttributes: new { @class = "btn btn-secondary" })
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </body>
 </html>

@@ -4,12 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holiday Exchanges</title>
+
+    <link rel="stylesheet" href="~/Content/Site.css" type="text/css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- TODO: Ask jon about uninstalling the jquery nuget package and referring to the jquery cdn instead (why is below only 3.2.1 when the nuget package is 3.5.1) -->
+    <!-- TODO: Same as above for jquery validation and modernizr -->
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="~/Content/Site.css" />
+    <!-- icons -->
+    <script src="https://kit.fontawesome.com/9a3845859f.js" crossorigin="anonymous"></script>
 
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jqueryval")
@@ -40,7 +46,7 @@
                     @if (Session["UserName"] != null)
                     {
                         <li>
-                            <a class="nav-link" href="@Url.Action("Create", "Group")">Create a group</a>
+                            <a class="nav-link" href="@Url.Action("Create", "Group")">Create an event</a>
                         </li>
                     }
                 </ul>
@@ -51,13 +57,17 @@
                             <a class="nav-link" href="@Url.Action("Register", "Login")">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Login", "Login")">Login</a>
+                            <a class="nav-link" href="@Url.Action("Login", "Login")">
+                                <i class="fas fa-sign-in-alt"></i>&nbsp;
+                                Login
+                            </a>
                         </li>
                         <li class="nav-item" style="color: white;">
                             <a class="nav-link" href="#">
                                 @{
                                     string username = Session["UserName"] != null ? Session["UserName"].ToString() : "Account";
                                 }
+                                <i class="far fa-user-circle"></i>&nbsp;
                                 @username
                             </a>
                         </li>
@@ -70,31 +80,35 @@
                                 @{
                                     string username = Session["UserName"].ToString();
                                 }
+                                <i class="fas fa-user-circle"></i>&nbsp;
                                 @username
                             </a>
 
                             <!-- #region old Bootstrap 3 dropdown -->
                             <!--<ul class="dropdown-menu">
-                        <li class="dropdown-item">
-                            @Html.ActionLink("Profile", "DetailsByUsername", "User", routeValues: new { username = Session["UserName"].ToString() }, htmlAttributes: null)
-                        </li>
-                        <li>
-                            @Html.ActionLink("Wishlist", "WishlistByUsername", "User", routeValues: new { username = Session["UserName"].ToString() }, htmlAttributes: null)
-                        </li>-->
+                            <li class="dropdown-item">
+                                @Html.ActionLink("Profile", "DetailsByUsername", "User", routeValues: new { username = Session["UserName"].ToString() }, htmlAttributes: null)
+                            </li>
+                            <li>
+                                @Html.ActionLink("Wishlist", "WishlistByUsername", "User", routeValues: new { username = Session["UserName"].ToString() }, htmlAttributes: null)
+                            </li>-->
                             @*<li>@Html.ActionLink("Sign Out", "SignOut", "Login")</li>*@
                             <!--<li>
-                            <a href="@Url.Action("SignOut", "Login")">
-                                <span class="glyphicon glyphicon-log-out"></span>
-                                &nbsp;Sign Out
-                            </a>
-                        </li>
-                    </ul>-->
+                                    <a href="@Url.Action("SignOut", "Login")">
+                                        <span class="glyphicon glyphicon-log-out"></span>
+                                        &nbsp;Sign Out
+                                    </a>
+                                </li>
+                            </ul>-->
                             <!-- #endregion -->
 
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("DetailsByUsername", "User", Session["UserName"].ToString())">Profile</a>
-                                <a class="dropdown-item" href="@Url.Action("WishlistByUsername", "User", Session["UserName"].ToString())">Wishlist</a>
-                                <a class="dropdown-item" href="@Url.Action("SignOut", "Login")">Sign Out</a>
+                                <a class="dropdown-item" href="@Url.Action("DetailsByUsername", "User", new { username = Session["UserName"].ToString() })">Profile</a>
+                                <a class="dropdown-item" href="@Url.Action("WishlistByUsername", "User", new { username = Session["UserName"].ToString() })">Wishlist</a>
+                                <a class="dropdown-item" href="@Url.Action("SignOut", "Login")">
+                                    <i class="fas fa-sign-out-alt"></i>&nbsp;
+                                    Sign Out
+                                </a>
                             </div>
                         </li>
                     }
@@ -103,16 +117,16 @@
 
             <!-- #region old navbar for login status -->
             @*<div class="navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li style="color: white; margin-top: -30px; float: right;">
-                    <i class="glyphicon glyphicon-user"></i>
-                    @{
-                        string username = Session["UserName"] != null ? Session["UserName"].ToString() : "Account";
-                    }
-                    &nbsp;@username
-                </li>
-            </ul>
-        </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li style="color: white; margin-top: -30px; float: right;">
+                            <i class="glyphicon glyphicon-user"></i>
+                            @{
+                                string username = Session["UserName"] != null ? Session["UserName"].ToString() : "Account";
+                            }
+                            &nbsp;@username
+                        </li>
+                    </ul>
+                </div>
             *@
             <!-- #endregion -->
         </div>
@@ -121,10 +135,8 @@
         @RenderBody()
         <hr />
         <footer class="text-center">
-            <p>&copy; @DateTime.Now.Year - Holiday Exchanges</p>
+            <p><i class="far fa-copyright"></i> @DateTime.Now.Year - Holiday Exchanges</p>
         </footer>
     </div>
-
-    
 </body>
 </html>

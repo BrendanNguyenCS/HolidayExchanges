@@ -4,37 +4,50 @@
     ViewBag.Title = "Join";
 }
 
-<h2>Join This Group</h2>
-
-@using (Html.BeginForm("Join", "Group", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.GroupID)
-        @Html.HiddenFor(model => model.HasBeenPaired)
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ExchangeDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ExchangeDate)
-            </dd>
-        </dl>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            @Html.Button("Join", "btn btn-primary", "JoinSubmit", HtmlExtensionsButton.HtmlButtonTypes.submit)
+<div class="container">
+    <section id="JoinGroupTitle">
+        <div class="row">
+            <div class="page-header col-12">
+                <h1 class="text-center display-5">Join This Group</h1>
+                <hr />
+            </div>
         </div>
-    </div>
-}
+    </section>
+
+    <section id="JoinDetails">
+        <div class="container body-content">
+            @using (Html.BeginForm("Join", "Group", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="container-fluid form-horizontal">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.GroupID)
+                    @Html.HiddenFor(model => model.HasBeenPaired)
+
+                    <dl class="row">
+                        <dt class="offset-md-1 col-md-2">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </dt>
+                        <dd class="col-md-9">
+                            @Html.DisplayFor(model => model.Name)
+                        </dd>
+
+                        <dt class="offset-md-1 col-md-2">
+                            @Html.DisplayNameFor(model => model.ExchangeDate)
+                        </dt>
+                        <dd class="col-md-9">
+                            @Html.DisplayFor(model => model.ExchangeDate)
+                        </dd>
+                    </dl>
+
+                    <div class="form-group row">
+                        <div class="offset-md-1 col-md-9">
+                            @Html.Button("Join", "btn btn-primary", "JoinSubmit", HtmlExtensionsButton.HtmlButtonTypes.submit)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>

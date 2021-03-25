@@ -1,6 +1,6 @@
-﻿1. Add boolean properties to signify if a group has been paired off yet
+﻿1. Fix align of forms
 
-2. Add functionality for wishlists and wishes
+2. Fix screen size for all other views
 
 3. Work on wish views, viewmodels, and route configs (attribute routing)
 
@@ -9,3 +9,5 @@
 	i.e. bnuge shouldn't be able to edit the other user's profiles and so on
 
 	Same thing for certain buttons on certain pages
+
+5. Input masking for phone fields

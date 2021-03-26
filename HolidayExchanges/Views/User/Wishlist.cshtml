@@ -39,54 +39,56 @@
     <section>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                     <div class="body-content">
                         @foreach (var wish in Model.Wishlist)
                         {
-                            <div>
-                                <details>
-                                    <summary>@wish.ItemName</summary>
-                                    <div>
-                                        <dl class="dl-horizontal">
-                                            <dt>
-                                                Description
-                                            </dt>
-                                            <dd>
-                                                @wish.Description
-                                            </dd>
-                                            <dt>
-                                                Quantity
-                                            </dt>
-                                            <dd>
-                                                @wish.Quantity
-                                            </dd>
-                                            <dt>
-                                                Special Instructions
-                                            </dt>
-                                            <dd>
-                                                @wish.PurchasingInstructions
-                                            </dd>
-                                            <dt>
-                                                Already Bought?
-                                            </dt>
-                                            <dd>
-                                                @{
-                                                    if (wish.HasBeenBought)
-                                                    {
-                                                        <p>Yes</p>
+                            <div class="row">
+                                <div class="col-12">
+                                    <details>
+                                        <summary>@wish.ItemName</summary>
+                                        <div class="container">
+                                            <dl class="dl-horizontal">
+                                                <dt>
+                                                    Description
+                                                </dt>
+                                                <dd>
+                                                    @wish.Description
+                                                </dd>
+                                                <dt>
+                                                    Quantity
+                                                </dt>
+                                                <dd>
+                                                    @wish.Quantity
+                                                </dd>
+                                                <dt>
+                                                    Special Instructions
+                                                </dt>
+                                                <dd>
+                                                    @wish.PurchasingInstructions
+                                                </dd>
+                                                <dt>
+                                                    Already Bought?
+                                                </dt>
+                                                <dd>
+                                                    @{
+                                                        if (wish.HasBeenBought)
+                                                        {
+                                                            <p>Yes</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p>No</p>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <p>No</p>
-                                                    }
-                                                }
-                                            </dd>
-                                        </dl>
-                                    </div>
-                                    <div>
-                                        @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-default" })
-                                    </div>
-                                </details>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <div>
+                                            @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-default" })
+                                        </div>
+                                    </details>
+                                </div>
                             </div>
                         }
 

@@ -36,7 +36,7 @@
 
                     <div class="form-group row">
                         @Html.LabelFor(model => model.ItemName, htmlAttributes: new { @class = "col-form-label col-6 col-md-3 offset-lg-1 col-lg-2 offset-xl-1 col-xl-2" })
-                        <div class="col-10 col-md-9 col-lg-8 col-xl-7">
+                        <div class="col-12 col-md-9 col-lg-8 col-xl-7">
                             @Html.EditorFor(model => model.ItemName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.ItemName, "", new { @class = "text-danger" })
                         </div>
@@ -61,7 +61,7 @@
 
                     <div class="form-group row">
                         @Html.LabelFor(model => model.ItemLink, htmlAttributes: new { @class = "col-form-label col-5 col-md-3 offset-lg-1 col-lg-2" })
-                        <div class="col-10 col-md-9 col-lg-8 col-xl-7">
+                        <div class="col-12 col-md-9 col-lg-8 col-xl-7">
                             @Html.EditorFor(model => model.ItemLink, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.ItemLink, "", new { @class = "text-danger" })
                         </div>
@@ -76,7 +76,6 @@
                         </div>
                     </div>
 
-                    <!-- TODO: ask jon how to fix checkbox label and box columns (so that the box aligned with the other field areas) -->
                     <div class="form-group row">
                         <div class="form-check-inline offset-lg-1">
                             @Html.LabelFor(model => model.HasBeenBought, htmlAttributes: new { @class = "form-check-label col-12" })
@@ -86,7 +85,7 @@
                             @*@Html.CheckBoxFor(model => model.HasBeenBought, new { @class = "form-control", @type = "checkbox" })*@
                             <!-- #endregion -->
 
-                            <input type="checkbox" name="@Html.NameFor(model => model.HasBeenBought)" id="HasBeenBought" value="@Model.HasBeenBought" class="form-check-input" />
+                            @Html.CheckBoxFor(model => model.HasBeenBought, htmlAttributes: new { @class = "form-check-input" })
                             @Html.ValidationMessageFor(model => model.HasBeenBought, "", new { @class = "text-danger" })
                         </div>
                     </div>

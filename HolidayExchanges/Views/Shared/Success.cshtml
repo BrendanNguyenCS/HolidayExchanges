@@ -5,10 +5,24 @@
     <title>Success</title>
 </head>
 <body>
-    <hgroup>
-        <h1>Success.</h1>
-        <h2>Congrats, you did something right.</h2>
-    </hgroup>
-    <input type="button" class="btn btn-primary btn-lg" value="Home plz" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");" />
+    <div class="container">
+        <section id="SuccessMessageSection">
+            <div class="row">
+                <div class="col-12">
+                    <hgroup>
+                        <h1 class="page-header display-4 text-success font-weight-bold">Success.</h1>
+                        <h2>Congrats, you did something right.</h2>
+                    </hgroup>
+                </div>
+            </div>
+        </section>
+        <section id="SuccessRedirectButton">
+            <div class="row">
+                <div class="col-12">
+                    <input type="button" class="btn btn-primary btn-lg" value="Home plz" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");" />
+                </div>
+            </div>
+        </section>
+    </div>
 </body>
 </html>

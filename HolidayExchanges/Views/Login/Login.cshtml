@@ -33,7 +33,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "col-form-label col-sm-3 offset-md-1 col-md-2 offset-lg-2 col-lg-2" })
-                                <div class="col-8 col-md-7 col-lg-5">
+                                <div class="col-12 col-md-7 col-lg-5">
                                     @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.UserName, "", htmlAttributes: new { @class = "text-danger" })
                                 </div>
@@ -41,7 +41,7 @@
 
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "col-form-label col-sm-3 offset-md-1 col-md-2 offset-lg-2 col-lg-2" })
-                                <div class="col-8 col-md-7 col-lg-5">
+                                <div class="col-12 col-md-7 col-lg-5">
                                     @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.Password, "", htmlAttributes: new { @class = "text-danger" })
                                 </div>

@@ -28,16 +28,16 @@
                             @Html.HiddenFor(model => model.HasBeenPaired)
 
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-4 col-md-3 offset-lg-2 col-lg-2 offset-xl-3 required" })
-                                <div class="col-8 col-sm-7 col-md-6 col-lg-5 col-xl-4">
+                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label offset-md-1 col-md-3 offset-lg-2 col-lg-2 offset-xl-3 required" })
+                                <div class="col-12 col-md-6 col-lg-5 col-xl-4">
                                     @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" } })
                                     @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                @Html.LabelFor(model => model.ExchangeDate, htmlAttributes: new { @class = "col-form-label col-4 col-md-3 offset-lg-2 col-lg-2 offset-xl-3  required" })
-                                <div class="col-6 col-md-4 col-lg-3">
+                                @Html.LabelFor(model => model.ExchangeDate, htmlAttributes: new { @class = "col-form-label offset-md-1 col-md-3 offset-lg-2 col-lg-2 offset-xl-3  required" })
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                                     @Html.EditorFor(model => model.ExchangeDate, new { htmlAttributes = new { @class = "form-control", type = "date", required = "required", style = "border: 1px solid #d9534f;" } })
                                     @Html.ValidationMessageFor(model => model.ExchangeDate, "", new { @class = "text-danger" })
                                 </div>

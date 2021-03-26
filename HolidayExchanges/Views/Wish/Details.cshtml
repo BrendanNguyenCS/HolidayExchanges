@@ -1,82 +1,98 @@
 ﻿@model HolidayExchanges.Models.Wish
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Wish Details";
 }
 
-<h2>Wish Details</h2>
-<hr />
+<div class="container">
+    <section id="WishDetailsTitle">
+        <div class="row">
+            <div class="page-header col-12">
+                <h1 class="text-center display-5">Wish Details</h1>
+                <hr />
+            </div>
+        </div>
+    </section>
 
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.User.UserName)
-        </dt>
+    <section id="WishDetailsList">
+        <div class="container body-content offset-md-1">
+            <dl class="row">
+                <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.User.UserName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.User.UserName)
-        </dd>
+                <dd class="col-12 col-md-8">
+                    @Html.DisplayFor(model => model.User.UserName)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ItemName)
-        </dt>
+                <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.ItemName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ItemName)
-        </dd>
+                <dd class="col-12 col-md-8">
+                    @Html.DisplayFor(model => model.ItemName)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+                <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+                <dd class="col-12 col-md-8">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
+                <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
+                <dd class="col-12 col-md-8">
+                    @Html.DisplayFor(model => model.Quantity)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ItemLink)
-        </dt>
+                <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.ItemLink)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ItemLink)
-        </dd>
+                <dd class="col-12 col-md-8">
+                    <!-- the entire link url (doesn't look good) -->
+                    @*@Html.DisplayFor(model => model.ItemLink)*@
+                    <a href="@Model.ItemLink" style="text-decoration: none;" target="_blank">Click here</a>
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PurchasingInstructions)
-        </dt>
+                <dt class="col-8 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.PurchasingInstructions)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.PurchasingInstructions)
-        </dd>
+                <dd class="col-12 col-md-8">
+                    @Html.DisplayFor(model => model.PurchasingInstructions)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.HasBeenBought)
-        </dt>
+                <dt class="col-7 col-md-4 offset-lg-1 col-lg-3">
+                    @Html.DisplayNameFor(model => model.HasBeenBought)
+                </dt>
 
-        <dd>
-            @{
-                if (Model.HasBeenBought)
-                {
-                    <p>Yes</p>
-                }
-                else
-                {
-                    <p>No</p>
-                }
-            }
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.WishID }, new { @class = "btn btn-default " })
-    @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
-    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+                <dd class="col-12 col-md-8">
+                    @{
+                        if (Model.HasBeenBought)
+                        {
+                            <p>Yes</p>
+                        }
+                        else
+                        {
+                            <p>No</p>
+                        }
+                    }
+                </dd>
+            </dl>
+            <div class="row">
+                <div class="container">
+                    <div class="btn-group col-12 offset-lg-1 col-lg-3" role="group" aria-label="Buttons for wish details page">
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.WishID }, new { @class = "btn btn-primary mr-0" })
+                        @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-primary mr-0" })
+                        @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>

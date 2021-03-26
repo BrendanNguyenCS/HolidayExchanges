@@ -1,7 +1,7 @@
 ﻿@model HolidayExchanges.Models.Group
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Group Details";
 }
 <div class="container">
     <section id="GroupEditTitle">
@@ -51,19 +51,19 @@
 
                             <!-- #region Trying to fix date time issue -->
                             @*<div class="form-group">
-            @Html.LabelFor(model => model.ExchangeDate.Value.Date, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ExchangeDate.Value.Date, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                @Html.ValidationMessageFor(model => model.ExchangeDate.Value.Date, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExchangeDate.Value.TimeOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ExchangeDate.Value.TimeOfDay, new { htmlAttributes = new { @class = "form-control", type = "time" } })
-                @Html.ValidationMessageFor(model => model.ExchangeDate.Value.TimeOfDay, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                                    @Html.LabelFor(model => model.ExchangeDate.Value.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ExchangeDate.Value.Date, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                                        @Html.ValidationMessageFor(model => model.ExchangeDate.Value.Date, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ExchangeDate.Value.TimeOfDay, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ExchangeDate.Value.TimeOfDay, new { htmlAttributes = new { @class = "form-control", type = "time" } })
+                                        @Html.ValidationMessageFor(model => model.ExchangeDate.Value.TimeOfDay, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
                             *@
                             <!-- #endregion -->
 

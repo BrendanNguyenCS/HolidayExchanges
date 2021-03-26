@@ -1,7 +1,7 @@
 ﻿@model HolidayExchanges.ViewModels.GrouplistViewModel
 
 @{
-    ViewBag.Title = "Grouplist";
+    ViewBag.Title = "Your Grouplist";
 }
 
 <style>
@@ -28,60 +28,85 @@
         }
 
     details summary:focus {
-        display: none;
+        outline: none;
     }
 </style>
 
-<h2>All groups for @Model.UserName</h2>
-<hr />
-<div>
-    @foreach (var group in Model.Groups)
-    {
-        <details>
-            <summary>@group.Name</summary>
-            <div>
-                <dl class="dl-horizontal">
-                    <dd>
-                        @group.Name
-                    </dd>
-                    <dt>
-                        Exchange Date
-                    </dt>
-                    <dd>
-                        @group.ExchangeDate
-                    </dd>
-                    <dt>
-                        Has Been Paired?
-                    </dt>
-                    <dd>
-                        @{
-                            if (group.HasBeenPaired)
-                            {
-                                <p>Yes</p>
-                            }
-                            else
-                            {
-                                <p>No</p>
-                            }
-                        }
-                    </dd>
-                </dl>
+<div class="container">
+    <section id="GrouplistTitle">
+        <div class="row">
+            <div class="page-header col-12">
+                <h1 class="display-5 text-center">All groups for @Model.UserName</h1>
+                <hr />
             </div>
-            <div>
-                @Html.ActionLink("View", "Details", "Group", new { id = group.GroupID }, htmlAttributes: new { @class = "btn btn-default" })
-            </div>
-        </details>
-    }
+        </div>
+    </section>
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Count)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Count)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-default" })
+    <section id="Grouplist">
+        <div class="container body-content">
+            <div class="row">
+                <div class="col-12">
+                    @foreach (var group in Model.Groups)
+                    {
+                        <details>
+                            <summary>@group.Name</summary>
+                            <div class="container-fluid">
+                                <dl class="row">
+                                    <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                                        Name
+                                    </dt>
+                                    <dd class="col-12 col-md-8">
+                                        @group.Name
+                                    </dd>
+                                    <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                                        Exchange Date
+                                    </dt>
+                                    <dd class="col-12 col-md-8">
+                                        @group.ExchangeDate
+                                    </dd>
+                                    <dt class="col-7 col-md-4 offset-lg-1 col-lg-3">
+                                        Has Been Paired?
+                                    </dt>
+                                    <dd class="col-12 col-md-8">
+                                        @{
+                                            if (group.HasBeenPaired)
+                                            {
+                                                <p>Yes</p>
+                                            }
+                                            else
+                                            {
+                                                <p>No</p>
+                                            }
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 offset-lg-1">
+                                    @Html.ActionLink("View", "Details", "Group", new { id = group.GroupID }, htmlAttributes: new { @class = "btn btn-info" })
+                                </div>
+                            </div>
+                        </details>
+                    }
+
+                    <div class="container mt-1">
+                        <dl class="row">
+                            <dt class="col-3 offset-md-1 col-md-1">
+                                @Html.DisplayNameFor(model => model.Count)
+                            </dt>
+                            <dd class="col-9">
+                                @Html.DisplayFor(model => model.Count)
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <div class="row">
+                        <div class="offset-1 col-11">
+                            @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-outline-primary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>

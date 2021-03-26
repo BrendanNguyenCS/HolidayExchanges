@@ -6,14 +6,13 @@
     <title>Holiday Exchanges</title>
 
     <link rel="stylesheet" href="~/Content/Site.css" type="text/css" />
+
+    <!-- Bootstrap 4 CDNs -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <!-- TODO: Ask jon about uninstalling the jquery nuget package and referring to the jquery cdn instead (why is below only 3.2.1 when the nuget package is 3.5.1) -->
-    <!-- TODO: Same as above for jquery validation and modernizr -->
-
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     <!-- icons -->
     <script src="https://kit.fontawesome.com/9a3845859f.js" crossorigin="anonymous"></script>
 
@@ -24,7 +23,7 @@
 <body>
     <nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
         <div class="container">
-            <a href="#" class="navbar-brand">Holiday Exchanges</a>
+            <a href="@Url.Action("Index", "Home")" class="navbar-brand">Holiday Exchanges</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -32,7 +31,9 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
+                            <i class="fas fa-home mr-1"></i>Home
+                        </a>
                     </li>
                     @if (Session["UserName"] == null)
                     {
@@ -58,7 +59,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Login", "Login")">
-                                <i class="fas fa-sign-in-alt"></i>&nbsp;
+                                <i class="fas fa-sign-in-alt"></i>
                                 Login
                             </a>
                         </li>
@@ -67,7 +68,7 @@
                                 @{
                                     string username = Session["UserName"] != null ? Session["UserName"].ToString() : "Account";
                                 }
-                                <i class="far fa-user-circle"></i>&nbsp;
+                                <i class="far fa-user-circle"></i>
                                 @username
                             </a>
                         </li>
@@ -80,7 +81,7 @@
                                 @{
                                     string username = Session["UserName"].ToString();
                                 }
-                                <i class="fas fa-user-circle"></i>&nbsp;
+                                <i class="fas fa-user-circle"></i>
                                 @username
                             </a>
 
@@ -106,7 +107,7 @@
                                 <a class="dropdown-item" href="@Url.Action("DetailsByUsername", "User", new { username = Session["UserName"].ToString() })">Profile</a>
                                 <a class="dropdown-item" href="@Url.Action("WishlistByUsername", "User", new { username = Session["UserName"].ToString() })">Wishlist</a>
                                 <a class="dropdown-item" href="@Url.Action("SignOut", "Login")">
-                                    <i class="fas fa-sign-out-alt"></i>&nbsp;
+                                    <i class="fas fa-sign-out-alt"></i>
                                     Sign Out
                                 </a>
                             </div>

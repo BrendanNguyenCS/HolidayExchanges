@@ -1,48 +1,64 @@
 ﻿@model HolidayExchanges.Models.Group
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Group";
 }
 
-<h2>Delete</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Group</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ExchangeDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ExchangeDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.HasBeenPaired)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.HasBeenPaired)
-        </dd>
-    </dl>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+<div class="container">
+    <section id="GroupDeleteTitle">
+        <div class="row">
+            <div class="page-header col-12">
+                <h1 class="text-center display-5">Delete this Group</h1>
+                <hr />
+            </div>
         </div>
-    }
+    </section>
+
+    <section id="GroupDeleteDetails">
+        <div class="container offset-lg-2">
+            <div class="row mb-1">
+                <div class="col-12 offset-md-1">
+                    <h3>Are you sure you want to delete this?</h3>
+                </div>
+            </div>
+            <dl class="row">
+                <dt class="col-4 offset-sm-1 offset-md-2 col-md-3 offset-lg-2 col-lg-2">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-7">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt class="col-4 offset-sm-1 offset-md-2 col-md-3 offset-lg-2 col-lg-2">
+                    @Html.DisplayNameFor(model => model.ExchangeDate)
+                </dt>
+                <dd class="col-7">
+                    @Html.DisplayFor(model => model.ExchangeDate)
+                </dd>
+
+                <dt class="col-4 offset-sm-1 offset-md-2 col-md-3 offset-lg-2 col-lg-2">
+                    @Html.DisplayNameFor(model => model.HasBeenPaired)
+                </dt>
+                <dd class="col-7">
+                    @Html.DisplayFor(model => model.HasBeenPaired)
+                </dd>
+            </dl>
+
+            <section id="GroupDeleteButton">
+                <div class="row">
+                    <div class="col-12 offset-md-2">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-actions no-color">
+                                <input type="submit" value="Delete" class="btn btn-danger" />
+                                @Html.ActionLink("Group Details", "Details", new { id = Model.GroupID }, new { @class = "btn btn-outline-secondary" })
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
 </div>

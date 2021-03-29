@@ -35,6 +35,7 @@ namespace HolidayExchanges.Controllers
                 Session["RedirectLink"] = Url.Action("Edit", "User", id);
                 return RedirectToAction("Login", "Login");
             }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -207,7 +208,6 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Wishlist", new { id });
         }
 
-        //TODO: Finish implementation of user wishlist search
         [HttpPost]
         public ActionResult Wishlist(WishlistViewModel model)
         {

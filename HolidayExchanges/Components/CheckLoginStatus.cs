@@ -27,6 +27,7 @@ namespace HolidayExchanges.Components
         /// cref="UrlHelper"/> class and its <see cref="UrlHelper.Action(string, string)"/>, <see
         /// cref="UrlHelper.RouteUrl(object)"/> methods to set the redirect link session variable
         /// </remarks>
+        [NonAction]
         public static bool IsLoggedIn(string currentActionMethod, string currentController, int routeValue = 0)
         {
             UrlHelper url = new UrlHelper(HttpContext.Current.Request.RequestContext);
@@ -63,7 +64,7 @@ namespace HolidayExchanges.Components
         public static ActionResult IsLoggedIn(this Controller controller,
             string currentActionMethod,
             string currentController,
-            int routeValue = 0)
+            int? routeValue = 0)
         {
             var username = controller.Session["UserName"] != null ? controller.Session["UserName"].ToString() : "";
             if (string.IsNullOrEmpty(username))
@@ -129,7 +130,7 @@ namespace HolidayExchanges.Components
                 RouteValueDictionary route = new RouteValueDictionary(new
                 {
                     action = "Error",
-                    controller = "Home"
+                    controller = "User"
                 });
                 return new RedirectToRouteResult(route);
             }
@@ -153,5 +154,33 @@ namespace HolidayExchanges.Components
         }
 
         #endregion Check current user's page access authorization
+
+        #region Check current user's page access authorization as a boolean
+
+        /// <summary>
+        /// Determines whether the current user is authorized to access the page
+        /// </summary>
+        /// <param name="controller">The controller.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Usually will involve a user trying to access another user's edit details pages.
+        /// </remarks>
+        /// <example>
+        /// If user <c>bnuge</c> wants to access <c>User/Edit/2</c> which is "owned" by goodvnguy,
+        /// the method will check if they have the same user id. The method will find that they are
+        /// not the same user and thus return false.
+        /// </example>
+        public static bool IsOwnerOfPage(this Controller controller, int? id)
+        {
+            var username = controller.Session["UserName"] != null ? controller.Session["UserName"].ToString() : "";
+            var pageOwner = db.Users.Find(id);
+            if (pageOwner == null) return false;
+            var currentUser = db.Users.Where(u => u.UserName == username).Single();
+            if (pageOwner.UserID != currentUser.UserID) return false;
+            return true;
+        }
+
+        #endregion Check current user's page access authorization as a boolean
     }
 }

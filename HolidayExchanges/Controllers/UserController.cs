@@ -1,6 +1,4 @@
-﻿using HolidayExchanges.Components;
-using HolidayExchanges.DAL;
-using HolidayExchanges.Models;
+﻿using HolidayExchanges.Models;
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System.Data.Entity;
@@ -10,9 +8,8 @@ using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
-        private SecretSantaDbContext db = new SecretSantaDbContext();
         private SecretSantaManager santaMgr;
 
         public UserController()
@@ -20,29 +17,29 @@ namespace HolidayExchanges.Controllers
             santaMgr = new SecretSantaManager(db);
         }
 
-        // GET: User, Not ideal: the "Index" should be the user's main page with profile
-        public ActionResult Index()
-        {
-            return View(db.Users.ToList());
-        }
+        // TODO: Ask jon about refactoring authorization code so that it can also do the redirecting to login page (by returning an ActionResult)
 
         // GET: User/Details/5
         public ActionResult Details(int? id)
         {
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Edit", "User", id);
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            if (!IsLoggedIn("Details", "User", id))
                 return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", new { id = currentUser.UserID });
             }
 
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            ResetRedirectLink();
+
             User user = db.Users.Find(id);
-            int num = id.GetValueOrDefault();
-            if (user == null) return HttpNotFound();
+            int num = id.Value;
+            if (user == null)
+                return HttpNotFound();
             UserViewModel model = new UserViewModel
             {
                 User = user,
@@ -57,55 +54,29 @@ namespace HolidayExchanges.Controllers
         public ActionResult Details(string username)
         {
             if (string.IsNullOrEmpty(username))
-            {
                 return RedirectToAction("Login", "Login");
-            }
             int id = db.Users.Single(u => u.UserName == username).UserID;
             return RedirectToAction("Details", new { id });
         }
 
-        /*Create not needed since Register (LoginController) acts as a user creation tool
-        // GET: User/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: User/Create To protect from overposting attacks, enable the specific properties you
-        // want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "UserID,UserName,Password,Salt,FirstName,LastName,Address1,Address2,City,State,Zip,Country,Email,Birthday,PhoneNumber")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(user);
-        }*/
-
         // GET: User/Edit/5
         public ActionResult Edit(int? id)
         {
-            // checks for log in status
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Edit", "User", id);
-                return RedirectToAction("Login", "Login");
-            }
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            if (!IsLoggedIn("Edit", "User", id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", "User", new { id = currentUser.UserID });
             }
+
             User user = db.Users.Find(id);
             if (user == null)
-            {
                 return HttpNotFound();
-            }
             return View(user);
         }
 
@@ -119,7 +90,7 @@ namespace HolidayExchanges.Controllers
             if (ModelState.IsValid)
             {
                 //Session["RedirectLink"] = null;
-                this.ResetRedirectLink();
+                ResetRedirectLink();
 
                 db.Entry(user).State = EntityState.Modified;
                 db.Entry(user).Property(u => u.UserName).IsModified = false;
@@ -146,23 +117,22 @@ namespace HolidayExchanges.Controllers
         // GET: User/Delete/5
         public ActionResult Delete(int? id)
         {
-            //checks current login status
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                // if not currently logged in, redirect to login page
-                Session["RedirectLink"] = Url.Action("Delete", "User", id);
-                return RedirectToAction("Login", "Login");
-            }
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            //checks current login status
+            if (!IsLoggedIn("Delete", "User", id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", "User", new { id = currentUser.UserID });
             }
+
             User user = db.Users.Find(id);
             if (user == null)
-            {
                 return HttpNotFound();
-            }
             return View(user);
         }
 
@@ -171,7 +141,7 @@ namespace HolidayExchanges.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            this.ResetRedirectLink();
+            ResetRedirectLink();
 
             User user = db.Users.Find(id);
             db.Users.Remove(user);
@@ -180,12 +150,11 @@ namespace HolidayExchanges.Controllers
         }
 
         // GET: User/Wishlist/1
+        [HttpGet]
         public ActionResult Wishlist(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             User user = db.Users.Find(id);
             WishlistViewModel model = new WishlistViewModel
             {
@@ -200,16 +169,15 @@ namespace HolidayExchanges.Controllers
         [ActionName("WishlistByUsername")]
         public ActionResult Wishlist(string username)
         {
+            // will not redirect back to wishlist page after completion of login
             if (string.IsNullOrEmpty(username))
-            {
                 return RedirectToAction("Login", "Login");
-            }
             int id = db.Users.Single(u => u.UserName == username).UserID;
             return RedirectToAction("Wishlist", new { id });
         }
 
         [HttpPost]
-        public ActionResult Wishlist(WishlistViewModel model)
+        public ActionResult Wishlist([Bind(Include = "SearchUserName,SearchEmail")] WishlistViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -219,9 +187,10 @@ namespace HolidayExchanges.Controllers
                 }
 
                 User user;
-                if (!string.IsNullOrEmpty(model.UserName))
+                if (!string.IsNullOrEmpty(model.SearchUserName))
                 {
-                    user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
+                    user = db.Users.SingleOrDefault(u => u.UserName == model.SearchUserName);
+                    ModelState.Remove("SearchEmail");
                     if (user == null)
                     {
                         ModelState.AddModelError("SearchUserName", "This user doesn't exist.");
@@ -232,6 +201,7 @@ namespace HolidayExchanges.Controllers
 
                 // email must be filled at this point
                 user = db.Users.SingleOrDefault(u => u.Email == model.SearchEmail);
+                ModelState.Remove("SearchUserName");
                 if (user == null)
                 {
                     ModelState.AddModelError("SearchEmail", "This email doesn't exist");
@@ -247,21 +217,20 @@ namespace HolidayExchanges.Controllers
         public ActionResult Grouplist(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Grouplist", "User", id);
+
+            if (!IsLoggedIn("Details", "User", id))
                 return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", "User", new { id = currentUser.UserID });
             }
 
             // check to see if it has been redirected from login/register pages
             if (Session["RedirectLink"] != null)
-            {
-                this.ResetRedirectLink();
-            }
+                ResetRedirectLink();
 
             User user = db.Users.Find(id);
             GrouplistViewModel model = new GrouplistViewModel

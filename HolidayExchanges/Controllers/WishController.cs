@@ -1,6 +1,4 @@
-﻿using HolidayExchanges.Components;
-using HolidayExchanges.DAL;
-using HolidayExchanges.Models;
+﻿using HolidayExchanges.Models;
 using HolidayExchanges.ViewModels;
 using System.Data.Entity;
 using System.Linq;
@@ -9,10 +7,8 @@ using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
 {
-    public class WishController : Controller
+    public class WishController : BaseController
     {
-        private readonly SecretSantaDbContext _context = new SecretSantaDbContext();
-
         // GET: Wish/Details/1
         public ActionResult Details(int? id)
         {
@@ -20,7 +16,7 @@ namespace HolidayExchanges.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Wish wish = _context.Wishes.Find(id);
+            Wish wish = db.Wishes.Find(id);
             if (wish == null) return HttpNotFound();
             return View(wish);
         }
@@ -36,7 +32,7 @@ namespace HolidayExchanges.Controllers
                 Session["RedirectLink"] = Url.Action("Create", "Wish");
                 return RedirectToAction("Login", "Login");
             }
-            var user = _context.Users.Where(u => u.UserName == username).Single();
+            var user = db.Users.Where(u => u.UserName == username).Single();
             var model = new WishViewModel(user.UserID);
             return View(model);
         }
@@ -49,7 +45,7 @@ namespace HolidayExchanges.Controllers
             if (ModelState.IsValid)
             {
                 // reset for unused session variable
-                this.ResetRedirectLink();
+                ResetRedirectLink();
 
                 var wish = new Wish
                 {
@@ -62,8 +58,8 @@ namespace HolidayExchanges.Controllers
                     HasBeenBought = model.HasBeenBought
                 };
 
-                _context.Wishes.Add(wish);
-                _context.SaveChanges();
+                db.Wishes.Add(wish);
+                db.SaveChanges();
                 return RedirectToAction("Details", "User", new { id = model.UserId });
             }
 
@@ -83,7 +79,7 @@ namespace HolidayExchanges.Controllers
                 return RedirectToAction("Login", "Login");
             }
 
-            var selectedWish = _context.Wishes
+            var selectedWish = db.Wishes
                 .Single(w => w.WishID == id && w.User.UserName == username);
 
             return View(selectedWish);
@@ -98,9 +94,9 @@ namespace HolidayExchanges.Controllers
             {
                 this.ResetRedirectLink();
 
-                _context.Entry(model).State = EntityState.Modified;
-                _context.Entry(model).Property(m => m.UserID).IsModified = false;
-                _context.SaveChanges();
+                db.Entry(model).State = EntityState.Modified;
+                db.Entry(model).Property(m => m.UserID).IsModified = false;
+                db.SaveChanges();
                 // not sure whether to display wish details or entire user wishlist
                 return RedirectToAction("Details", model.UserID);
                 //return RedirectToAction("Wishlist", "User", model.UserID);
@@ -122,7 +118,7 @@ namespace HolidayExchanges.Controllers
                 return RedirectToAction("Login", "Login");
             }
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Wish wish = _context.Wishes.Find(id);
+            Wish wish = db.Wishes.Find(id);
             if (wish == null)
             {
                 return HttpNotFound();
@@ -137,15 +133,15 @@ namespace HolidayExchanges.Controllers
         {
             this.ResetRedirectLink();
 
-            Wish wish = _context.Wishes.Find(id);
-            _context.Wishes.Remove(wish);
-            _context.SaveChanges();
+            Wish wish = db.Wishes.Find(id);
+            db.Wishes.Remove(wish);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 
         public ActionResult MarkAsPurchased(int? id)
         {
-            var wish = _context.Wishes.Find(id);
+            var wish = db.Wishes.Find(id);
             if (wish == null)
             {
                 ViewBag.ErrorMessage = "This item cannot be marked as purchased.";
@@ -157,9 +153,9 @@ namespace HolidayExchanges.Controllers
                 return RedirectToAction("Details", id);
             }
 
-            _context.Entry(wish).State = EntityState.Modified;
+            db.Entry(wish).State = EntityState.Modified;
             wish.HasBeenBought = true;
-            _context.SaveChanges();
+            db.SaveChanges();
             return RedirectToAction("Details", id);
         }
 
@@ -167,7 +163,7 @@ namespace HolidayExchanges.Controllers
         {
             if (disposing)
             {
-                _context.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

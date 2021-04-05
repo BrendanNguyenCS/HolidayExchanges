@@ -1,6 +1,4 @@
-﻿using HolidayExchanges.Components;
-using HolidayExchanges.DAL;
-using HolidayExchanges.Models;
+﻿using HolidayExchanges.Models;
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System;
@@ -13,14 +11,13 @@ using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
 {
-    public class GroupController : Controller
+    public class GroupController : BaseController
     {
-        private readonly SecretSantaDbContext _context = new SecretSantaDbContext();
         private SecretSantaManager _santaMgr;
 
         public GroupController()
         {
-            _santaMgr = new SecretSantaManager(_context);
+            _santaMgr = new SecretSantaManager(db);
         }
 
         // Group/Index
@@ -32,9 +29,11 @@ namespace HolidayExchanges.Controllers
         // GET: Group/Details/1
         public ActionResult Details(int id)
         {
-            if (id == 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Group group = _context.Groups.Find(id);
-            if (group == null) return HttpNotFound();
+            if (id == 0)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            Group group = db.Groups.Find(id);
+            if (group == null)
+                return HttpNotFound();
             var users = _santaMgr.GetAllUsersInGroup(id);
             var GroupViewModel = new GroupViewModel
             {
@@ -48,12 +47,15 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
+            /*var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
             if (string.IsNullOrEmpty(username))
             {
                 Session["RedirectLink"] = Url.Action("Create", "Group");
                 return RedirectToAction("Login", "Login");
-            }
+            }*/
+
+            if (!IsLoggedIn("Create", "Group"))
+                return RedirectToAction("Login", "Login");
 
             return View();
         }
@@ -67,15 +69,15 @@ namespace HolidayExchanges.Controllers
             if (ModelState.IsValid)
             {
                 var username = Session["UserName"].ToString();
-                var currentUser = _context.Users.FirstOrDefault(u => u.UserName == username);
+                var currentUser = db.Users.FirstOrDefault(u => u.UserName == username);
 
-                this.ResetRedirectLink();
+                ResetRedirectLink();
 
                 if (currentUser != null)
                 {
-                    _context.Groups.Add(group);
-                    _context.UserGroups.Add(new UserGroup { UserID = currentUser.UserID, GroupID = group.GroupID });
-                    _context.SaveChanges();
+                    db.Groups.Add(group);
+                    db.UserGroups.Add(new UserGroup { UserID = currentUser.UserID, GroupID = group.GroupID });
+                    db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -96,7 +98,7 @@ namespace HolidayExchanges.Controllers
                 Session["RedirectLink"] = Url.Action("Edit", "Group", id);
                 return RedirectToAction("Login", "Login");
             }
-            Group group = _context.Groups.Find(id);
+            Group group = db.Groups.Find(id);
             if (group == null) return HttpNotFound();
             return View(group);
         }
@@ -109,14 +111,12 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Session["RedirectLink"] = null;
+                ResetRedirectLink();
 
-                this.ResetRedirectLink();
-
-                _context.Entry(group).State = EntityState.Modified;
-                _context.Entry(group).Property(g => g.HasBeenPaired).IsModified = false;
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                db.Entry(group).State = EntityState.Modified;
+                db.Entry(group).Property(g => g.HasBeenPaired).IsModified = false;
+                db.SaveChanges();
+                return RedirectToAction("Details", new { id = group.GroupID });
             }
             return View(group);
         }
@@ -132,7 +132,7 @@ namespace HolidayExchanges.Controllers
             }
 
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Group group = _context.Groups.Find(id);
+            Group group = db.Groups.Find(id);
             if (group == null) return HttpNotFound();
             return View(group);
         }
@@ -142,11 +142,11 @@ namespace HolidayExchanges.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            this.ResetRedirectLink();
+            ResetRedirectLink();
 
-            Group group = _context.Groups.Find(id);
-            _context.Groups.Remove(group);
-            _context.SaveChanges();
+            Group group = db.Groups.Find(id);
+            db.Groups.Remove(group);
+            db.SaveChanges();
             return RedirectToAction("Index", "Home");
         }
 
@@ -160,7 +160,7 @@ namespace HolidayExchanges.Controllers
                 Session["RedirectLink"] = Url.Action("Join", "Group", id);
                 return RedirectToAction("Login", "Login");
             }
-            var group = _context.Groups.Find(id);
+            var group = db.Groups.Find(id);
             if (group != null) return View(group);
             ViewBag.ErrorMessage = "Unable to locate event group";
             return RedirectToAction("Error", "Home");
@@ -171,16 +171,16 @@ namespace HolidayExchanges.Controllers
         public ActionResult Join(Group model)
         {
             var username = Session["UserName"].ToString();
-            var user = _context.Users.FirstOrDefault(u => u.UserName == username);
+            var user = db.Users.FirstOrDefault(u => u.UserName == username);
             var group = _santaMgr.GetGroupById(model.GroupID);
 
             // reset for unused session variable
-            this.ResetRedirectLink();
+            ResetRedirectLink();
 
             try
             {
-                _context.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = group.GroupID });
-                _context.SaveChanges();
+                db.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = group.GroupID });
+                db.SaveChanges();
                 return RedirectToAction("Success", "Home");
             }
             catch (Exception ex)
@@ -216,7 +216,7 @@ namespace HolidayExchanges.Controllers
 
                     var user = ug.User;
                     var group = ug.Group;
-                    var recipient = _context.Users.Find(ug.RecipientUserID);
+                    var recipient = db.Users.Find(ug.RecipientUserID);
                     var message = new MailMessage();
                     message.To.Add(user.Email);
 
@@ -252,14 +252,14 @@ namespace HolidayExchanges.Controllers
                     throw new Exception(ex.Message);
                 }
             }
-            return RedirectToAction("Success", "Home");
+            return RedirectToAction("Details", id);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _context.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

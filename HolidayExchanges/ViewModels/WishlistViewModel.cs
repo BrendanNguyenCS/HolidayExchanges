@@ -18,7 +18,7 @@ namespace HolidayExchanges.ViewModels
 
         public int Count
         {
-            get => Wishlist.Count;
+            get => Wishlist != null ? Wishlist.Count : 0;
         }
     }
 }

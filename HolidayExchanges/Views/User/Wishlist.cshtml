@@ -46,54 +46,56 @@
         <div class="container body-content">
             <div class="row">
                 <div class="col-12">
-                    @foreach (var wish in Model.Wishlist)
-                    {
-                        <details>
-                            <summary>@wish.ItemName</summary>
-                            <div class="container-fluid">
-                                <dl class="row">
-                                    <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
-                                        Description
-                                    </dt>
-                                    <dd class="col-12 col-md-8">
-                                        @wish.Description
-                                    </dd>
+                    @{
+                        foreach (var wish in Model.Wishlist)
+                        {
+                            <details>
+                                <summary>@wish.ItemName</summary>
+                                <div class="container-fluid">
+                                    <dl class="row">
+                                        <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                                            Description
+                                        </dt>
+                                        <dd class="col-12 col-md-8">
+                                            @wish.Description
+                                        </dd>
 
-                                    <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
-                                        Quantity
-                                    </dt>
-                                    <dd class="col-12 col-md-8">
-                                        @wish.Quantity
-                                    </dd>
-                                    <dt class="col-8 col-md-4 offset-lg-1 col-lg-3">
-                                        Special Instructions
-                                    </dt>
-                                    <dd class="col-12 col-md-8">
-                                        @wish.PurchasingInstructions
-                                    </dd>
-                                    <dt class="col-7 col-md-4 offset-lg-1 col-lg-3">
-                                        Already Bought?
-                                    </dt>
-                                    <dd class="col-12 col-md-8">
-                                        @{
-                                            if (wish.HasBeenBought)
-                                            {
-                                                <p>Yes</p>
+                                        <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
+                                            Quantity
+                                        </dt>
+                                        <dd class="col-12 col-md-8">
+                                            @wish.Quantity
+                                        </dd>
+                                        <dt class="col-8 col-md-4 offset-lg-1 col-lg-3">
+                                            Special Instructions
+                                        </dt>
+                                        <dd class="col-12 col-md-8">
+                                            @wish.PurchasingInstructions
+                                        </dd>
+                                        <dt class="col-7 col-md-4 offset-lg-1 col-lg-3">
+                                            Already Bought?
+                                        </dt>
+                                        <dd class="col-12 col-md-8">
+                                            @{
+                                                if (wish.HasBeenBought)
+                                                {
+                                                    <p>Yes</p>
+                                                }
+                                                else
+                                                {
+                                                    <p>No</p>
+                                                }
                                             }
-                                            else
-                                            {
-                                                <p>No</p>
-                                            }
-                                        }
-                                    </dd>
-                                </dl>
-                                <div class="row">
-                                    <div class="col-6 offset-lg-1">
-                                        @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-info" })
+                                        </dd>
+                                    </dl>
+                                    <div class="row">
+                                        <div class="col-6 offset-lg-1">
+                                            @Html.ActionLink("View", "Details", "Wish", routeValues: new { id = wish.WishID }, htmlAttributes: new { @class = "btn btn-info" })
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </details>
+                            </details>
+                        }
                     }
 
                     <div class="container mt-1">
@@ -131,8 +133,12 @@
                         @using (Html.BeginForm("Wishlist", "User", FormMethod.Post, new { @class = "form-inline" }))
                         {
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+                            <div class="row">
+                                <div class="col-12">
+                                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-12 col-md-4">
                                     <label class="sr-only" for="@Model.SearchUserName">Username</label>

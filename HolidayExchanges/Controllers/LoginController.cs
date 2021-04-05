@@ -1,5 +1,4 @@
-﻿using HolidayExchanges.DAL;
-using HolidayExchanges.Models;
+﻿using HolidayExchanges.Models;
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System;
@@ -8,9 +7,8 @@ using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
-        public SecretSantaDbContext context = new SecretSantaDbContext();
         public HashManager hasher = new HashManager();
 
         [HttpGet]
@@ -28,7 +26,7 @@ namespace HolidayExchanges.Controllers
             if (ModelState.IsValid)
             {
                 // Attempt to find the username that is entered
-                var user = context.Users.FirstOrDefault(u => u.UserName == model.UserName);
+                var user = db.Users.FirstOrDefault(u => u.UserName == model.UserName);
 
                 if (user == null) // Username doesn't exist in the db
                 {
@@ -54,7 +52,7 @@ namespace HolidayExchanges.Controllers
                     return Redirect(Session["RedirectLink"].ToString());
                 }
 
-                return RedirectToAction("Success", "Home"); // redirect to main page
+                return RedirectToAction("Index", "Home"); // redirect to main page
             }
 
             return View(model);
@@ -79,7 +77,7 @@ namespace HolidayExchanges.Controllers
             {
                 var user = model.User;
                 // check if username exists already (can return null)
-                var existingUserName = context.Users.FirstOrDefault(l => l.UserName == user.UserName);
+                var existingUserName = db.Users.FirstOrDefault(l => l.UserName == user.UserName);
                 if (existingUserName != null) //an account already exists with username
                 {
                     // Adds new validation message to form
@@ -91,7 +89,7 @@ namespace HolidayExchanges.Controllers
                 if (!string.IsNullOrWhiteSpace(user.Email))
                 {
                     // check if email exists already (can return null)
-                    var existingEmail = context.Users.FirstOrDefault(l => l.Email == user.Email);
+                    var existingEmail = db.Users.FirstOrDefault(l => l.Email == user.Email);
                     if (existingEmail != null)
                     {
                         // Adds new validation message to form
@@ -123,8 +121,8 @@ namespace HolidayExchanges.Controllers
                 // adding both objects to db
                 try
                 {
-                    context.Users.Add(user);
-                    context.SaveChanges();
+                    db.Users.Add(user);
+                    db.SaveChanges();
                 }
                 catch (Exception)
                 {
@@ -137,7 +135,7 @@ namespace HolidayExchanges.Controllers
                     return Redirect(Session["RedirectLink"].ToString());
                 }
 
-                return RedirectToAction("Success", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             return View(model);
@@ -153,7 +151,7 @@ namespace HolidayExchanges.Controllers
         {
             if (disposing)
             {
-                context.Dispose();
+                db.Dispose();
             }
             base.Dispose(disposing);
         }

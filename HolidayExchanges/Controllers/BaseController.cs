@@ -51,8 +51,7 @@ namespace HolidayExchanges.Controllers
         /// <param name="routeValue">The route value.</param>
         /// <returns></returns>
         /// <remarks>Not an action method</remarks>
-        [NonAction]
-        public bool IsLoggedIn(string currentActionMethod,
+        protected bool IsLoggedIn(string currentActionMethod,
             string currentController,
             int? routeValue = 0)
         {
@@ -90,8 +89,7 @@ namespace HolidayExchanges.Controllers
         /// the method will check if they have the same user id. The method will find that they are
         /// not the same user and thus return false.
         /// </example>
-        [NonAction]
-        public bool IsOwnerOfPage(int? id)
+        protected virtual bool IsOwnerOfPage(int? id)
         {
             var username = GetCurrentUsername();
             if (id == null)
@@ -100,9 +98,12 @@ namespace HolidayExchanges.Controllers
             if (pageOwner == null)
                 return false;
             var currentUser = db.Users.Single(u => u.UserName == username);
-            if (pageOwner.UserID != currentUser.UserID)
-                return false;
-            return true;
+            //if (pageOwner.UserID != currentUser.UserID)
+            //    return false;
+            //return true;
+
+            // same as above
+            return pageOwner.UserID == currentUser.UserID;
         }
 
         #endregion Check current user's page access authorization as a boolean
@@ -112,13 +113,14 @@ namespace HolidayExchanges.Controllers
         /// <summary>
         /// Resets the redirect link.
         /// </summary>
-        [NonAction]
         protected void ResetRedirectLink()
         {
             Session["RedirectLink"] = null;
         }
 
         #endregion Reset RedirectLink session variable
+
+        // TODO: Is there a way to add a method that automatically combines IsLoggedIn and IsOwnerOfPage in the child classes (consider the fact that the GroupController and WishController had overriding methods for IsOwnerOfPage)
 
         protected override void Dispose(bool disposing)
         {

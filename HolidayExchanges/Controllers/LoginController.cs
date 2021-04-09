@@ -146,14 +146,5 @@ namespace HolidayExchanges.Controllers
             Session["UserName"] = null;
             return RedirectToAction("Success", "Home");
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

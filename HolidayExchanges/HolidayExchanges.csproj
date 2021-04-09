@@ -201,6 +201,10 @@
     <Compile Include="Migrations\202103181940028_AddGroupPairedBoolean.Designer.cs">
       <DependentUpon>202103181940028_AddGroupPairedBoolean.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202104061235272_AddCreatorPropertyforGroup.cs" />
+    <Compile Include="Migrations\202104061235272_AddCreatorPropertyforGroup.Designer.cs">
+      <DependentUpon>202104061235272_AddCreatorPropertyforGroup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\User.cs" />
@@ -215,6 +219,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\WishlistSearchVM.cs" />
     <Compile Include="ViewModels\WishlistViewModel.cs" />
     <Compile Include="ViewModels\WishViewModel.cs" />
   </ItemGroup>
@@ -369,12 +374,11 @@
     <Content Include="Views\Wish\Details.cshtml" />
     <Content Include="Views\User\Wishlist.cshtml" />
     <Content Include="Views\User\Grouplist.cshtml" />
+    <Content Include="Views\Shared\_WishlistSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="fonts\" />
-    <Folder Include="Views\Base\" />
-    <Folder Include="Views\Helper\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -400,6 +404,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103181940028_AddGroupPairedBoolean.resx">
       <DependentUpon>202103181940028_AddGroupPairedBoolean.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104061235272_AddCreatorPropertyforGroup.resx">
+      <DependentUpon>202104061235272_AddCreatorPropertyforGroup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

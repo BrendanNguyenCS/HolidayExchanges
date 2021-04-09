@@ -13,11 +13,10 @@ namespace HolidayExchanges.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Wish wish = db.Wishes.Find(id);
-            if (wish == null) return HttpNotFound();
+            if (wish == null)
+                return HttpNotFound();
             return View(wish);
         }
 
@@ -26,13 +25,10 @@ namespace HolidayExchanges.Controllers
         public ActionResult Create()
         {
             // check for log in status
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Create", "Wish");
+            if (!IsLoggedIn("Create", "Wish"))
                 return RedirectToAction("Login", "Login");
-            }
-            var user = db.Users.Where(u => u.UserName == username).Single();
+            var username = Session["UserName"].ToString();
+            var user = db.Users.Single(u => u.UserName == username);
             var model = new WishViewModel(user.UserID);
             return View(model);
         }
@@ -44,7 +40,6 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                // reset for unused session variable
                 ResetRedirectLink();
 
                 var wish = new Wish
@@ -70,15 +65,17 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            // check for log in status
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Edit", "Wish", id);
-                return RedirectToAction("Login", "Login");
-            }
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
+            // check for log in status
+            if (!IsLoggedIn("Edit", "Wish", id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
+
+            var username = Session["UserName"].ToString();
             var selectedWish = db.Wishes
                 .Single(w => w.WishID == id && w.User.UserName == username);
 
@@ -92,14 +89,13 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                this.ResetRedirectLink();
+                ResetRedirectLink();
 
                 db.Entry(model).State = EntityState.Modified;
                 db.Entry(model).Property(m => m.UserID).IsModified = false;
                 db.SaveChanges();
                 // not sure whether to display wish details or entire user wishlist
                 return RedirectToAction("Details", model.UserID);
-                //return RedirectToAction("Wishlist", "User", model.UserID);
             }
 
             return View(model);
@@ -109,20 +105,18 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Delete(int? id)
         {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             //checks current login status
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                // if not currently logged in, redirect to login page
-                Session["RedirectLink"] = Url.Action("Delete", "Wish", id);
+            if (!IsLoggedIn("Delete", "Wish", id))
                 return RedirectToAction("Login", "Login");
-            }
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
+
             Wish wish = db.Wishes.Find(id);
             if (wish == null)
-            {
                 return HttpNotFound();
-            }
             return View(wish);
         }
 
@@ -131,7 +125,7 @@ namespace HolidayExchanges.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            this.ResetRedirectLink();
+            ResetRedirectLink();
 
             Wish wish = db.Wishes.Find(id);
             db.Wishes.Remove(wish);
@@ -149,23 +143,30 @@ namespace HolidayExchanges.Controllers
             }
 
             if (wish.HasBeenBought)
-            {
                 return RedirectToAction("Details", id);
-            }
 
             db.Entry(wish).State = EntityState.Modified;
             wish.HasBeenBought = true;
             db.SaveChanges();
+            // TODO: Can we return a new EmptyResult() here instead of calling a RedirectToAction back to where we came from?
             return RedirectToAction("Details", id);
         }
 
-        protected override void Dispose(bool disposing)
+        /// <summary>
+        /// Checks the current session username to the username attached the wish being accessed
+        /// with <see cref="Wish.WishID"/> of <paramref name="id"/>
+        /// </summary>
+        /// <param name="id">The wish identifier.</param>
+        /// <returns></returns>
+        /// <remarks>Overload for the <see cref="BaseController.IsOwnerOfPage(int?)"/></remarks>
+        protected override bool IsOwnerOfPage(int? id)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            var username = GetCurrentUsername();
+            if (id == null)
+                return false;
+            var pageOwner = db.Wishes.Find(id).User;
+
+            return pageOwner.UserName == username;
         }
     }
 }

@@ -23,6 +23,13 @@
                 </dd>
 
                 <dt class="offset-md-1 col-md-2">
+                    @Html.DisplayNameFor(model => model.Group.Creator)
+                </dt>
+                <dd class="col-md-9">
+                    @Html.DisplayFor(model => model.Group.Creator)
+                </dd>
+
+                <dt class="offset-md-1 col-md-2">
                     @Html.DisplayNameFor(model => model.Group.ExchangeDate)
                 </dt>
                 <dd class="col-md-9">
@@ -48,16 +55,6 @@
                 <dt class="offset-md-1 col-md-2">
                     @Html.DisplayNameFor(model => model.Users)
                 </dt>
-
-                <!-- #region Bootstrap 3 dl-horizontal users list -->
-                @* @foreach (var user in Model.Users)
-                    {
-                        <dd class="col-md-9">
-                            - @user.UserName
-                        </dd>
-                    }
-                *@
-                <!-- #endregion -->
 
                 @{
                     for (int i = 0; i < Model.Users.Count; i++)

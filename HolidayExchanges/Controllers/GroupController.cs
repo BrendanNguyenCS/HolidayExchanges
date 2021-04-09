@@ -47,13 +47,6 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            /*var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Create", "Group");
-                return RedirectToAction("Login", "Login");
-            }*/
-
             if (!IsLoggedIn("Create", "Group"))
                 return RedirectToAction("Login", "Login");
 
@@ -64,12 +57,13 @@ namespace HolidayExchanges.Controllers
         // you want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired")] Group group)
+        public ActionResult Create([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired,Creator")] Group group)
         {
             if (ModelState.IsValid)
             {
                 var username = Session["UserName"].ToString();
                 var currentUser = db.Users.FirstOrDefault(u => u.UserName == username);
+                group.Creator = username;
 
                 ResetRedirectLink();
 
@@ -91,15 +85,16 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Edit", "Group", id);
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!IsLoggedIn("Edit", "Group", id))
                 return RedirectToAction("Login", "Login");
-            }
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
             Group group = db.Groups.Find(id);
-            if (group == null) return HttpNotFound();
+            db.Entry(group).Property(g => g.Creator).IsModified = false;
+            if (group == null)
+                return HttpNotFound();
             return View(group);
         }
 
@@ -107,7 +102,7 @@ namespace HolidayExchanges.Controllers
         // you want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired")] Group group)
+        public ActionResult Edit([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired,Creator")] Group group)
         {
             if (ModelState.IsValid)
             {
@@ -124,16 +119,15 @@ namespace HolidayExchanges.Controllers
         // GET: Group/Delete/5
         public ActionResult Delete(int? id)
         {
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Delete", "Group", id);
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!IsLoggedIn("Delete", "Group", id))
                 return RedirectToAction("Login", "Login");
-            }
-
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
             Group group = db.Groups.Find(id);
-            if (group == null) return HttpNotFound();
+            if (group == null)
+                return HttpNotFound();
             return View(group);
         }
 
@@ -154,14 +148,13 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Join(int id)
         {
-            var username = Session["UserName"] != null ? Session["UserName"].ToString() : "";
-            if (string.IsNullOrEmpty(username))
-            {
-                Session["RedirectLink"] = Url.Action("Join", "Group", id);
+            if (id == 0)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!IsLoggedIn("Join", "Group", id))
                 return RedirectToAction("Login", "Login");
-            }
             var group = db.Groups.Find(id);
-            if (group != null) return View(group);
+            if (group != null)
+                return View(group);
             ViewBag.ErrorMessage = "Unable to locate event group";
             return RedirectToAction("Error", "Home");
         }
@@ -174,7 +167,6 @@ namespace HolidayExchanges.Controllers
             var user = db.Users.FirstOrDefault(u => u.UserName == username);
             var group = _santaMgr.GetGroupById(model.GroupID);
 
-            // reset for unused session variable
             ResetRedirectLink();
 
             try
@@ -193,7 +185,8 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Pair(int id)
         {
-            if (id == 0) return HttpNotFound();
+            if (id == 0)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var group = _santaMgr.GetGroupById(id);
             if (group != null)
             {
@@ -255,13 +248,18 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Details", id);
         }
 
-        protected override void Dispose(bool disposing)
+        /// <summary>
+        /// Checks the current session username to the Creator property of the group with <see
+        /// cref="Group.GroupID"/> of <paramref name="id"/>
+        /// </summary>
+        /// <param name="id">The group identifier.</param>
+        /// <returns></returns>
+        /// <remarks>Overload for the <see cref="BaseController.IsOwnerOfPage(int?)"/></remarks>
+        protected override bool IsOwnerOfPage(int? id)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            var username = GetCurrentUsername();
+            var currentGroup = db.Groups.Find(id);
+            return currentGroup.Creator == username;
         }
     }
 }

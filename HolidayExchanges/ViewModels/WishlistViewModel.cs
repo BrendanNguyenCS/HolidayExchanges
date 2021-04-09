@@ -6,19 +6,38 @@ namespace HolidayExchanges.ViewModels
 {
     public class WishlistViewModel
     {
+        public WishlistViewModel()
+        {
+            Wishlist = new List<Wish>();
+        }
+
+        /// <summary>
+        /// The identifier for the associated user.
+        /// </summary>
         public int UserID { get; set; }
+
+        /// <summary>
+        /// The username for the associated user.
+        /// </summary>
+        [Display(Name = "Username")]
         public string UserName { get; set; }
+
+        /// <summary>
+        /// The user's wishlist.
+        /// </summary>
         public List<Wish> Wishlist { get; set; }
 
-        [Display(Name = "Username")]
-        public string SearchUserName { get; set; }
-
-        [Display(Name = "Email")]
-        public string SearchEmail { get; set; }
-
+        /// <summary>
+        /// A read-only property for the amount of wishes in wishlist.
+        /// </summary>
         public int Count
         {
-            get => Wishlist != null ? Wishlist.Count : 0;
+            get => Wishlist.Count;
         }
+
+        /*/// <summary>
+        /// Can be either a username or email of any user. </summary>
+        [Display(Name = "Search Criteria")]
+        public string SearchCriteria { get; set; }*/
     }
 }

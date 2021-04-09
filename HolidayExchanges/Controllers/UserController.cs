@@ -1,6 +1,7 @@
 ﻿using HolidayExchanges.Models;
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -89,7 +90,6 @@ namespace HolidayExchanges.Controllers
             ModelState.Remove("Password");
             if (ModelState.IsValid)
             {
-                //Session["RedirectLink"] = null;
                 ResetRedirectLink();
 
                 db.Entry(user).State = EntityState.Modified;
@@ -97,7 +97,7 @@ namespace HolidayExchanges.Controllers
                 db.Entry(user).Property(u => u.Password).IsModified = false;
                 db.Entry(user).Property(u => u.Salt).IsModified = false;
                 db.SaveChanges();
-                return RedirectToAction("Details", user.UserID);
+                return RedirectToAction("Details", new { id = user.UserID });
             }
 
             #region Error Checking Comments
@@ -156,12 +156,27 @@ namespace HolidayExchanges.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             User user = db.Users.Find(id);
-            WishlistViewModel model = new WishlistViewModel
+            bool hasWishes = db.Wishes.Any(w => w.UserID == user.UserID);
+            WishlistViewModel model;
+            if (hasWishes)
             {
-                UserID = id.Value,
-                UserName = user.UserName,
-                Wishlist = user.Wishes.ToList()
-            };
+                model = new WishlistViewModel
+                {
+                    UserID = id.Value,
+                    UserName = user.UserName,
+                    Wishlist = user.Wishes.ToList()
+                };
+            }
+            else
+            {
+                model = new WishlistViewModel
+                {
+                    UserID = id.Value,
+                    UserName = user.UserName,
+                    Wishlist = new List<Wish>()
+                };
+            }
+
             return View(model);
         }
 
@@ -176,42 +191,60 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Wishlist", new { id });
         }
 
+        [HttpGet, ChildActionOnly]
+        public ActionResult WishlistSearch()
+        {
+            WishlistSearchVM model = new WishlistSearchVM();
+            return PartialView("_WishlistSearch", model);
+        }
+
         [HttpPost]
-        public ActionResult Wishlist([Bind(Include = "SearchUserName,SearchEmail")] WishlistViewModel model)
+        public ActionResult WishlistSearch(WishlistSearchVM model)
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(model.SearchUserName) && string.IsNullOrEmpty(model.SearchEmail))
-                {
-                    return View(model);
-                }
+                if (string.IsNullOrEmpty(model.SearchUsername) && string.IsNullOrEmpty(model.SearchEmail))
+                    return PartialView(model);
 
-                User user;
-                if (!string.IsNullOrEmpty(model.SearchUserName))
+                User userFound;
+
+                if (!string.IsNullOrEmpty(model.SearchUsername))
                 {
-                    user = db.Users.SingleOrDefault(u => u.UserName == model.SearchUserName);
-                    ModelState.Remove("SearchEmail");
-                    if (user == null)
+                    userFound = db.Users.SingleOrDefault(u => u.UserName == model.SearchUsername);
+
+                    if (userFound == null) // if a user doesn't exist
                     {
-                        ModelState.AddModelError("SearchUserName", "This user doesn't exist.");
-                        return View(model);
+                        ModelState.AddModelError("SearchUsername", "This username doesn't exist.");
+                        return PartialView(model);
                     }
-                    return RedirectToAction("Wishlist", new { id = user.UserID });
+
+                    // a matching user was found
+                    return RedirectToAction("Wishlist", "User", new { id = userFound.UserID });
                 }
 
-                // email must be filled at this point
-                user = db.Users.SingleOrDefault(u => u.Email == model.SearchEmail);
-                ModelState.Remove("SearchUserName");
-                if (user == null)
+                // the email search field must be filled at this point
+                userFound = db.Users.SingleOrDefault(u => u.Email == model.SearchEmail);
+
+                if (userFound == null)
                 {
-                    ModelState.AddModelError("SearchEmail", "This email doesn't exist");
-                    return View(model);
+                    ModelState.AddModelError("SearchEmail", "This email doesn't exist.");
+                    return PartialView(model);
                 }
-                return RedirectToAction("Wishlist", new { id = user.UserID });
+
+                return RedirectToAction("Wishlist", "User", new { id = userFound.UserID });
             }
 
-            return View(model);
+            return PartialView(model);
         }
+
+        #region AJAX/JSON version
+
+        /*[HttpPost]
+        public ActionResult WishlistSearch(string searchTerm)
+        {
+        }*/
+
+        #endregion AJAX/JSON version
 
         // GET: User/Grouplist/1
         public ActionResult Grouplist(int? id)
@@ -228,9 +261,8 @@ namespace HolidayExchanges.Controllers
                 return RedirectToAction("Details", "User", new { id = currentUser.UserID });
             }
 
-            // check to see if it has been redirected from login/register pages
-            if (Session["RedirectLink"] != null)
-                ResetRedirectLink();
+            // check not needed because if already null, it won't change anything
+            ResetRedirectLink();
 
             User user = db.Users.Find(id);
             GrouplistViewModel model = new GrouplistViewModel
@@ -240,15 +272,6 @@ namespace HolidayExchanges.Controllers
                 Groups = santaMgr.GetAllGroupsForUser(id.Value)
             };
             return View(model);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

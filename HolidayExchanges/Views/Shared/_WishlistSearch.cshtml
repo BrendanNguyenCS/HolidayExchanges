@@ -1,0 +1,65 @@
+﻿<!-- TODO: Do I need AJAX in order to pass the entire WishlistViewModel object from the form to the other views? -->
+@model HolidayExchanges.ViewModels.WishlistSearchVM
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 container-fluid">
+            @using (Html.BeginForm("WishlistSearch", "User", FormMethod.Post))
+            {
+
+                Html.AntiForgeryToken();
+
+                <div class="row">
+                    <div class="col-12">
+                        <p>Search for another user's wishlist:</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger mb-1" })
+                    </div>
+                </div>
+
+                <!-- #region Old custom inline form -->
+                <!--<div class="row">-->
+
+                <!--<div class="form-group col-12 col-md-4 mr-md-0">
+                        <label class="sr-only">Search Username</label>
+                        <input type="text" id="searchUsername" name="searchUsername" placeholder="Search username" class="form-control" />
+                    </div>
+
+                    <div class="form-group col-12 col-md-auto px-md-1" id="OrHelpText">
+                        <p class="form-control-plaintext">or</p>
+                    </div>
+
+                    <div class="form-group col-12 col-md-4 pr-md-1 mr-md-0">
+                        <label class="sr-only">Search Email</label>
+                        <input type="text" id="searchEmail" name="searchEmail" placeholder="Search email" class="form-control" />
+                    </div>
+
+                    <div class="col-12 col-md-auto">
+                        <button type="submit" class="btn btn-primary mt-0 mb-2">Search</button>
+                    </div>
+                </div>-->
+                <!-- #endregion -->
+
+                <div class="row">
+                    <div class="form-group col-12 col-md-4 mr-md-0">
+                        @Html.LabelFor(model => model.SearchUsername, htmlAttributes: new { @class = "col-form-label sr-only" })
+                        @Html.EditorFor(model => model.SearchUsername, new { htmlAttributes = new { @class = "form-control", @type = "text", @placeholder = "Search username" } })
+                    </div>
+                    <div class="form-group col-12 col-md-auto px-md-1">
+                        <p class="form-control-plaintext">or</p>
+                    </div>
+                    <div class="form-group col-12 col-md-4 mr-md-0">
+                        @Html.LabelFor(model => model.SearchEmail, htmlAttributes: new { @class = "col-form-label sr-only" })
+                        @Html.EditorFor(model => model.SearchEmail, new { htmlAttributes = new { @class = "form-control", @type = "text", @placeholder = "Search email" } })
+                    </div>
+                    <div class="col-12 col-md-auto">
+                        <button type="submit" class="btn btn-primary mt-0 mb-2">Search</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

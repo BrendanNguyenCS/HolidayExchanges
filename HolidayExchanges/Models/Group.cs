@@ -36,8 +36,11 @@ namespace HolidayExchanges.Models
         [Display(Name = "Already Paired?")]
         public bool HasBeenPaired { get; set; }
 
-        // represents username of user that created the group
-        //public string Creator { get; set; }
+        /// <summary>
+        /// The username of the person who created the group
+        /// </summary>
+        [StringLength(50)]
+        public string Creator { get; set; }
 
         /// <summary>
         /// The list of <see cref="HolidayExchanges.Models.UserGroup"/> that are currently in the group.

@@ -57,3 +57,8 @@ legend {
 }
 
 /* Find out how to stack the inline form in Wishlist.cshtml under 767px */
+@media screen and (max-width: 767px){
+    #OrHelpText {
+        text-align: center;
+    }
+}

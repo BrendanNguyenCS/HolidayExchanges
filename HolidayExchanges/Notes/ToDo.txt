@@ -1,13 +1,16 @@
-﻿1. Fix align of forms
-
-2. Fix screen size for all other views
-
-3. Work on wish views, viewmodels, and route configs (attribute routing)
-
-4. Think about how to restrict access to certain pages if you aren't the user that the page belongs to
+﻿1. Think about how to restrict access to certain pages if you aren't the user that the page belongs to
 
 	i.e. bnuge shouldn't be able to edit the other user's profiles and so on
 
 	Same thing for certain buttons on certain pages
 
-5. Input masking for phone fields
+2. Input masking for phone fields
+
+3. Ability to remove a person from a group
+
+4. Ability to have pairings beforehand and manually enter them
+
+Discussion Questions
+- How to remove the test email text file from main repository but keep it locally
+	(obviously we want to add it to the .gitignore file, but how do we remove it from GitHub?)
+- Do I need the dispose override method for all controllers that inherit from the BaseController if they all do the same thing as the parent class?

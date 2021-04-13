@@ -34,10 +34,5 @@ namespace HolidayExchanges.ViewModels
         {
             get => Wishlist.Count;
         }
-
-        /*/// <summary>
-        /// Can be either a username or email of any user. </summary>
-        [Display(Name = "Search Criteria")]
-        public string SearchCriteria { get; set; }*/
     }
 }

@@ -1,5 +1,4 @@
 ﻿using HolidayExchanges.Models;
-using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System;
 using System.Data.Entity;
@@ -13,13 +12,6 @@ namespace HolidayExchanges.Controllers
 {
     public class GroupController : BaseController
     {
-        private SecretSantaManager _santaMgr;
-
-        public GroupController()
-        {
-            _santaMgr = new SecretSantaManager(db);
-        }
-
         // Group/Index
         public ActionResult Index()
         {
@@ -260,6 +252,24 @@ namespace HolidayExchanges.Controllers
             var username = GetCurrentUsername();
             var currentGroup = db.Groups.Find(id);
             return currentGroup.Creator == username;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="currentController"></param>
+        /// <param name="currentAction"></param>
+        /// <returns></returns>
+        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        {
+            if (!IsLoggedIn("Edit", "Group", id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
+
+            return new EmptyResult();
         }
     }
 }

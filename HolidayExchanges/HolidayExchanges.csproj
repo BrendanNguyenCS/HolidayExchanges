@@ -219,7 +219,6 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
-    <Compile Include="ViewModels\WishlistSearchVM.cs" />
     <Compile Include="ViewModels\WishlistViewModel.cs" />
     <Compile Include="ViewModels\WishViewModel.cs" />
   </ItemGroup>
@@ -310,7 +309,6 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\cartoon-gift-exchange.jpg" />
-    <Content Include="Notes\Email.txt" />
     <Content Include="Notes\HelpfulPages.txt" />
     <Content Include="bin\HolidayExchanges.dll.config" />
     <Content Include="bin\roslyn\csc.exe.config" />
@@ -326,6 +324,7 @@
     <Content Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </Content>
+    <Content Include="Diagrams\Controllers.cd" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-3.5.1-vsdoc.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
@@ -374,7 +373,6 @@
     <Content Include="Views\Wish\Details.cshtml" />
     <Content Include="Views\User\Wishlist.cshtml" />
     <Content Include="Views\User\Grouplist.cshtml" />
-    <Content Include="Views\Shared\_WishlistSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

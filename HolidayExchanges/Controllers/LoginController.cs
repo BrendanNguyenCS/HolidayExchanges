@@ -146,5 +146,14 @@ namespace HolidayExchanges.Controllers
             Session["UserName"] = null;
             return RedirectToAction("Success", "Home");
         }
+
+        #region Method to satisfy abstraction (this doesn't do anything)
+
+        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        {
+            return new EmptyResult();
+        }
+
+        #endregion Method to satisfy abstraction (this doesn't do anything)
     }
 }

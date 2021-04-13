@@ -1,5 +1,4 @@
 ﻿using HolidayExchanges.Models;
-using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,13 +10,6 @@ namespace HolidayExchanges.Controllers
 {
     public class UserController : BaseController
     {
-        private SecretSantaManager santaMgr;
-
-        public UserController()
-        {
-            santaMgr = new SecretSantaManager(db);
-        }
-
         // TODO: Ask jon about refactoring authorization code so that it can also do the redirecting to login page (by returning an ActionResult)
 
         // GET: User/Details/5
@@ -44,9 +36,9 @@ namespace HolidayExchanges.Controllers
             UserViewModel model = new UserViewModel
             {
                 User = user,
-                Groups = santaMgr.GetAllGroupsForUser(num)
+                Groups = _santaMgr.GetAllGroupsForUser(num)
             };
-            model.Recipients = santaMgr.GetRecipientsForAllGroupsForUser(num, model.Groups);
+            model.Recipients = _santaMgr.GetRecipientsForAllGroupsForUser(num, model.Groups);
             return View(model);
         }
 
@@ -191,60 +183,38 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Wishlist", new { id });
         }
 
-        [HttpGet, ChildActionOnly]
-        public ActionResult WishlistSearch()
-        {
-            WishlistSearchVM model = new WishlistSearchVM();
-            return PartialView("_WishlistSearch", model);
-        }
+        #region AJAX Call API Endpoints
 
-        [HttpPost]
-        public ActionResult WishlistSearch(WishlistSearchVM model)
+        [HttpGet]
+        public JsonResult WishlistSearch(string searchCriteria)
         {
             if (ModelState.IsValid)
             {
-                if (string.IsNullOrEmpty(model.SearchUsername) && string.IsNullOrEmpty(model.SearchEmail))
-                    return PartialView(model);
+                if (string.IsNullOrEmpty(searchCriteria))
+                    return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
 
-                User userFound;
+                var user = db.Users.SingleOrDefault(u => (u.UserName == searchCriteria) || (u.Email == searchCriteria));
 
-                if (!string.IsNullOrEmpty(model.SearchUsername))
-                {
-                    userFound = db.Users.SingleOrDefault(u => u.UserName == model.SearchUsername);
+                if (user != null)
+                    return Json(new { success = true, redirect = Url.Action("GetUserWishlist", "User", searchCriteria) }, JsonRequestBehavior.AllowGet);
 
-                    if (userFound == null) // if a user doesn't exist
-                    {
-                        ModelState.AddModelError("SearchUsername", "This username doesn't exist.");
-                        return PartialView(model);
-                    }
-
-                    // a matching user was found
-                    return RedirectToAction("Wishlist", "User", new { id = userFound.UserID });
-                }
-
-                // the email search field must be filled at this point
-                userFound = db.Users.SingleOrDefault(u => u.Email == model.SearchEmail);
-
-                if (userFound == null)
-                {
-                    ModelState.AddModelError("SearchEmail", "This email doesn't exist.");
-                    return PartialView(model);
-                }
-
-                return RedirectToAction("Wishlist", "User", new { id = userFound.UserID });
+                return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
             }
 
-            return PartialView(model);
+            // TODO: finish this
+            return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
         }
 
-        #region AJAX/JSON version
-
-        /*[HttpPost]
-        public ActionResult WishlistSearch(string searchTerm)
+        [HttpPost]
+        public ActionResult GetUserWishlist(string searchCriteria)
         {
-        }*/
+            var user = db.Users.SingleOrDefault(u => (u.UserName == searchCriteria) || (u.Email == searchCriteria));
 
-        #endregion AJAX/JSON version
+            // no need to check if it is null since AJAX API endpoint already did the work
+            return RedirectToAction("Wishlist", "User", new { id = user.UserID });
+        }
+
+        #endregion AJAX Call API Endpoints
 
         // GET: User/Grouplist/1
         public ActionResult Grouplist(int? id)
@@ -269,9 +239,23 @@ namespace HolidayExchanges.Controllers
             {
                 UserID = id.Value,
                 UserName = user.UserName,
-                Groups = santaMgr.GetAllGroupsForUser(id.Value)
+                Groups = _santaMgr.GetAllGroupsForUser(id.Value)
             };
             return View(model);
+        }
+
+        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        {
+            if (!IsLoggedIn(currentController, currentAction, id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", "User", new { id = currentUser.UserID });
+            }
+
+            return new EmptyResult();
         }
     }
 }

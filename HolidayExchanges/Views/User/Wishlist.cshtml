@@ -32,7 +32,7 @@
     }
 </style>
 
-<div class="container">
+<div class="container body-content">
     <section id="WishlistTitle">
         <div class="row">
             <div class="page-header col-12">
@@ -43,7 +43,7 @@
     </section>
 
     <section id="Wishlist">
-        <div class="container body-content">
+        <div class="container">
             <div class="row">
                 <div class="col-12">
                     @{
@@ -107,11 +107,10 @@
                                 @Html.DisplayFor(model => model.Count)
                             </dd>
                         </dl>
-                    </div>
-
-                    <div class="row">
-                        <div class="offset-1 col-11">
-                            @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-outline-primary" })
+                        <div class="row">
+                            <div class="offset-md-1 col-auto">
+                                @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,16 +118,64 @@
         </div>
     </section>
     <hr />
+    <section id="WishlistSearch">
+        <div class="container">
+            <div class="row">
+                <div class="col-12" id="dvWLSearch">
+                    @using (Html.BeginForm())
+                    {
+                        Html.AntiForgeryToken();
 
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <p>Search functionality has being overhauled.</p>
-                <!-- TODO: Do i need another VM for my partial view form? -->
-                @{
-                    Html.RenderAction("WishlistSearch", "User");
-                }
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>Search for another user's wishlist:</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12 col-md-4 mr-md-0">
+                                    <label class="sr-only col-form-label" for="searchCriteria">Search Criteria</label>
+                                    <input type="text" id="searchCriteria" name="searchCriteria" placeholder="Username/email" class="form-control" />
+                                </div>
+                                <div class="form-group col-12 col-md-auto">
+                                    <button type="submit" class="btn btn-outline-primary mt-0 mb-2" id="wLSearchBtn">Search</button>
+                                </div>
+                            </div>
+                        </div>}
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#wLSearchBtn').click(function () {
+            var searchCriteria = $('#searchCriteria').val();
+
+            $.ajax({
+                url: '@Url.Action("WishlistSearch", "User")',
+                async: false,
+                method: 'GET',
+                data: JSON.stringify(searchCriteria),
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.success) {
+                    /* redirect to second api endpoint that creates new user and redirects to their wishlist */
+                        window.location.href = data.redirect;
+                    }
+                    else {
+                        alert(data.ex);
+                    }
+                }
+            });
+        });
+    });
+</script>

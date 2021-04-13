@@ -168,5 +168,16 @@ namespace HolidayExchanges.Controllers
 
             return pageOwner.UserName == username;
         }
+
+        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        {
+            if (!IsLoggedIn("Edit", "Wish", id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
+
+            return new EmptyResult();
+        }
     }
 }

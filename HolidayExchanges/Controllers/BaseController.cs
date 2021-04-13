@@ -1,16 +1,24 @@
 ﻿using HolidayExchanges.DAL;
 using HolidayExchanges.Models;
+using HolidayExchanges.Services;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
 {
     /// <summary>
-    /// The base controller class with several authentication non-action helper methods
+    /// The <see langword="abstract"/> base controller class with several authentication non-action
+    /// helper methods
     /// </summary>
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
         protected readonly SecretSantaDbContext db = new SecretSantaDbContext();
+        protected readonly SecretSantaManager _santaMgr;
+
+        public BaseController()
+        {
+            _santaMgr = new SecretSantaManager(db);
+        }
 
         #region Checking the current session username
 
@@ -120,7 +128,15 @@ namespace HolidayExchanges.Controllers
 
         #endregion Reset RedirectLink session variable
 
-        // TODO: Is there a way to add a method that automatically combines IsLoggedIn and IsOwnerOfPage in the child classes (consider the fact that the GroupController and WishController had overriding methods for IsOwnerOfPage)
+        /// <summary>
+        /// A combiner helper function for <see cref="IsLoggedIn(string, string, int?)"/> and <see cref="IsOwnerOfPage(int?)"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="currentController"></param>
+        /// <param name="currentAction"></param>
+        /// <returns></returns>
+        /// <remarks>Is an <see langword="abstract"/> method.</remarks>
+        protected abstract ActionResult IsAuthorized(int? id, string currentController, string currentAction);
 
         protected override void Dispose(bool disposing)
         {

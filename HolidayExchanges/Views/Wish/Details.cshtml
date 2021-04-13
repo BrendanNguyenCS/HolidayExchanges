@@ -85,13 +85,11 @@
                 </dd>
             </dl>
             <div class="row">
-                <div class="container">
                     <div class="btn-group col-12 offset-lg-1 col-lg-3" role="group" aria-label="Buttons for wish details page">
                         @Html.ActionLink("Edit", "Edit", new { id = Model.WishID }, new { @class = "btn btn-primary mr-0" })
                         @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-primary mr-0" })
                         @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-primary" })
                     </div>
-                </div>
             </div>
         </div>
     </section>

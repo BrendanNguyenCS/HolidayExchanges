@@ -7,5 +7,6 @@ namespace HolidayExchanges.ViewModels
     {
         public Group Group { get; set; }
         public List<User> Users { get; set; }
+        public bool IsCreator { get; set; }
     }
 }

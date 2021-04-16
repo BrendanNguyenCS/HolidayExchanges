@@ -34,8 +34,7 @@ namespace HolidayExchanges.Controllers
         }
 
         // POST: Wish/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create(WishViewModel model)
         {
             if (ModelState.IsValid)
@@ -83,8 +82,7 @@ namespace HolidayExchanges.Controllers
         }
 
         // POST: Wish/Edit/1
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "WishID,UserID,ItemName,Description,Quantity,ItemLink,PurchasingInstructions,HasBeenBought")] Wish model)
         {
             if (ModelState.IsValid)
@@ -169,6 +167,17 @@ namespace HolidayExchanges.Controllers
             return pageOwner.UserName == username;
         }
 
+        /// <summary>
+        /// A combiner helper function for <see cref="BaseController.IsLoggedIn(string, string,
+        /// int?)"/> and <see cref="IsOwnerOfPage(int?)"/>
+        /// </summary>
+        /// <param name="id">The wish identifier.</param>
+        /// <param name="currentController">The current controller ("Wish").</param>
+        /// <param name="currentAction">The current action.</param>
+        /// <returns>
+        /// <see langword="true"/> if the current user session is logged in AND the wish being
+        /// accessed belong to them, <see langword="false"/> otherwise.
+        /// </returns>
         protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
         {
             if (!IsLoggedIn("Edit", "Wish", id))

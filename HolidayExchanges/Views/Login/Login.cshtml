@@ -49,9 +49,7 @@
 
                             <div class="form-group row">
                                 <div class="offset-sm-3 col-md-9 offset-md-3 col-md-9 offset-lg-4 col-lg-8">
-                                    @*<input type="submit" value="Submit" class="btn btn-primary" />*@
                                     @Html.Button("Login", "btn btn-primary", "LoginSubmit", HtmlExtensionsButton.HtmlButtonTypes.submit)
-                                    @*<input type="button" class="btn btn-secondary" id="LoginRegister" value="Register" onclick="@("window.location.href='" + @Url.Action("Register", "Login") + "'");" />*@
                                     <a class="btn btn-secondary" href="@Url.Action("Register", "Login")" id="RegisterButton">Register</a>
                                 </div>
                             </div>
@@ -62,3 +60,38 @@
         </div>
     </section>
 </div>
+
+<!-- #region AJAX addition -->
+@*
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#LoginSubmit').click(function () {
+                var token = $('[name=__RequestVerificationToken]').val();
+                $.ajax({
+                    url: '@Url.Action("ValidateLogin", "Login")',
+                    async = false,
+                    method: 'POST',
+                    cache: false,
+                    headers: { '__RequestVerificationToken': token },
+                    data: {model: JSON.stringify(@Model) },
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            if (response.redirect) {
+                                window.location.href = response.redirectUrl;
+                            }
+                            else {
+                                window.location.href = '@Url.Action("Index", "Home")';
+                            }
+                        }
+                        else {
+                            alert(response.ex);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+*@
+<!-- #endregion -->

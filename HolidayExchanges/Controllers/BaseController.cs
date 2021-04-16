@@ -116,6 +116,24 @@ namespace HolidayExchanges.Controllers
 
         #endregion Check current user's page access authorization as a boolean
 
+        #region Check if current user session is in group being accessed
+
+        /// <summary>
+        /// Checks to see if the current session user is a part of the group with <paramref name="id"/>
+        /// </summary>
+        /// <param name="id">The group identifier.</param>
+        /// <returns>
+        /// <see langword="true"/> if the user is indeed in the group, <see langword="false"/> otherwise.
+        /// </returns>
+        public virtual bool IsInGroup(int? id)
+        {
+            var user = GetCurrentUser();
+            var anyUG = db.UserGroups.SingleOrDefault(ug => (ug.GroupID == id) && (ug.UserID == user.UserID));
+            return anyUG != null;
+        }
+
+        #endregion Check if current user session is in group being accessed
+
         #region Reset RedirectLink session variable
 
         /// <summary>
@@ -128,6 +146,8 @@ namespace HolidayExchanges.Controllers
 
         #endregion Reset RedirectLink session variable
 
+        #region Combining login and page owner checks
+
         /// <summary>
         /// A combiner helper function for <see cref="IsLoggedIn(string, string, int?)"/> and <see cref="IsOwnerOfPage(int?)"/>
         /// </summary>
@@ -138,13 +158,6 @@ namespace HolidayExchanges.Controllers
         /// <remarks>Is an <see langword="abstract"/> method.</remarks>
         protected abstract ActionResult IsAuthorized(int? id, string currentController, string currentAction);
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        #endregion Combining login and page owner checks
     }
 }

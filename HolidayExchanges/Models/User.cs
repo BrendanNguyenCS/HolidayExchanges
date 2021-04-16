@@ -131,6 +131,7 @@ namespace HolidayExchanges.Models
         /// <value>The email.</value>
         [StringLength(128)]
         [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Email is invalid")]
         [Column(Order = 4)]
         public string Email { get; set; }
 
@@ -149,6 +150,7 @@ namespace HolidayExchanges.Models
         /// <value>The phone number.</value>
         [StringLength(20)]
         [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
         /// <summary>

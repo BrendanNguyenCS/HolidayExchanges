@@ -157,22 +157,23 @@
     $(document).ready(function () {
         $('#wLSearchBtn').click(function () {
             var searchCriteria = $('#searchCriteria').val();
-
+            var token = $('[name=__RequestVerificationToken]').val();
             $.ajax({
                 url: '@Url.Action("WishlistSearch", "User")',
                 async: false,
                 method: 'GET',
+                headers: {'_RequestVerificationToken': token},
                 data: JSON.stringify(searchCriteria),
                 dataType: 'json',
-                contentType: false,
+                contentType: "application/json; charset=utf-8",
                 processData: false,
-                success: function (data) {
-                    if (data.success) {
-                    /* redirect to second api endpoint that creates new user and redirects to their wishlist */
-                        window.location.href = data.redirect;
+                success: function (response) {
+                    if (response.success) {
+                    /* redirect to second api endpoint */
+                        window.location.href = response.redirectUrl;
                     }
                     else {
-                        alert(data.ex);
+                        alert(response.ex);
                     }
                 }
             });

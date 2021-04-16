@@ -12,27 +12,27 @@ namespace HolidayExchanges.Controllers
 {
     public class GroupController : BaseController
     {
-        // Group/Index
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // GET: Group/Details/1
         public ActionResult Details(int id)
         {
             if (id == 0)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!IsLoggedIn("Details", "Group", id))
+                return RedirectToAction("Login", "Login");
+            // add check that ensures that current user must be in the group to view details
+            if (!IsInGroup(id))
+                return RedirectToAction("Home", "Index");
             Group group = db.Groups.Find(id);
             if (group == null)
                 return HttpNotFound();
             var users = _santaMgr.GetAllUsersInGroup(id);
-            var GroupViewModel = new GroupViewModel
+            var model = new GroupViewModel
             {
                 Group = group,
                 Users = users
             };
-            return View(GroupViewModel);
+            model.IsCreator = IsOwnerOfPage(id);
+            return View(model);
         }
 
         // GET: Group/Create/1
@@ -54,7 +54,7 @@ namespace HolidayExchanges.Controllers
             if (ModelState.IsValid)
             {
                 var username = Session["UserName"].ToString();
-                var currentUser = db.Users.FirstOrDefault(u => u.UserName == username);
+                var currentUser = db.Users.SingleOrDefault(u => u.UserName == username);
                 group.Creator = username;
 
                 ResetRedirectLink();
@@ -136,7 +136,13 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: Group/Join/1
+        #region Join Methods
+
+        /* GET: Group/Join/1
+        * Assumes that the current user is not in the group already
+        **/
+
+        // TODO: can change the join operation to an AJAX call
         [HttpGet]
         public ActionResult Join(int id)
         {
@@ -156,7 +162,7 @@ namespace HolidayExchanges.Controllers
         public ActionResult Join(Group model)
         {
             var username = Session["UserName"].ToString();
-            var user = db.Users.FirstOrDefault(u => u.UserName == username);
+            var user = db.Users.SingleOrDefault(u => u.UserName == username);
             var group = _santaMgr.GetGroupById(model.GroupID);
 
             ResetRedirectLink();
@@ -173,6 +179,45 @@ namespace HolidayExchanges.Controllers
                 return RedirectToAction("Error", "Home");
             }
         }
+
+        #region AJAX Join
+
+        [HttpPost]
+        public JsonResult AjaxJoin(int id)
+        {
+            bool inGroup = IsInGroup(id);
+            if (inGroup)
+                return Json(new { success = false, ex = "You are already in this group." }, JsonRequestBehavior.AllowGet);
+            else
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetGroup(int id)
+        {
+            var username = Session["UserName"].ToString();
+            var user = db.Users.SingleOrDefault(u => u.UserName == username);
+
+            ResetRedirectLink();
+
+            try
+            {
+                db.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = id });
+                db.SaveChanges();
+                return RedirectToAction("Success", "Home");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message + ". " + ex.InnerException.Message;
+                return RedirectToAction("Error", "Home");
+            }
+        }
+
+        #endregion AJAX Join
+
+        #endregion Join Methods
+
+        #region Administrative Methods
 
         [HttpGet]
         public ActionResult Pair(int id)
@@ -240,6 +285,24 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Details", id);
         }
 
+        #endregion Administrative Methods
+
+        [HttpGet]
+        public JsonResult GroupSearch(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return Json(new { success = false, ex = "The search is empty." }, JsonRequestBehavior.AllowGet);
+
+            var group = db.Groups.SingleOrDefault(g => g.Name == name);
+
+            if (group != null)
+                return Json(new { success = true, ex = Url.Action("Details", "Group", new { id = group.GroupID }) }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { success = false, ex = "A group with that name does not exist." }, JsonRequestBehavior.AllowGet);
+        }
+
+        #region Authorization Helpers
+
         /// <summary>
         /// Checks the current session username to the Creator property of the group with <see
         /// cref="Group.GroupID"/> of <paramref name="id"/>
@@ -255,12 +318,16 @@ namespace HolidayExchanges.Controllers
         }
 
         /// <summary>
-        /// 
+        /// A combiner helper function for <see cref="BaseController.IsLoggedIn(string, string,
+        /// int?)"/> and <see cref="IsOwnerOfPage(int?)"/>
         /// </summary>
         /// <param name="id"></param>
         /// <param name="currentController"></param>
         /// <param name="currentAction"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// <see langword="true"/> if the current user session is logged in AND is the creator of
+        /// the group with <paramref name="id"/>, <see langword="false"/> otherwise.
+        /// </returns>
         protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
         {
             if (!IsLoggedIn("Edit", "Group", id))
@@ -271,5 +338,7 @@ namespace HolidayExchanges.Controllers
 
             return new EmptyResult();
         }
+
+        #endregion Authorization Helpers
     }
 }

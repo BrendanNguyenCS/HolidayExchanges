@@ -3,7 +3,7 @@
   <Class Name="HolidayExchanges.Controllers.BaseController">
     <Position X="4.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAABAACAQACAAAAAAAgAAAAAgCAAAAAACAAAAQAA=</HashCode>
+      <HashCode>AAAAAABAAAAQACAAAAAAAgAAAAAgCAAAAAACAAAAQAA=</HashCode>
       <FileName>Controllers\BaseController.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -31,7 +31,7 @@
   <Class Name="HolidayExchanges.Controllers.UserController">
     <Position X="9" Y="4.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>ACAAAAEAAAABAACAAAAAAAAAAAEBCAACAAAAAAAAAEA=</HashCode>
+      <HashCode>ACAAAAAAAAABAACAQAAAAAAAAAEBCAACAAAAAAAAAEA=</HashCode>
       <FileName>Controllers\UserController.cs</FileName>
     </TypeIdentifier>
   </Class>

@@ -56,6 +56,7 @@
                     @Html.DisplayNameFor(model => model.Users)
                 </dt>
 
+                <!-- TODO: change each user to a link to their wishlist -->
                 @{
                     for (int i = 0; i < Model.Users.Count; i++)
                     {
@@ -63,12 +64,14 @@
                         {
                             <dd class="col-md-9">
                                 - @Model.Users[0].UserName
+                                @*- <a href="@Url.Action("Wishlist", "User", new {id = Model.Users[0].UserID})" style="text-decoration:none;">@Model.Users[0].UserName</a>*@
                             </dd>
                         }
                         else
                         {
                             <dd class="offset-md-3 col-md-9">
                                 - @Model.Users[i].UserName
+                                @*- <a href="@Url.Action("Wishlist", "User", new { id = Model.Users[i].UserID })" style="text-decoration: none;">@Model.Users[i].UserName</a>*@
                             </dd>
                         }
                     }
@@ -80,42 +83,12 @@
     <section id="GroupDetailButtons">
         <div class="row">
             <div class="container">
-
-                <!-- #region Old button setup -->
-                @*<div class="offset-md-3 col-md-9">
-                        @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
-                        @Html.ActionLink("Edit", "Edit", new { id = Model.Group.GroupID }, new { @class = "btn btn-outline-dark" })
-                        @if (!Model.Group.HasBeenPaired)
-                        {
-                            @Html.ActionLink("Pair", "Pair", new { id = Model.Group.GroupID }, new { @class = "btn btn-secondary" })
-                        }
-                        @if (Model.Group.HasBeenPaired)
-                        {
-                            @Html.ActionLink("Pair Again", "Pair", new { id = Model.Group.GroupID }, new { @class = "btn btn-danger" })
-                            @Html.ActionLink("Send Assignments", "SendAssignments", new { id = Model.Group.GroupID }, new { @class = "btn btn-info" })
-                        }
-                    </div>
-                *@
-                <!-- #endregion -->
-                <!-- #region Button Group Attempt with "a" tags -->
-                @*<div class="btn-group" role="group" aria-label="Buttons for group details page">
-                        <a class="btn btn-primary" href="@Url.Action("Index", "Home")" type="button">Back to Home</a>
-                        <a class="btn btn-outline-dark" type="button" href="@Url.Action("Edit",  new { id = Model.Group.GroupID })">Edit</a>
-                        @if (!Model.Group.HasBeenPaired)
-                        {
-                            <a class="btn btn-secondary" href="@Url.Action("Pair", new { id = Model.Group.GroupID })" type="button">Pair</a>
-                        }
-                        @if (Model.Group.HasBeenPaired)
-                        {
-                            <a class="btn btn-danger" href="@Url.Action("Pair", new { id = Model.Group.GroupID })" type="button">Pair Again</a>
-                            <a class="btn btn-info" href="@Url.Action("SendAssignments", new { id = Model.Group.GroupID })" type="button">Send Assignments</a>
-                        }
-                    </div>
-                *@
-                <!-- #endregion -->
-
                 <div class="btn-group offset-md-1 col-md-9" role="group" aria-label="Buttons for group details page">
                     <a class="btn btn-primary mr-0" href="@Url.Action("Index", "Home")">Back to Home</a>
+
+                    @*                    @if (Model.IsCreator)
+                        {
+                    *@
                     <a class="btn btn-dark mr-0" href="@Url.Action("Edit", new { id = Model.Group.GroupID })">Edit</a>
                     @if (!Model.Group.HasBeenPaired)
                     {
@@ -126,6 +99,8 @@
                         <a class="btn btn-warning mr-0" href="@Url.Action("Pair", new { id = Model.Group.GroupID })">Pair Again</a>
                         <a class="btn btn-info" href="@Url.Action("SendAssignments", new { id = Model.Group.GroupID })">Send Assignments</a>
                     }
+                    @*                    }
+                    *@
                 </div>
             </div>
         </div>

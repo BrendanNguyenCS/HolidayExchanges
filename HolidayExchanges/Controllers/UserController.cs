@@ -10,7 +10,7 @@ namespace HolidayExchanges.Controllers
 {
     public class UserController : BaseController
     {
-        // TODO: Ask jon about refactoring authorization code so that it can also do the redirecting to login page (by returning an ActionResult)
+        #region Details View Initializers
 
         // GET: User/Details/5
         public ActionResult Details(int? id)
@@ -51,6 +51,8 @@ namespace HolidayExchanges.Controllers
             int id = db.Users.Single(u => u.UserName == username).UserID;
             return RedirectToAction("Details", new { id });
         }
+
+        #endregion Details View Initializers
 
         // GET: User/Edit/5
         public ActionResult Edit(int? id)
@@ -141,6 +143,8 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        #region Wishlist View Initializers
+
         // GET: User/Wishlist/1
         [HttpGet]
         public ActionResult Wishlist(int? id)
@@ -183,28 +187,25 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Wishlist", new { id });
         }
 
+        #endregion Wishlist View Initializers
+
         #region AJAX Call API Endpoints
 
         [HttpGet]
         public JsonResult WishlistSearch(string searchCriteria)
         {
-            if (ModelState.IsValid)
-            {
-                if (string.IsNullOrEmpty(searchCriteria))
-                    return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
+            if (string.IsNullOrEmpty(searchCriteria))
+                return Json(new { success = false, ex = "The search is empty." }, JsonRequestBehavior.AllowGet);
 
-                var user = db.Users.SingleOrDefault(u => (u.UserName == searchCriteria) || (u.Email == searchCriteria));
+            var user = db.Users.SingleOrDefault(u => (u.UserName == searchCriteria) || (u.Email == searchCriteria));
 
-                if (user != null)
-                    return Json(new { success = true, redirect = Url.Action("GetUserWishlist", "User", searchCriteria) }, JsonRequestBehavior.AllowGet);
+            if (user != null)
+                return Json(new { success = true, redirectUrl = Url.Action("GetUserWishlist", "User", searchCriteria) }, JsonRequestBehavior.AllowGet);
 
-                return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
-            }
-
-            // TODO: finish this
             return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
         }
 
+        // TODO: why can't I just set the redirectUrl of the true JSON object to the new user's wishlist action?
         [HttpPost]
         public ActionResult GetUserWishlist(string searchCriteria)
         {
@@ -244,6 +245,14 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// A combiner helper function for <see cref="BaseController.IsLoggedIn(string, string,
+        /// int?)"/> and <see cref="BaseController.IsOwnerOfPage(int?)"/>
+        /// </summary>
+        /// <param name="id">The user identifier.</param>
+        /// <param name="currentController">The current controller ("User").</param>
+        /// <param name="currentAction">The current action.</param>
+        /// <returns></returns>
         protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
         {
             if (!IsLoggedIn(currentController, currentAction, id))

@@ -14,19 +14,16 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            //User model = new User();
             LoginViewModel model = new LoginViewModel();
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Attempt to find the username that is entered
-                var user = db.Users.FirstOrDefault(u => u.UserName == model.UserName);
+                var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
 
                 if (user == null) // Username doesn't exist in the db
                 {
@@ -58,6 +55,39 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public JsonResult ValidateLogin(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("UserName", "This username doesn't exist.");
+                    return Json(new { success = false, ex = "This username doesn't exist." }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var isAUser = hasher.VerifyPassword(model.Password, user.Password, user.Salt);
+
+                    if (!isAUser)
+                    {
+                        ModelState.AddModelError("Password", "This password is incorrect.");
+                        return Json(new { success = false, ex = "This password is incorrect." }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+                Session["UserName"] = model.UserName;
+                if (Session["RedirectLink"] != null)
+                    return Json(new { success = true, redirect = true, redirectUrl = Session["RedirectLink"].ToString() });
+
+                return Json(new { success = true, redirect = false }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult Register()
         {
@@ -69,33 +99,24 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = model.User;
-                // check if username exists already (can return null)
-                var existingUserName = db.Users.FirstOrDefault(l => l.UserName == user.UserName);
+                var existingUserName = db.Users.SingleOrDefault(l => l.UserName == user.UserName);
                 if (existingUserName != null) //an account already exists with username
                 {
-                    // Adds new validation message to form
                     ModelState.AddModelError("User.UserName", "This username already exists. Please try another username.");
                     return View(model);
                 }
 
-                // might not be filled in as it is not a required field
-                if (!string.IsNullOrWhiteSpace(user.Email))
+                var existingEmail = db.Users.SingleOrDefault(l => l.Email == user.Email);
+                if (existingEmail != null)
                 {
-                    // check if email exists already (can return null)
-                    var existingEmail = db.Users.FirstOrDefault(l => l.Email == user.Email);
-                    if (existingEmail != null)
-                    {
-                        // Adds new validation message to form
-                        ModelState.AddModelError("User.Email", "Sorry, there's already an account associated with this email. Please try again.");
-                        return View(model);
-                    }
+                    ModelState.AddModelError("User.Email", "Sorry, there's already an account associated with this email. Please try again.");
+                    return View(model);
                 }
 
                 // retrieve password fields and compares them
@@ -139,6 +160,47 @@ namespace HolidayExchanges.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult AjaxRegister(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = model.User;
+                var existingUser = db.Users.SingleOrDefault(l => l.UserName == model.User.UserName);
+                if (existingUser != null)
+                    return Json(new { success = false, ex = "This username already exists." }, JsonRequestBehavior.AllowGet);
+
+                var existingEmail = db.Users.SingleOrDefault(l => l.UserName == model.User.Email);
+                if (existingEmail != null)
+                    return Json(new { success = false, ex = "This email already exists." }, JsonRequestBehavior.AllowGet);
+
+                if (!model.ValidatePassword())
+                    return Json(new { success = false, ex = "Your password fields are different." }, JsonRequestBehavior.AllowGet);
+
+                if (user.Birthday == null)
+                    user.Birthday = DateTime.UtcNow.Date;
+
+                var userSalt = hasher.GenerateSalt();
+                var userHash = hasher.ComputeHash(user.Password, userSalt);
+                user.Password = Convert.ToBase64String(userHash);
+                user.Salt = Convert.ToBase64String(userSalt);
+
+                try
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, ex = "Sorry but something went wrong and your registration failed. Please try again." }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SignOut()

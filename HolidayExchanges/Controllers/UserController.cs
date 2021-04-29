@@ -55,11 +55,11 @@ namespace HolidayExchanges.Controllers
         #endregion Details View Initializers
 
         // GET: User/Edit/5
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
             if (!IsLoggedIn("Edit", "User", id))
                 return RedirectToAction("Login", "Login");
 
@@ -72,40 +72,61 @@ namespace HolidayExchanges.Controllers
             User user = db.Users.Find(id);
             if (user == null)
                 return HttpNotFound();
-            return View(user);
+
+            UserEditViewModel model = new UserEditViewModel
+            {
+                ID = user.UserID,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address1 = user.Address1,
+                Address2 = user.Address2,
+                City = user.City,
+                State = user.State,
+                Zip = user.Zip,
+                Country = user.Country,
+                Email = user.Email,
+                // below will be a hidden field
+                OriginalEmail = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Birthday = user.Birthday
+            };
+            return View(model);
         }
 
-        // POST: User/Edit/5 To protect from overposting attacks, enable the specific properties you
-        // want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "UserID,UserName,Password,Salt,FirstName,LastName,Address1,Address2,City,State,Zip,Country,Email,Birthday,PhoneNumber")] User user)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Edit(UserEditViewModel model)
         {
-            ModelState.Remove("Password");
             if (ModelState.IsValid)
             {
                 ResetRedirectLink();
 
+                var user = db.Users.Find(model.ID);
                 db.Entry(user).State = EntityState.Modified;
                 db.Entry(user).Property(u => u.UserName).IsModified = false;
                 db.Entry(user).Property(u => u.Password).IsModified = false;
                 db.Entry(user).Property(u => u.Salt).IsModified = false;
+
+                #region VM to model assignments
+
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Address1 = model.Address1;
+                user.Address2 = model.Address2;
+                user.City = model.City;
+                user.State = model.State;
+                user.Country = model.Country;
+                user.Email = model.Email;
+                user.PhoneNumber = model.PhoneNumber;
+                user.Birthday = model.Birthday;
+
+                #endregion VM to model assignments
+
                 db.SaveChanges();
                 return RedirectToAction("Details", new { id = user.UserID });
             }
 
-            #region Error Checking Comments
-
-            /*var errors = ModelState
-             .Where(x => x.Value.Errors.Count > 0)
-             .Select(x => new { x.Key, x.Value.Errors })
-             .ToArray();
-             System.Console.WriteLine(errors.ToString());
-            */
-
-            #endregion Error Checking Comments
-
-            return View(user);
+            return View(model);
         }
 
         // GET: User/Delete/5
@@ -176,11 +197,10 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        // GET: User/Wishlist/bnuge
+        // GET: User/Wishlist/bnuge (this is only for the navbar wishlist button)
         [ActionName("WishlistByUsername")]
         public ActionResult Wishlist(string username)
         {
-            // will not redirect back to wishlist page after completion of login
             if (string.IsNullOrEmpty(username))
                 return RedirectToAction("Login", "Login");
             int id = db.Users.Single(u => u.UserName == username).UserID;
@@ -205,7 +225,6 @@ namespace HolidayExchanges.Controllers
             return Json(new { success = false, ex = "A user was not found" }, JsonRequestBehavior.AllowGet);
         }
 
-        // TODO: why can't I just set the redirectUrl of the true JSON object to the new user's wishlist action?
         [HttpPost]
         public ActionResult GetUserWishlist(string searchCriteria)
         {
@@ -253,7 +272,7 @@ namespace HolidayExchanges.Controllers
         /// <param name="currentController">The current controller ("User").</param>
         /// <param name="currentAction">The current action.</param>
         /// <returns></returns>
-        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        protected ActionResult IsAuthorized(int? id, string currentController, string currentAction)
         {
             if (!IsLoggedIn(currentController, currentAction, id))
                 return RedirectToAction("Login", "Login");

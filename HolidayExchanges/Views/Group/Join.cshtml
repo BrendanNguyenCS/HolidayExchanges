@@ -59,31 +59,33 @@
     </section>
 </div>
 
-<!-- #region AJAX addition -->
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            $('#JoinSubmit').click(function () {
-                $.ajax({
-                    url: '@Url.Action("AjaxJoin", "Group", new { id = Model.GroupID })',
-                    async = false,
-                    method: 'POST',
-                    data: '{id: @Model.GroupID}',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    processData: false,
-                    success: function (response) {
-                        if (response.success) {
-                            if (confirm("Are you sure you want to join this group?")) {
-                                window.location.href = '@Url.Action("GetGroup", "Group", new { id = Model.GroupID });
+@section Scripts {
+    <!-- #region AJAX addition -->
+    @*<script type="text/javascript">
+            $(document).ready(function () {
+                $('#JoinSubmit').click(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: '@Url.Action("AjaxJoin", "Group")',
+                        async = false,
+                        method: 'GET',
+                        data: {id: @Model.GroupID },
+                        dataType: 'json',
+                        processData: false,
+                        success: function (response) {
+                            if (response.success) {
+                                if (confirm("Are you sure you want to join this group?")) {
+                                    window.location.href = '@Url.Action("GetGroup", "Group", new { id = Model.GroupID })';
+                                }
+                            }
+                            else {
+                                alert(response.ex);
                             }
                         }
-                        else {
-                            alert(response.ex);
-                        }
-                    }
+                    });
                 });
             });
-        });
-    </script>
-*@
-<!-- #endregion -->
+        </script>
+    *@
+    <!-- #endregion -->
+}

@@ -86,23 +86,76 @@
                 <div class="btn-group offset-md-1 col-md-9" role="group" aria-label="Buttons for group details page">
                     <a class="btn btn-primary mr-0" href="@Url.Action("Index", "Home")">Back to Home</a>
 
-                    @*                    @if (Model.IsCreator)
+                    @if (Model.IsCreator)
+                    {
+                        <a class="btn btn-dark mr-0" href="@Url.Action("Edit", new { id = Model.Group.GroupID })">Edit</a>
+                        if (!Model.Group.HasBeenPaired)
                         {
-                    *@
-                    <a class="btn btn-dark mr-0" href="@Url.Action("Edit", new { id = Model.Group.GroupID })">Edit</a>
-                    @if (!Model.Group.HasBeenPaired)
-                    {
-                        <a class="btn btn-secondary" href="@Url.Action("Pair", new { id = Model.Group.GroupID })">Pair</a>
+                            <a class="btn btn-secondary paired" href="@Url.Action("Pair", new { id = Model.Group.GroupID })">Pair</a>
+                        }
+                        if (Model.Group.HasBeenPaired)
+                        {
+                            <a class="btn btn-warning mr-0 paired" href="@Url.Action("Pair", new { id = Model.Group.GroupID })">Pair Again</a>
+                            <a class="btn btn-info" href="@Url.Action("SendAssignments", new { id = Model.Group.GroupID })" id="SendAssignmentBtn">Send Assignments</a>
+                        }
                     }
-                    @if (Model.Group.HasBeenPaired)
-                    {
-                        <a class="btn btn-warning mr-0" href="@Url.Action("Pair", new { id = Model.Group.GroupID })">Pair Again</a>
-                        <a class="btn btn-info" href="@Url.Action("SendAssignments", new { id = Model.Group.GroupID })">Send Assignments</a>
-                    }
-                    @*                    }
-                    *@
                 </div>
             </div>
         </div>
     </section>
 </div>
+
+@section Scripts {
+    <!-- #region Pair and assignment ajax calls -->
+    <!-- should these just be JQuery get/post calls (not ajax method)? -->
+    @*
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#SendAssignmentBtn').click(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: '@Url.Action("AjaxSendAssignments")',
+                        method: 'GET',
+                        async: true,
+                        data: { id: @Model.Group.GroupID },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Assignments have been sent successfully");
+                            }
+                            else {
+                                alert("Error:\n" + response.ex);
+                            }
+                        },
+                        error: function () {
+                            alert("Failed");
+                        }
+                    });
+                });
+
+                $('.paired').on('click', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url: '@Url.Action("AjaxJoin")',
+                        method: 'GET',
+                        async: false,
+                        data: { id: @Model.Group.GroupID },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Pairing was successful.");
+                            }
+                            else {
+                                alert(response.ex);
+                            }
+                        },
+                        error: function () {
+                            alert("Failed");
+                        }
+                    });
+                });
+            });
+        </script>
+    *@
+    <!-- #endregion -->
+}

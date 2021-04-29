@@ -61,37 +61,38 @@
     </section>
 </div>
 
-<!-- #region AJAX addition -->
-@*
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#LoginSubmit').click(function () {
-                var token = $('[name=__RequestVerificationToken]').val();
-                $.ajax({
-                    url: '@Url.Action("ValidateLogin", "Login")',
-                    async = false,
-                    method: 'POST',
-                    cache: false,
-                    headers: { '__RequestVerificationToken': token },
-                    data: {model: JSON.stringify(@Model) },
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            if (response.redirect) {
-                                window.location.href = response.redirectUrl;
+@section Scripts {
+    @*
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#LoginSubmit').on('click', function (e) {
+                    e.preventDefault();
+                    var _form = $(this).closest('form');
+                    if (_form.valid()) {
+                        $.ajax({
+                            url: '@Url.Action("ValidateLogin")',
+                            method: 'POST',
+                            async: false,
+                            data: { model: JSON.stringify(@Model) },
+                            dataType: 'json',
+                            success: function (response) {
+                                if (response.success) {
+                                    alert("Login successful.");
+                                    if (response.redirect) {
+                                        window.location.href = response.redirectUrl;
+                                    }
+                                    else {
+                                        window.location.href = '@Url.Action("Home", "Index")';
+                                    }
+                                }
+                            },
+                            error: function () {
+                                alert("Failed");
                             }
-                            else {
-                                window.location.href = '@Url.Action("Index", "Home")';
-                            }
-                        }
-                        else {
-                            alert(response.ex);
-                        }
+                        });
                     }
                 });
             });
-        });
-    </script>
-*@
-<!-- #endregion -->
+        </script>
+    *@
+}

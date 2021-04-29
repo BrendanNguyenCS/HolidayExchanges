@@ -4,8 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HolidayExchanges.ViewModels
 {
+    /// <summary>
+    /// The viewmodel for the user's wishlist details view.
+    /// </summary>
     public class WishlistViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WishlistViewModel"/> class.
+        /// </summary>
         public WishlistViewModel()
         {
             Wishlist = new List<Wish>();

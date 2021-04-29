@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 
 namespace HolidayExchanges.Services
 {
+    /// <summary>
+    /// A class that contains the different shuffling algorithms.
+    /// </summary>
     public static class ShuffleManager
     {
         /// <summary>

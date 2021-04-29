@@ -12,8 +12,13 @@ namespace HolidayExchanges.Services
     /// </summary>
     public class SecretSantaManager
     {
+        /// <value>The database context</value>
         private readonly SecretSantaDbContext _context;
 
+        /// <summary>
+        /// Instantiates a new instance of the <see cref="SecretSantaManager"/> class.
+        /// </summary>
+        /// <param name="context">The <see cref="SecretSantaDbContext"/> instance.</param>
         public SecretSantaManager(SecretSantaDbContext context)
         {
             _context = context;
@@ -258,7 +263,6 @@ namespace HolidayExchanges.Services
                     _context.SaveChanges();
 
                     var recipient = _context.Users.Find(recipientId);
-                    //SendMatchEmail(currentUser, recipient, currentGroup);
 
                     #region Not Working DB Update
 

@@ -10,7 +10,8 @@
 
 4. Ability to have pairings beforehand and manually enter them
 
-Discussion Questions
-- How to remove the test email text file from main repository but keep it locally
-	(obviously we want to add it to the .gitignore file, but how do we remove it from GitHub?)
-- Do I need the dispose override method for all controllers that inherit from the BaseController if they all do the same thing as the parent class?
+5. How do I validate fields for pages that involve AJAX calls?
+	- JQuery Validate on client-side
+	- Server side validation is a big problem
+	- Remote validation? https://www.c-sharpcorner.com/blogs/remote-validation-in-mvc-5-using-remote-attribute
+	- May involve changing some of the edit views to full viewmodels to avoid validating on User model directly

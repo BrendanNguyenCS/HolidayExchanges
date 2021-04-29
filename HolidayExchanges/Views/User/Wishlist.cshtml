@@ -122,61 +122,61 @@
         <div class="container">
             <div class="row">
                 <div class="col-12" id="dvWLSearch">
-                    @using (Html.BeginForm())
-                    {
-                        Html.AntiForgeryToken();
-
-                        <div class="form-horizontal">
-                            <div class="row">
-                                <div class="col-12">
-                                    <p>Search for another user's wishlist:</p>
-                                </div>
+                    <div class="form-horizontal">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>Search for another user's wishlist:</p>
                             </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                             </div>
-                            <div class="row">
-                                <div class="form-group col-12 col-md-4 mr-md-0">
-                                    <label class="sr-only col-form-label" for="searchCriteria">Search Criteria</label>
-                                    <input type="text" id="searchCriteria" name="searchCriteria" placeholder="Username/email" class="form-control" />
-                                </div>
-                                <div class="form-group col-12 col-md-auto">
-                                    <button type="submit" class="btn btn-outline-primary mt-0 mb-2" id="wLSearchBtn">Search</button>
-                                </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-12 col-md-4 mr-md-0 mb-2">
+                                <label class="sr-only col-form-label" for="searchCriteria">Search Criteria</label>
+                                <input type="text" id="searchCriteria" name="searchCriteria" placeholder="Username/email" class="form-control" />
                             </div>
-                        </div>}
+                            <div class="col-12 col-md-auto">
+                                <input type="submit" class="btn btn-outline-primary mt-0 mb-2 ml-0 ml-md-1" id="wLSearchBtn" value="Search" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#wLSearchBtn').click(function () {
-            var searchCriteria = $('#searchCriteria').val();
-            var token = $('[name=__RequestVerificationToken]').val();
-            $.ajax({
-                url: '@Url.Action("WishlistSearch", "User")',
-                async: false,
-                method: 'GET',
-                headers: {'_RequestVerificationToken': token},
-                data: JSON.stringify(searchCriteria),
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                processData: false,
-                success: function (response) {
-                    if (response.success) {
-                    /* redirect to second api endpoint */
-                        window.location.href = response.redirectUrl;
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#wLSearchBtn').click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("WishlistSearch")',
+                    method: 'GET',
+                    async: false,
+                    data: {
+                        searchCriteria: $('#searchCriteria').val()
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                        /* redirect to second api endpoint */
+                            alert("You have successfully registered. You will be redirected to the main page.");
+                            window.location.href = response.redirectUrl;
+                        }
+                        else {
+                            alert(response.ex);
+                        }
+                    },
+                    error: function () {
+                        alert("Something failed. Try again.");
                     }
-                    else {
-                        alert(response.ex);
-                    }
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
+}

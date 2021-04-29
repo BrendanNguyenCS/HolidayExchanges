@@ -146,7 +146,6 @@ namespace HolidayExchanges.Controllers
             db.Entry(wish).State = EntityState.Modified;
             wish.HasBeenBought = true;
             db.SaveChanges();
-            // TODO: Can we return a new EmptyResult() here instead of calling a RedirectToAction back to where we came from?
             return RedirectToAction("Details", id);
         }
 
@@ -178,7 +177,7 @@ namespace HolidayExchanges.Controllers
         /// <see langword="true"/> if the current user session is logged in AND the wish being
         /// accessed belong to them, <see langword="false"/> otherwise.
         /// </returns>
-        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        protected ActionResult IsAuthorized(int? id, string currentController, string currentAction)
         {
             if (!IsLoggedIn("Edit", "Wish", id))
                 return RedirectToAction("Login", "Login");

@@ -8,8 +8,13 @@ namespace HolidayExchanges.Services
     /// </summary>
     public class HashManager
     {
+        /// <value>The size, in bytes, for the pre-hash password.</value>
         private const int _salt_size = 32;
+
+        /// <value>The number of iterations the hashing algorithm will perform before finishing.</value>
         private const int _num_iterations = 10000;
+
+        /// <value>The size of the final hashed password.</value>
         private const int _subkey_length = 32; // 256 bits % 8 bits per byte
 
         /// <summary>

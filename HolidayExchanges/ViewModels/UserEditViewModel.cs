@@ -1,51 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
-//using System.Web.Mvc;
-
-namespace HolidayExchanges.Models
+namespace HolidayExchanges.ViewModels
 {
     /// <summary>
-    /// Represents a user on the website
+    /// The viewmodel for the user profile editing view.
     /// </summary>
-    [Table("User")]
-    public class User
+    public class UserEditViewModel
     {
         /// <summary>
         /// The user identifier.
         /// </summary>
-        [Key]
-        [Column(Order = 0)]
-        public int UserID { get; set; }
+        public int ID { get; set; }
 
         /// <summary>
         /// The username for the current user.
         /// </summary>
         [Required(ErrorMessage = "This field is required.")]
-        [Column(Order = 1)]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "This field must be between 3 and 50 characters long.")]
         [Display(Name = "Username")]
-        //[Remote("IsUsernameAvailable", "Login", ErrorMessage = "This username is already taken.")]
         public string UserName { get; set; }
-
-        /// <summary>
-        /// The user's password (if from db, will be in hashed form).
-        /// </summary>
-        [Required(ErrorMessage = "This field is required.")]
-        [DataType(DataType.Password)]
-        [MinLength(5, ErrorMessage = "The password must be longer than {0} characters.")]
-        [StringLength(256)]
-        [Column("HashedPassword", Order = 2)]
-        public string Password { get; set; }
-
-        /// <summary>
-        /// The user's salt.
-        /// </summary>
-        [StringLength(128)]
-        [Column(Order = 3)]
-        public string Salt { get; set; }
 
         /// <summary>
         /// The user's first name.
@@ -60,19 +36,6 @@ namespace HolidayExchanges.Models
         [Display(Name = "Last Name")]
         [StringLength(20)]
         public string LastName { get; set; }
-
-        /// <summary>
-        /// The user's full name (first + last).
-        /// </summary>
-        [NotMapped]
-        [Display(Name = "Full Name")]
-        public string FullName
-        {
-            get
-            {
-                return FirstName + " " + LastName;
-            }
-        }
 
         /// <summary>
         /// The first line of the user's address.
@@ -123,8 +86,15 @@ namespace HolidayExchanges.Models
         [DataType(DataType.EmailAddress)]
         [EmailAddress(ErrorMessage = "Email is invalid")]
         [Column(Order = 4)]
-        //[Remote("IsEmailAvailable", "Login", ErrorMessage = "This email is associated with another user already.")]
+        [Remote("IsEmailAvailableOnEdit", "Login", ErrorMessage = "This email is associated with another user already.", AdditionalFields = "OriginalEmail")]
         public string Email { get; set; }
+
+        /// <summary>
+        /// A property used for email availability validation.
+        /// </summary>
+        [StringLength(128)]
+        [DataType(DataType.EmailAddress)]
+        public string OriginalEmail { get; set; }
 
         /// <summary>
         /// The user's birthday.
@@ -141,15 +111,5 @@ namespace HolidayExchanges.Models
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
-
-        /// <summary>
-        /// Gets or sets the user groups.
-        /// </summary>
-        public virtual ICollection<UserGroup> UserGroups { get; set; }
-
-        /// <summary>
-        /// Gets or sets the wishes.
-        /// </summary>
-        public virtual ICollection<Wish> Wishes { get; set; }
     }
 }

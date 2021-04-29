@@ -145,19 +145,5 @@ namespace HolidayExchanges.Controllers
         }
 
         #endregion Reset RedirectLink session variable
-
-        #region Combining login and page owner checks
-
-        /// <summary>
-        /// A combiner helper function for <see cref="IsLoggedIn(string, string, int?)"/> and <see cref="IsOwnerOfPage(int?)"/>
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="currentController"></param>
-        /// <param name="currentAction"></param>
-        /// <returns></returns>
-        /// <remarks>Is an <see langword="abstract"/> method.</remarks>
-        protected abstract ActionResult IsAuthorized(int? id, string currentController, string currentAction);
-
-        #endregion Combining login and page owner checks
     }
 }

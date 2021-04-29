@@ -138,11 +138,11 @@ namespace HolidayExchanges.Controllers
 
         #region Join Methods
 
-        /* GET: Group/Join/1
-        * Assumes that the current user is not in the group already
-        **/
+        /*
+         * GET: Group/Join/1
+         * Assumes that the current user is not in the group already
+         */
 
-        // TODO: can change the join operation to an AJAX call
         [HttpGet]
         public ActionResult Join(int id)
         {
@@ -182,7 +182,7 @@ namespace HolidayExchanges.Controllers
 
         #region AJAX Join
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult AjaxJoin(int id)
         {
             bool inGroup = IsInGroup(id);
@@ -204,7 +204,7 @@ namespace HolidayExchanges.Controllers
             {
                 db.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = id });
                 db.SaveChanges();
-                return RedirectToAction("Success", "Home");
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
@@ -217,8 +217,9 @@ namespace HolidayExchanges.Controllers
 
         #endregion Join Methods
 
-        #region Administrative Methods
+        #region Administrative Actions
 
+        // TODO: change Pair and SendAssignments to Ajax.Actionlink to prevent reloading of page https://dotnet-helpers.com/mvc/ajax-helpers-asp-net-mvc/
         [HttpGet]
         public ActionResult Pair(int id)
         {
@@ -232,6 +233,24 @@ namespace HolidayExchanges.Controllers
             }
             ViewBag.ErrorMessage = "Pairing failed.";
             return RedirectToAction("Error", "Home");
+        }
+
+        [HttpGet]
+        public JsonResult AjaxPair(int id)
+        {
+            var group = _santaMgr.GetGroupById(id);
+            if (id == 0 || group == null)
+                return Json(new { success = false, ex = "Invalid group number" }, JsonRequestBehavior.AllowGet);
+
+            try
+            {
+                _santaMgr.GetRecipientAssignments(id);
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { success = false, ex = "Pairing failed:\n" + e.Message + e.StackTrace + e.InnerException }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]
@@ -285,21 +304,57 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Details", id);
         }
 
-        #endregion Administrative Methods
-
         [HttpGet]
-        public JsonResult GroupSearch(string name)
+        public async Task<JsonResult> AjaxSendAssignments(int id)
         {
-            if (string.IsNullOrEmpty(name))
-                return Json(new { success = false, ex = "The search is empty." }, JsonRequestBehavior.AllowGet);
+            var list = _santaMgr.GetUserGroupsForGroup(id);
+            foreach (var ug in list)
+            {
+                try
+                {
+                    #region Email Contacts
 
-            var group = db.Groups.SingleOrDefault(g => g.Name == name);
+                    var user = ug.User;
+                    var group = ug.Group;
+                    var recipient = db.Users.Find(ug.RecipientUserID);
+                    var message = new MailMessage();
+                    message.To.Add(user.Email);
 
-            if (group != null)
-                return Json(new { success = true, ex = Url.Action("Details", "Group", new { id = group.GroupID }) }, JsonRequestBehavior.AllowGet);
+                    #endregion Email Contacts
 
-            return Json(new { success = false, ex = "A group with that name does not exist." }, JsonRequestBehavior.AllowGet);
+                    #region Email Content
+
+                    message.Subject = "Your assignment for the group " + group.Name;
+                    message.Body = "<h1>Secret Santa Pair Notification</h1>" + Environment.NewLine +
+                        "<p>Hello " + user.UserName + ",</p>" + Environment.NewLine +
+                        "<p>Your recipient for the " + group.Name + " group has been chosen.<p>" + Environment.NewLine +
+                        "<p><strong>Your recipient</strong>: " + recipient.UserName + "</p>" + Environment.NewLine +
+                        "<p>To view their wishlist, go to our website and view your profile.</p>" + Environment.NewLine +
+                        "<p>Thank you,</p>" + Environment.NewLine +
+                        "<p>From your friends at Holiday Exchanges MA</p>";
+                    message.IsBodyHtml = true;
+
+                    #endregion Email Content
+
+                    using (var smtp = new SmtpClient())
+                    {
+                        await smtp.SendMailAsync(message);
+                    }
+                }
+                catch (SmtpException ex)
+                {
+                    return Json(new { success = false, ex = ex.Message + ex.StackTrace + ex.InnerException }, JsonRequestBehavior.AllowGet);
+                }
+                catch (ArgumentNullException ex)
+                {
+                    return Json(new { success = false, ex = ex.Message + ex.StackTrace + ex.InnerException }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
+
+        #endregion Administrative Actions
 
         #region Authorization Helpers
 
@@ -328,7 +383,7 @@ namespace HolidayExchanges.Controllers
         /// <see langword="true"/> if the current user session is logged in AND is the creator of
         /// the group with <paramref name="id"/>, <see langword="false"/> otherwise.
         /// </returns>
-        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
+        protected ActionResult IsAuthorized(int? id, string currentController, string currentAction)
         {
             if (!IsLoggedIn("Edit", "Group", id))
                 return RedirectToAction("Login", "Login");

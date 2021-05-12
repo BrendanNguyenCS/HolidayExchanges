@@ -22,7 +22,7 @@
     </section>
 
     <section id="LoginForm">
-        <div class="container body-content">
+        <div class="container">
             @using (Html.BeginForm("Login", "Login", FormMethod.Post))
             {
                 @Html.AntiForgeryToken()
@@ -42,8 +42,9 @@
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "col-form-label col-sm-3 offset-md-1 col-md-2 offset-lg-2 col-lg-2" })
                                 <div class="col-12 col-md-7 col-lg-5">
-                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.Password, "", htmlAttributes: new { @class = "text-danger" })
+                                    <p class="form-text text-muted"><a style="text-decoration: none;" href="@Url.Action("ForgotPassword")">Forgot your password?</a></p>
                                 </div>
                             </div>
 
@@ -60,39 +61,3 @@
         </div>
     </section>
 </div>
-
-@section Scripts {
-    @*
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#LoginSubmit').on('click', function (e) {
-                    e.preventDefault();
-                    var _form = $(this).closest('form');
-                    if (_form.valid()) {
-                        $.ajax({
-                            url: '@Url.Action("ValidateLogin")',
-                            method: 'POST',
-                            async: false,
-                            data: { model: JSON.stringify(@Model) },
-                            dataType: 'json',
-                            success: function (response) {
-                                if (response.success) {
-                                    alert("Login successful.");
-                                    if (response.redirect) {
-                                        window.location.href = response.redirectUrl;
-                                    }
-                                    else {
-                                        window.location.href = '@Url.Action("Home", "Index")';
-                                    }
-                                }
-                            },
-                            error: function () {
-                                alert("Failed");
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
-    *@
-}

@@ -1,5 +1,6 @@
 ﻿using HolidayExchanges.Models;
 using HolidayExchanges.ViewModels;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -17,7 +18,22 @@ namespace HolidayExchanges.Controllers
             Wish wish = db.Wishes.Find(id);
             if (wish == null)
                 return HttpNotFound();
-            return View(wish);
+
+            var model = new WishDetailsVM
+            {
+                UserName = wish.User.UserName,
+                WishID = id.Value,
+                UserID = wish.UserID,
+                ItemName = wish.ItemName,
+                Description = wish.Description,
+                Quantity = wish.Quantity,
+                ItemLink = wish.ItemLink,
+                PurchasingInstructions = wish.PurchasingInstructions,
+                HasBeenBought = wish.HasBeenBought
+            };
+            model.PageOwner = IsOwnerOfPage(id);
+
+            return View(model);
         }
 
         // GET: Wish/Create
@@ -92,8 +108,61 @@ namespace HolidayExchanges.Controllers
                 db.Entry(model).State = EntityState.Modified;
                 db.Entry(model).Property(m => m.UserID).IsModified = false;
                 db.SaveChanges();
-                // not sure whether to display wish details or entire user wishlist
-                return RedirectToAction("Details", model.UserID);
+                return RedirectToAction("Details", new { id = model.WishID });
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult NewEdit(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            if (!IsLoggedIn("Edit", "Wish", id))
+                return RedirectToAction("Login", "Login");
+
+            if (!IsOwnerOfPage(id))
+                return RedirectToAction("Details", id);
+
+            var selectedWish = db.Wishes
+                .Single(w => w.WishID == id && w.User.UserName == GetCurrentUsername());
+
+            var model = new WishEditVM
+            {
+                WishID = id.Value,
+                ItemName = selectedWish.ItemName,
+                Description = selectedWish.Description,
+                Quantity = selectedWish.Quantity,
+                ItemLink = selectedWish.ItemLink,
+                PurchasingInstructions = selectedWish.PurchasingInstructions,
+                HasBeenBought = selectedWish.HasBeenBought
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult NewEdit(WishEditVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var selectedWish = db.Wishes
+            .Single(w => w.WishID == model.WishID && w.User.UserName == GetCurrentUsername());
+                db.Entry(selectedWish).State = EntityState.Modified;
+                db.Entry(selectedWish).Property(w => w.UserID).IsModified = false;
+
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Details", new { id = model.WishID });
+                }
+                catch (Exception e)
+                {
+                    ViewBag.ErrorMessage = e.Message + e.StackTrace + e.InnerException;
+                    return View("Error");
+                }
             }
 
             return View(model);
@@ -131,22 +200,20 @@ namespace HolidayExchanges.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult MarkAsPurchased(int? id)
+        // AJAX call
+        public JsonResult MarkAsPurchased(int? id)
         {
             var wish = db.Wishes.Find(id);
             if (wish == null)
-            {
-                ViewBag.ErrorMessage = "This item cannot be marked as purchased.";
-                return RedirectToAction("Error", "Home");
-            }
+                return Json(new { success = false, ex = "This item cannot be marked as purchased." }, JsonRequestBehavior.AllowGet);
 
             if (wish.HasBeenBought)
-                return RedirectToAction("Details", id);
+                return Json(new { success = true, reload = false, reloadMsg = "This item has already been purchased" }, JsonRequestBehavior.AllowGet);
 
             db.Entry(wish).State = EntityState.Modified;
             wish.HasBeenBought = true;
             db.SaveChanges();
-            return RedirectToAction("Details", id);
+            return Json(new { success = true, reload = true }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

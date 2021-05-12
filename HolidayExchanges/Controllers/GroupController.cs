@@ -19,9 +19,8 @@ namespace HolidayExchanges.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             if (!IsLoggedIn("Details", "Group", id))
                 return RedirectToAction("Login", "Login");
-            // add check that ensures that current user must be in the group to view details
             if (!IsInGroup(id))
-                return RedirectToAction("Home", "Index");
+                return RedirectToAction("Index", "Home");
             Group group = db.Groups.Find(id);
             if (group == null)
                 return HttpNotFound();
@@ -45,32 +44,43 @@ namespace HolidayExchanges.Controllers
             return View();
         }
 
-        // POST: Group/Create/1 To protect from overposting attacks, enable the specific properties
-        // you want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired,Creator")] Group group)
+        // POST: Group/Create/1
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Create(GroupCreateVM model)
         {
             if (ModelState.IsValid)
             {
                 var username = Session["UserName"].ToString();
-                var currentUser = db.Users.SingleOrDefault(u => u.UserName == username);
-                group.Creator = username;
+                var group = new Group
+                {
+                    Name = model.Name,
+                    ExchangeDate = model.ExchangeDate,
+                    Creator = username
+                };
 
+                var currentUser = db.Users.SingleOrDefault(u => u.UserName == username);
                 ResetRedirectLink();
 
                 if (currentUser != null)
                 {
-                    db.Groups.Add(group);
-                    db.UserGroups.Add(new UserGroup { UserID = currentUser.UserID, GroupID = group.GroupID });
-                    db.SaveChanges();
-                    return RedirectToAction("Index", "Home");
+                    try
+                    {
+                        db.Groups.Add(group);
+                        db.UserGroups.Add(new UserGroup { UserID = currentUser.UserID, GroupID = group.GroupID });
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Home");
+                    }
+                    catch (Exception e)
+                    {
+                        ViewBag.ErrorMessage = e.Message + e.StackTrace + e.InnerException;
+                        return View("Error");
+                    }
                 }
 
                 return RedirectToAction("Register", "Login");
             }
 
-            return View(group);
+            return View(model);
         }
 
         // GET: Group/Edit/1
@@ -92,8 +102,7 @@ namespace HolidayExchanges.Controllers
 
         // POST: Group/Edit/5 To protect from overposting attacks, enable the specific properties
         // you want to bind to, for more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "GroupID,Name,ExchangeDate,HasBeenPaired,Creator")] Group group)
         {
             if (ModelState.IsValid)
@@ -138,11 +147,7 @@ namespace HolidayExchanges.Controllers
 
         #region Join Methods
 
-        /*
-         * GET: Group/Join/1
-         * Assumes that the current user is not in the group already
-         */
-
+        // GET: Group/Join/1
         [HttpGet]
         public ActionResult Join(int id)
         {
@@ -152,14 +157,24 @@ namespace HolidayExchanges.Controllers
                 return RedirectToAction("Login", "Login");
             var group = db.Groups.Find(id);
             if (group != null)
-                return View(group);
+            {
+                var model = new JoinViewModel
+                {
+                    GroupID = group.GroupID,
+                    GroupName = group.Name,
+                    Creator = group.Creator,
+                    ExchangeDate = group.ExchangeDate
+                };
+                return View(model);
+            }
+
             ViewBag.ErrorMessage = "Unable to locate event group";
-            return RedirectToAction("Error", "Home");
+            return View("Error");
         }
 
         // POST: Group/Join/1
         [HttpPost]
-        public ActionResult Join(Group model)
+        public ActionResult Join(JoinViewModel model)
         {
             var username = Session["UserName"].ToString();
             var user = db.Users.SingleOrDefault(u => u.UserName == username);
@@ -171,55 +186,44 @@ namespace HolidayExchanges.Controllers
             {
                 db.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = group.GroupID });
                 db.SaveChanges();
-                return RedirectToAction("Success", "Home");
+                return View("Success");
             }
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message + ". " + ex.InnerException.Message;
-                return RedirectToAction("Error", "Home");
+                return View("Error");
             }
         }
 
-        #region AJAX Join
-
-        [HttpGet]
+        // AJAX join API endpoint
+        [HttpPost]
         public JsonResult AjaxJoin(int id)
         {
             bool inGroup = IsInGroup(id);
             if (inGroup)
                 return Json(new { success = false, ex = "You are already in this group." }, JsonRequestBehavior.AllowGet);
             else
-                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult GetGroup(int id)
-        {
-            var username = Session["UserName"].ToString();
-            var user = db.Users.SingleOrDefault(u => u.UserName == username);
-
-            ResetRedirectLink();
-
-            try
             {
-                db.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = id });
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message + ". " + ex.InnerException.Message;
-                return RedirectToAction("Error", "Home");
+                var user = GetCurrentUser();
+                ResetRedirectLink();
+
+                try
+                {
+                    db.UserGroups.Add(new UserGroup { UserID = user.UserID, GroupID = id });
+                    db.SaveChanges();
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false, ex = "Something went wrong. Please try again later.\n" + e.Message + e.StackTrace + e.InnerException }, JsonRequestBehavior.AllowGet);
+                }
             }
         }
-
-        #endregion AJAX Join
 
         #endregion Join Methods
 
         #region Administrative Actions
 
-        // TODO: change Pair and SendAssignments to Ajax.Actionlink to prevent reloading of page https://dotnet-helpers.com/mvc/ajax-helpers-asp-net-mvc/
         [HttpGet]
         public ActionResult Pair(int id)
         {
@@ -229,10 +233,10 @@ namespace HolidayExchanges.Controllers
             if (group != null)
             {
                 _santaMgr.GetRecipientAssignments(id);
-                return RedirectToAction("Success", "Home");
+                return View("Success");
             }
             ViewBag.ErrorMessage = "Pairing failed.";
-            return RedirectToAction("Error", "Home");
+            return View("Error");
         }
 
         [HttpGet]
@@ -340,6 +344,8 @@ namespace HolidayExchanges.Controllers
                     {
                         await smtp.SendMailAsync(message);
                     }
+
+                    return Json(new { success = true }, JsonRequestBehavior.AllowGet);
                 }
                 catch (SmtpException ex)
                 {

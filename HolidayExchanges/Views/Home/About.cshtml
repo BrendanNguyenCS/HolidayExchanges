@@ -1,8 +1,91 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
-<p>Invidunt at sit diam lorem labore ea accusam quod accusam consetetur vel eu no lorem iusto blandit rebum dolore amet praesent sed no delenit sed rebum labore facilisis doming facilisis sed ipsum labore voluptua amet blandit illum voluptua vel labore est nobis et sed voluptua dolor at eum eu ea</p>
+<link href="~/Content/About.css" type="text/css" rel="stylesheet" />
+
+<div class="container">
+
+    <section id="AboutTitle">
+        <div class="row">
+            <div class="col-12 page-header">
+                <h1 class="text-center display-4">About</h1>
+                <hr />
+            </div>
+        </div>
+    </section>
+
+    <section id="AboutMain">
+        <div class="row d-flex align-items-center">
+            <div class="col-12 col-sm-5 text-center" id="FigureDiv">
+                <div class="row">
+                    <div class="col-12">
+                        <figure class="figure">
+                            <img src="https://via.placeholder.com/150" class="figure-img img-fluid shadow-sm rounded" style="width: 150px" id="AuthorFig" />
+                            <figcaption class="figure-caption">Brendan Nguyen, Founder</figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-7 text-center text-sm-left" id="AboutTextDiv">
+                <p class="lead">Holiday Exchanges is your one-stop shop for everything related to gift exchange games during the holiday season. If you are planning a Secret Santa game with your family, friends, coworkers, or peers, this site is the one for you. Create an account with us and invite others to your event!</p>
+                <p>Look out for our future expansion into Yankee Swaps!</p>
+            </div>
+        </div>
+        <!-- all other screen sizes social sections -->
+        <div class="row d-none d-sm-block">
+            <div class="offset-sm-5 col-sm-7" id="LargeSocialIcons">
+                <p>If you want to follow any of our socials to keep up to date with the latest news and updates, those links are below:</p>
+
+                <a href="https://github.com/BrendanNguyenCS" class="btn btn-link github">
+                    <i class="fab fa-github mr-1"></i>
+                    GitHub
+                </a>
+
+                <a href="https://www.facebook.com" class="btn btn-link fb">
+                    <i class="fab fa-facebook-f mr-1"></i>
+                    Facebook
+                </a>
+
+                <a href="https://www.discord.com" class="btn btn-link discord">
+                    <i class="fab fa-discord mr-1"></i>
+                    Discord
+                </a>
+
+                <a href="https://www.instagram.com/" class="btn btn-link insta">
+                    <i class="fab fa-instagram mr-1"></i>
+                    Instagram
+                </a>
+            </div>
+        </div>
+        <!-- mobile-only social section -->
+        <div class="d-flex d-sm-none justify-content-center mb-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="container-fluid">
+                        <button type="button" class="btn btn-sm btn-secondary btn-block github" id="GitHubBtn">
+                            <i class="fab fa-github mr-1"></i>
+                            Click here for news and updates on <strong>GitHub</strong>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary btn-block fb" id="FBBtn">
+                            <i class="fab fa-facebook-f mr-1"></i>
+                            Follow us on <span class="FBText">Facebook</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary btn-block discord" id="DiscordBtn">
+                            <i class="fab fa-discord mr-1"></i>
+                            Follow on <span class="DiscordText">Discord</span> for quick help or hang out
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary btn-block insta" id="InstaBtn">
+                            <i class="fab fa-instagram mr-1"></i>
+                            Follow us on <span class="InstaText">Instagram</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/Scripts/About.js"></script>
+}

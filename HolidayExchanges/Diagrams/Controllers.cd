@@ -8,23 +8,23 @@
     </TypeIdentifier>
   </Class>
   <Class Name="HolidayExchanges.Controllers.GroupController">
-    <Position X="5.5" Y="4.25" Width="2.75" />
+    <Position X="5.5" Y="4.25" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAgBABiAgAAAAAAAAAEACEAGAAAAAAAAQAA=</HashCode>
+      <HashCode>AAQAAAAAQAgBABiAgAAAAAAAAAEACEACAAAAAAAAQAA=</HashCode>
       <FileName>Controllers\GroupController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HolidayExchanges.Controllers.HomeController">
     <Position X="11.5" Y="0.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAQEACAAAAAAAAgAAAAAAAAEAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAEACAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>Controllers\HomeController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HolidayExchanges.Controllers.LoginController">
-    <Position X="2" Y="4.25" Width="2.75" />
+    <Position X="1.75" Y="4.25" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>gAAAACAAAAAAAAAAAAAAAAAAAAABAAAAAAAQABAAQAA=</HashCode>
+      <HashCode>AAAAACABAAYAgAAAAAAEAAAAAAABAACCAAAQAAAAwAA=</HashCode>
       <FileName>Controllers\LoginController.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -36,9 +36,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="HolidayExchanges.Controllers.WishController">
-    <Position X="12.75" Y="4.25" Width="2.5" />
+    <Position X="12.75" Y="4.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAABAACAAAAAAAAAAAEACEACABAAAAAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAABAACAAEAAAAAAAAEACEACABAAAAAAQAA=</HashCode>
       <FileName>Controllers\WishController.cs</FileName>
     </TypeIdentifier>
   </Class>

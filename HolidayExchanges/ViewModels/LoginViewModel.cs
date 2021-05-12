@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-//using System.Web.Mvc;
+using System.Web.Mvc;
 
 namespace HolidayExchanges.ViewModels
 {
@@ -15,7 +14,7 @@ namespace HolidayExchanges.ViewModels
         [Required(ErrorMessage = "This field is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "This field must be between 3 and 50 characters long.")]
         [Display(Name = "Username")]
-        //[Remote("IsAValidUser", "Login", ErrorMessage = "Incorrect username")]
+        [Remote("IsAValidUser", "Login", ErrorMessage = "Incorrect username")]
         public string UserName { get; set; }
 
         /// <summary>
@@ -25,7 +24,7 @@ namespace HolidayExchanges.ViewModels
         [DataType(DataType.Password)]
         [MinLength(5, ErrorMessage = "The password must be longer than {0} characters.")]
         [StringLength(256)]
-        //[Remote("PasswordMatch", "Login", ErrorMessage = "Incorrect password", AdditionalFields = "UserName")]
+        [Remote("IsPasswordCorrect", "Login", ErrorMessage = "Incorrect password", AdditionalFields = "UserName")]
         public string Password { get; set; }
     }
 }

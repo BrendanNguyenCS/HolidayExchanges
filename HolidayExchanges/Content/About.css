@@ -1,0 +1,68 @@
+﻿div#LargeSocialIcons a {
+    text-decoration: none;
+}
+
+    div#LargeSocialIcons a:hover {
+        background: rgba(128,128,128,0.1);
+    }
+
+    div#LargeSocialIcons a:active {
+        background: rgba(128,128,128,0.3) !important;
+    }
+
+@media (max-width: 575.98px) {
+    .github {
+        background-color: #6e5494;
+    }
+
+    .fb {
+        background-color: #3b5998;
+    }
+
+    .discord {
+        background-color: #7289da;
+    }
+
+    .insta {
+        background-color: #e1306c;
+    }
+}
+
+@media (min-width: 576px) {
+    a.github, a.github:hover {
+        color: #6e5494;
+        font-weight: 600;
+    }
+
+        a.github:active {
+            border: 1px solid #6e5494;
+        }
+
+    a.fb, a.fb:hover {
+        font-family: "ufonts.com_klavika-bold-opentype", sans-serif;
+        font-weight: bold;
+        color: #3b5998;
+    }
+
+        a.fb:active {
+            border: 1px solid #3b5998;
+        }
+
+    a.discord, a.discord:hover {
+        font-family: UniSansDemo-HeavyCAPS, sans;
+        color: #7289da;
+    }
+
+        a.discord:active {
+            border: 1px solid #7289da;
+        }
+
+    a.insta, a.insta:hover {
+        color: #e1306c;
+        font-family: Fontspring-DEMO-blue_vinyl_regular_ps_ot, sans;
+    }
+
+        a.insta:active {
+            border: 1px solid #e1306c;
+        }
+}

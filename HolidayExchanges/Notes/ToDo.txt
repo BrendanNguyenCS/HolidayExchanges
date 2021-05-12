@@ -4,7 +4,7 @@
 
 	Same thing for certain buttons on certain pages
 
-2. Input masking for phone fields
+2. Input masking for phone fields (https://www.npmjs.com/package/jquery-input-mask-phone-number)
 
 3. Ability to remove a person from a group
 
@@ -15,3 +15,7 @@
 	- Server side validation is a big problem
 	- Remote validation? https://www.c-sharpcorner.com/blogs/remote-validation-in-mvc-5-using-remote-attribute
 	- May involve changing some of the edit views to full viewmodels to avoid validating on User model directly
+
+6. Custom alert boxes with html which jquery can show with the id selector (https://getbootstrap.com/docs/4.0/components/alerts/)
+
+7. Custom checkboxes/radio buttons (https://codepen.io/jpI/pen/OwgppV)

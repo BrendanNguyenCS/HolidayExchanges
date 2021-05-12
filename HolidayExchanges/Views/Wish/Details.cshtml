@@ -1,4 +1,4 @@
-﻿@model HolidayExchanges.Models.Wish
+﻿@model HolidayExchanges.ViewModels.WishDetailsVM
 
 @{
     ViewBag.Title = "Wish Details";
@@ -8,21 +8,21 @@
     <section id="WishDetailsTitle">
         <div class="row">
             <div class="page-header col-12">
-                <h1 class="text-center display-5">Wish Details</h1>
+                <h1 class="text-center display-4">Wish Details</h1>
                 <hr />
             </div>
         </div>
     </section>
 
     <section id="WishDetailsList">
-        <div class="container body-content offset-md-1">
+        <div class="container offset-md-1">
             <dl class="row">
                 <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
-                    @Html.DisplayNameFor(model => model.User.UserName)
+                    @Html.DisplayNameFor(model => model.UserName)
                 </dt>
 
                 <dd class="col-12 col-md-8">
-                    @Html.DisplayFor(model => model.User.UserName)
+                    @Html.DisplayFor(model => model.UserName)
                 </dd>
 
                 <dt class="col-5 col-md-4 offset-lg-1 col-lg-3">
@@ -54,8 +54,6 @@
                 </dt>
 
                 <dd class="col-12 col-md-8">
-                    <!-- the entire link url (doesn't look good) -->
-                    @*@Html.DisplayFor(model => model.ItemLink)*@
                     <a href="@Model.ItemLink" style="text-decoration: none;" target="_blank">Click here</a>
                 </dd>
 
@@ -85,12 +83,53 @@
                 </dd>
             </dl>
             <div class="row">
-                    <div class="btn-group col-12 offset-lg-1 col-lg-3" role="group" aria-label="Buttons for wish details page">
+                <div class="btn-group col-12 offset-lg-1 col-lg-3" role="group" aria-label="Buttons for wish details page">
+                    @Html.ActionLink("Edit", "Edit", new { id = Model.WishID }, new { @class = "btn btn-primary mr-0" })
+                    @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-primary mr-0" })
+                    @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="btn-group col-12 offset-lg-1 col-lg-3" role="group" aria-label="Buttons for wish details page">
+                    @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-primary mr-0" })
+                    @if (Model.PageOwner)
+                    {
                         @Html.ActionLink("Edit", "Edit", new { id = Model.WishID }, new { @class = "btn btn-primary mr-0" })
-                        @Html.ActionLink("Back to Wishlist", "Wishlist", "User", new { id = Model.UserID }, new { @class = "btn btn-primary mr-0" })
-                        @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-primary" })
-                    </div>
+                        @Html.ActionLink("Back to Profile", "Details", "User", new { id = Model.UserID }, new { @class = "btn btn-primary mr-0" })
+                    }
+                    <a class="btn btn-primary" href="@Url.Action("MarkAsPurchased", new { id = Model.WishID })" id="BuyMarkBtn">Mark as Purchased</a>
+                </div>
             </div>
         </div>
     </section>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#BuyMarkBtn').on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    async: false,
+                    url: '@Url.Action("MarkAsPurchased")',
+                    method: 'GET',
+                    data: { id: @Model.WishID},
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            if (response.reload) {
+                                window.location.reload(true);
+                            }
+                            else {
+                                alert(response.reloadMsg);
+                            }
+                        }
+                        else {
+                            alert(response.ex);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

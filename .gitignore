@@ -349,3 +349,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /HolidayExchanges/Notes/Email.txt
+/HolidayExchanges/Testing/TestClass.cs
+/HolidayExchanges/Views/Test/Test.cshtml
+/HolidayExchanges/Testing/TestController.cs
+/HolidayExchanges/Views/Test/Index.cshtml
+/HolidayExchanges/Web.config

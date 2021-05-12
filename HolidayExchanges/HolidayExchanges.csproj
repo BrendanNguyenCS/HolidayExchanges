@@ -214,12 +214,21 @@
     <Compile Include="Services\HashManager.cs" />
     <Compile Include="Services\SecretSantaManager.cs" />
     <Compile Include="Services\ShuffleManager.cs" />
+    <Compile Include="Testing\TestClass.cs" />
+    <Compile Include="Testing\TestController.cs" />
+    <Compile Include="ViewModels\ChangePasswordVM.cs" />
+    <Compile Include="ViewModels\ContactViewModel.cs" />
+    <Compile Include="ViewModels\ForgotPasswordVM.cs" />
+    <Compile Include="ViewModels\GroupCreateVM.cs" />
     <Compile Include="ViewModels\GrouplistViewModel.cs" />
     <Compile Include="ViewModels\GroupViewModel.cs" />
+    <Compile Include="ViewModels\JoinViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\UserEditViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\WishDetailsVM.cs" />
+    <Compile Include="ViewModels\WishEditVM.cs" />
     <Compile Include="ViewModels\WishlistViewModel.cs" />
     <Compile Include="ViewModels\WishViewModel.cs" />
   </ItemGroup>
@@ -300,6 +309,7 @@
     <Content Include="bin\System.Web.WebPages.Razor.xml" />
     <Content Include="bin\System.Web.WebPages.xml" />
     <Content Include="bin\WebGrease.dll" />
+    <Content Include="Content\About.css" />
     <Content Include="Diagrams\Infrastructure3-1-21.png" />
     <Content Include="Diagrams\Infrastructure3-12-21.png" />
     <Content Include="Diagrams\Infrastructure3-16-21.png" />
@@ -328,8 +338,13 @@
       <Link>.editorconfig</Link>
     </Content>
     <Content Include="Diagrams\Controllers.cd" />
+    <Content Include="Fonts\UniSansDemo-HeavyCAPS.otf" />
+    <Content Include="Fonts\Fontspring-DEMO-blue_vinyl_regular_ps_ot.otf" />
+    <Content Include="Fonts\ufonts.com_klavika-bold-opentype.otf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-3.5.1-vsdoc.js" />
+    <Content Include="Scripts\About.js" />
+    <Content Include="Scripts\Contact.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
     <Content Include="Scripts\jquery-3.5.1.slim.js" />
@@ -365,21 +380,22 @@
     <Content Include="Scripts\jquery-3.5.1.min.map" />
     <Content Include="Views\Group\Edit.cshtml" />
     <Content Include="Views\Group\Delete.cshtml" />
-    <Content Include="Views\Group\Index.cshtml" />
     <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Wish\Create.cshtml" />
     <Content Include="Views\Wish\Edit.cshtml" />
     <Content Include="Views\Wish\Delete.cshtml" />
     <Content Include="Views\Wish\Details.cshtml" />
     <Content Include="Views\User\Wishlist.cshtml" />
     <Content Include="Views\User\Grouplist.cshtml" />
+    <Content Include="Views\Login\ForgotPassword.cshtml" />
+    <Content Include="Views\Login\ChangePassword.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="fonts\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

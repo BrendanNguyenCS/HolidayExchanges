@@ -42,14 +42,28 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        // GET: User/Details/bnuge
+        // GET: User/Details/bnuge (only use is for navbar button when logged in)
         [ActionName("DetailsByUsername")]
         public ActionResult Details(string username)
         {
             if (string.IsNullOrEmpty(username))
                 return RedirectToAction("Login", "Login");
             int id = db.Users.Single(u => u.UserName == username).UserID;
-            return RedirectToAction("Details", new { id });
+            User user = db.Users.Find(id);
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", new { id = currentUser.UserID });
+            }
+            if (user == null)
+                return HttpNotFound();
+            UserViewModel model = new UserViewModel
+            {
+                User = user,
+                Groups = _santaMgr.GetAllGroupsForUser(id)
+            };
+            model.Recipients = _santaMgr.GetRecipientsForAllGroupsForUser(id, model.Groups);
+            return View("Details", model);
         }
 
         #endregion Details View Initializers
@@ -86,10 +100,11 @@ namespace HolidayExchanges.Controllers
                 Zip = user.Zip,
                 Country = user.Country,
                 Email = user.Email,
-                // below will be a hidden field
-                OriginalEmail = user.Email,
                 PhoneNumber = user.PhoneNumber,
-                Birthday = user.Birthday
+                Birthday = user.Birthday,
+                // hidden fields
+                OriginalEmail = user.Email,
+                OriginalUserName = user.UserName
             };
             return View(model);
         }
@@ -237,6 +252,7 @@ namespace HolidayExchanges.Controllers
         #endregion AJAX Call API Endpoints
 
         // GET: User/Grouplist/1
+        [HttpGet]
         public ActionResult Grouplist(int? id)
         {
             if (id == null)

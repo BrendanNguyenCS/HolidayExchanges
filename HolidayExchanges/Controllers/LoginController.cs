@@ -3,6 +3,7 @@ using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
@@ -14,8 +15,7 @@ namespace HolidayExchanges.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            LoginViewModel model = new LoginViewModel();
-            return View(model);
+            return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -23,24 +23,32 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
+                #region Replaced by remote validation logic
 
-                if (user == null) // Username doesn't exist in the db
-                {
-                    ModelState.AddModelError("UserName", "This username doesn't exist in our system. Try again, and contact the system administrator if the problem persists.");
-                    return View(model);
-                }
-                else
-                {
-                    // Check if entered password matches user's password in db
-                    var IsAUser = hasher.VerifyPassword(model.Password, user.Password, user.Salt);
+                /*
+                    var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
 
-                    if (!IsAUser) // Incorrect password
+                    if (user == null) // Username doesn't exist in the db
                     {
-                        ModelState.AddModelError("Password", "The password you entered is incorrect.");
+                        ModelState.AddModelError("UserName", "Incorrect username");
                         return View(model);
                     }
-                }
+                    else
+                    {
+                        // Check if entered password matches user's password in db
+                        var IsAUser = hasher.VerifyPassword(model.Password, user.Password, user.Salt);
+
+                        if (!IsAUser) // Incorrect password
+                        {
+                            // Replaced using remote validation? https://docs.microsoft.com/en-us/previous-versions/aspnet/gg508808(v=vs.98)?redirectedfrom=MSDN#adding-custom-remote-validation
+                            //ModelState.AddModelError("Password", "The password you entered is incorrect.");
+
+                            return View(model);
+                        }
+                    }
+                */
+
+                #endregion Replaced by remote validation logic
 
                 Session["UserName"] = model.UserName;
 
@@ -49,54 +57,16 @@ namespace HolidayExchanges.Controllers
                     return Redirect(Session["RedirectLink"].ToString());
                 }
 
-                return RedirectToAction("Index", "Home"); // redirect to main page
+                return RedirectToAction("Index", "Home");
             }
 
             return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public JsonResult ValidateLogin(LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
-
-                if (user == null)
-                {
-                    ModelState.AddModelError("UserName", "This username doesn't exist.");
-                    return Json(new { success = false, ex = "This username doesn't exist." }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    var isAUser = hasher.VerifyPassword(model.Password, user.Password, user.Salt);
-
-                    if (!isAUser)
-                    {
-                        ModelState.AddModelError("Password", "This password is incorrect.");
-                        return Json(new { success = false, ex = "This password is incorrect." }, JsonRequestBehavior.AllowGet);
-                    }
-                }
-
-                Session["UserName"] = model.UserName;
-                if (Session["RedirectLink"] != null)
-                    return Json(new { success = true, redirect = true, redirectUrl = Session["RedirectLink"].ToString() });
-
-                return Json(new { success = true, redirect = false }, JsonRequestBehavior.AllowGet);
-            }
-
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
         public ActionResult Register()
         {
-            User user = new User();
-            RegisterViewModel model = new RegisterViewModel
-            {
-                User = user
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -104,42 +74,61 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = model.User;
-                var existingUserName = db.Users.SingleOrDefault(l => l.UserName == user.UserName);
-                if (existingUserName != null) //an account already exists with username
+                #region Has been replaced by data annotations compare and remote validation attributes
+
+                /*
+                    var user = model.User;
+                    var existingUserName = db.Users.SingleOrDefault(l => l.UserName == user.UserName);
+                    if (existingUserName != null) //an account already exists with username
+                    {
+                        ModelState.AddModelError("User.UserName", "This username already exists. Please try another username.");
+                        return View(model);
+                    }
+
+                    var existingEmail = db.Users.SingleOrDefault(l => l.Email == user.Email);
+                    if (existingEmail != null)
+                    {
+                        ModelState.AddModelError("User.Email", "Sorry, there's already an account associated with this email. Please try again.");
+                        return View(model);
+                    }
+
+                    var confirmPassword = model.ConfirmPassword;
+                    if (!model.ValidatePassword())
+                    {
+                        ModelState.AddModelError("ConfirmPassword", "The ConfirmPassword field must match the Password field.");
+                        return View(model);
+                    }
+                */
+
+                #endregion Has been replaced by data annotations compare and remote validation attributes
+
+                if (model.Birthday == null)
                 {
-                    ModelState.AddModelError("User.UserName", "This username already exists. Please try another username.");
-                    return View(model);
+                    model.Birthday = DateTime.UtcNow.Date; // set to default value of date of registration
                 }
 
-                var existingEmail = db.Users.SingleOrDefault(l => l.Email == user.Email);
-                if (existingEmail != null)
+                var user = new User
                 {
-                    ModelState.AddModelError("User.Email", "Sorry, there's already an account associated with this email. Please try again.");
-                    return View(model);
-                }
-
-                // retrieve password fields and compares them
-                var confirmPassword = model.ConfirmPassword;
-                if (!model.ValidatePassword())
-                {
-                    ModelState.AddModelError("ConfirmPassword", "The ConfirmPassword field must match the Password field.");
-                    return View(model);
-                }
-
-                // check if birthday is blank
-                if (user.Birthday == null)
-                {
-                    user.Birthday = DateTime.UtcNow.Date; // set to default value of date of registration
-                }
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Address1 = model.Address1,
+                    Address2 = model.Address2,
+                    City = model.City,
+                    State = model.State,
+                    Zip = model.Zip,
+                    Country = model.Country,
+                    Email = model.Email,
+                    Birthday = model.Birthday,
+                    PhoneNumber = model.PhoneNumber
+                };
 
                 // only executes if username AND email doesn't exist in the db and password has been verified
-                var userSalt = hasher.GenerateSalt(); // creates salt
-                var userHash = hasher.ComputeHash(user.Password, userSalt); // creates hashed password
-                user.Password = Convert.ToBase64String(userHash); // save above to appropriate login acct
-                user.Salt = Convert.ToBase64String(userSalt); // save salt to same acct
+                var userSalt = hasher.GenerateSalt();
+                var userHash = hasher.ComputeHash(model.Password, userSalt);
+                user.Password = Convert.ToBase64String(userHash);
+                user.Salt = Convert.ToBase64String(userSalt);
 
-                // adding both objects to db
                 try
                 {
                     db.Users.Add(user);
@@ -162,60 +151,134 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public JsonResult AjaxRegister(RegisterViewModel model)
+        [HttpGet]
+        public ActionResult ForgotPassword()
         {
-            if (ModelState.IsValid)
+            ForgotPasswordVM model = new ForgotPasswordVM();
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ForgotPassword(ForgotPasswordVM model)
+        {
+            var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
+            // no need for null check since validation took care of it
+            db.Entry(user).Property(u => u.Password).IsModified = true;
+            db.Entry(user).Property(u => u.Salt).IsModified = true;
+
+            var salt = hasher.GenerateSalt();
+            var hash = hasher.ComputeHash(model.NewPassword, salt);
+            user.Password = Convert.ToBase64String(hash);
+            user.Salt = Convert.ToBase64String(salt);
+
+            try
             {
-                var user = model.User;
-                var existingUser = db.Users.SingleOrDefault(l => l.UserName == model.User.UserName);
-                if (existingUser != null)
-                    return Json(new { success = false, ex = "This username already exists." }, JsonRequestBehavior.AllowGet);
+                db.SaveChanges();
+                return RedirectToAction("Login", "Login");
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message + e.StackTrace + e.InnerException;
+                return View("Error");
+            }
+        }
 
-                var existingEmail = db.Users.SingleOrDefault(l => l.UserName == model.User.Email);
-                if (existingEmail != null)
-                    return Json(new { success = false, ex = "This email already exists." }, JsonRequestBehavior.AllowGet);
+        [HttpGet]
+        public ActionResult ChangePassword(int? id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-                if (!model.ValidatePassword())
-                    return Json(new { success = false, ex = "Your password fields are different." }, JsonRequestBehavior.AllowGet);
+            if (!IsLoggedIn("ChangePassword", "User", id))
+                return RedirectToAction("Login", "Login");
 
-                if (user.Birthday == null)
-                    user.Birthday = DateTime.UtcNow.Date;
-
-                var userSalt = hasher.GenerateSalt();
-                var userHash = hasher.ComputeHash(user.Password, userSalt);
-                user.Password = Convert.ToBase64String(userHash);
-                user.Salt = Convert.ToBase64String(userSalt);
-
-                try
-                {
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { success = false, ex = "Sorry but something went wrong and your registration failed. Please try again." }, JsonRequestBehavior.AllowGet);
-                }
-
-                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            if (!IsOwnerOfPage(id))
+            {
+                var currentUser = GetCurrentUser();
+                return RedirectToAction("Details", "User", new { id = currentUser.UserID });
             }
 
-            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            var model = new ChangePasswordVM();
+            return View(model);
         }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(ChangePasswordVM model)
+        {
+            var user = GetCurrentUser();
+            db.Entry(user).Property(u => u.Password).IsModified = true;
+            db.Entry(user).Property(u => u.Salt).IsModified = true;
+            var salt = hasher.GenerateSalt();
+            var hash = hasher.ComputeHash(model.NewPassword, salt);
+            user.Password = Convert.ToBase64String(hash);
+            user.Salt = Convert.ToBase64String(salt);
+
+            try
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = e.Message + e.StackTrace + e.InnerException;
+                return View("Error");
+            }
+        }
+
+        #region Remote Validation Methods
+
+        [HttpGet]
+        public JsonResult IsAValidUser(string UserName)
+        {
+            return Json(db.Users.Any(u => u.UserName == UserName), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult IsPasswordCorrect(string Password, string UserName)
+        {
+            var user = db.Users.SingleOrDefault(u => u.UserName == UserName);
+            return Json(hasher.VerifyPassword(Password, user.Password, user.Salt), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult IsUsernameAvailable(string UserName)
+        {
+            return Json(!db.Users.Any(u => u.UserName == UserName), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult IsEmailAvailable(string Email)
+        {
+            return Json(!db.Users.Any(u => u.Email == Email), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult IsEmailAvailableOnEdit(string Email, string OriginalEmail)
+        {
+            if (Email.Equals(OriginalEmail))
+            {
+                // validates field if unchanged
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(!db.Users.Any(u => u.Email == Email), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult IsUsernameAvailableOnEdit(string UserName, string OriginalUserName)
+        {
+            if (UserName.Equals(OriginalUserName))
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            return Json(!db.Users.Any(u => u.UserName == UserName), JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion Remote Validation Methods
 
         public ActionResult SignOut()
         {
             Session["UserName"] = null;
-            return RedirectToAction("Success", "Home");
+            return RedirectToAction("Index", "Home");
         }
-
-        #region Method to satisfy abstraction (this doesn't do anything)
-
-        protected override ActionResult IsAuthorized(int? id, string currentController, string currentAction)
-        {
-            return new EmptyResult();
-        }
-
-        #endregion Method to satisfy abstraction (this doesn't do anything)
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-//using System.Web.Mvc;
 
 namespace HolidayExchanges.Models
 {
@@ -27,7 +26,6 @@ namespace HolidayExchanges.Models
         [Column(Order = 1)]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "This field must be between 3 and 50 characters long.")]
         [Display(Name = "Username")]
-        //[Remote("IsUsernameAvailable", "Login", ErrorMessage = "This username is already taken.")]
         public string UserName { get; set; }
 
         /// <summary>

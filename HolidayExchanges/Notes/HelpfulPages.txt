@@ -57,26 +57,28 @@ https://web.archive.org/web/20150801085341/http://blog.thijssen.ch/2010/02/when-
 https://stackoverflow.com/questions/273313/randomize-a-listt
 	 - Fisher–Yates shuffle
 
+--------------------------------------------------------------
+
 Different pairing methods
 1. Randomly pair people until there are 3 remaining (and then assign accordingly)
 2. Randomize the list using Fisher-Yates shuffle and pair using adjacent indices (even or odd number of users in a list have same functionality)
+
+--------------------------------------------------------------
 
 Different random number generators to use in shuffling
 1. System.Random
 2. System.Security.Cryptography.RandomNumberGenerator
 
+--------------------------------------------------------------
+
 5. Shift Join view to details list (dl)
 
-6. Do fit pairing functionality, you can add a column to the userGroups table to accommodate the particular person's assigned recipient's userid
-
-7. Setting a required column for an existing nullable field
-http://testedwithf5.com/entity-framework/entity-framework-refresher-changing-nullable-to-non-nullable/
-
-8. Time sensitive function execution
+6. Time sensitive function execution
 https://stackoverflow.com/questions/3243348/how-to-call-a-method-daily-at-specific-time-in-c
 
-9. Fix many to many
-https://stackoverflow.com/questions/7050404/create-code-first-many-to-many-with-additional-fields-in-association-table?rq=1
-
-10. Route configs
+7. Route configs
 https://stackoverflow.com/questions/2246481/routing-with-multiple-parameters-using-asp-net-mvc
+
+8. Ability to use HTML helpers and passing model from embedded script to external JS file
+https://www.baeldung.com/spring-mvc-model-objects-js
+

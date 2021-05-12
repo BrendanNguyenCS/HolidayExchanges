@@ -1,17 +1,116 @@
-﻿@{
-    ViewBag.Title = "Contact";
+﻿@model HolidayExchanges.ViewModels.ContactViewModel
+@{
+    ViewBag.Title = "Contact Us";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    35 Rose Street<br />
-    Milton, MA 02186<br />
-    <abbr title="Phone">P:</abbr>
-    978.761.2418
-</address>
+<div class="container">
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+    <section id="ContactUsTitle">
+        <div class="row">
+            <div class="col-12 page-header">
+                <h1 class="text-center display-4">Contact Us</h1>
+                <hr />
+            </div>
+        </div>
+    </section>
+
+    <section id="ContactMain">
+        <div class="container">
+            <div class="row offset-lg-0 offset-xl-1">
+                <div class="col-12 col-lg-6">
+                    <section id="ContactForm">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="container-fluid form-horizontal p-0">
+                                <div class="row">
+                                    <div class="col-12 col-md-11 col-lg-12">
+                                        <p>You can also fill this form to contact the developer with any issues.</p>
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-12 col-md-3" })
+                                            <div class="col-12 col-md-9">
+                                                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-form-label col-12 col-md-3" })
+                                            <div class="col-12 col-md-9">
+                                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "email" } })
+                                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "col-form-label col-12 col-md-3" })
+                                            <div class="col-12 col-md-9">
+                                                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "col-form-label col-12 col-md-3" })
+                                            <div class="col-12 col-md-9">
+                                                @Html.EditorFor(model => model.Message, new { htmlAttributes = new { @class = "form-control", @rows = 6 } })
+                                                @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-auto offset-md-3">
+                                                <input type="submit" id="ContactSubmit" value="Send" class="btn btn-primary mx-0" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </section>
+                </div>
+                <div class="col-12 mt-1 mt-xl-0 offset-lg-1 col-lg-5">
+                    <section id="ContactInfo">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row" id="AddressRow">
+                                    <div class="col-12 col-md-4 col-lg-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p>Our address:</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11 offset-1">
+                                                <address>
+                                                    1 Nuggets Way<br />
+                                                    Boston, MA 02111<br />
+                                                    <abbr title="Phone">P:</abbr>
+                                                    978.761.2418
+                                                </address>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-7 col-lg-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <address>
+                                                    <strong>Support:</strong> <a href="mailto:brendan.nguyen20@gmail.com">brendan.nguyen20@gmail.com</a>
+                                                    <br />
+                                                    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Not available</a>
+                                                </address>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

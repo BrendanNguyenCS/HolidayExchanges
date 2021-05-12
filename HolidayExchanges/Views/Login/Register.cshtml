@@ -30,14 +30,13 @@
         <div class="row">
             <div class="page-header col-12">
                 <h1 class="text-center display-4">Register</h1>
-                <hr />
             </div>
         </div>
     </section>
 
     <section id="RegisterForm">
-        <div class="container body-content">
-            @using (Html.BeginForm("Register", "Login", FormMethod.Post))
+        <div class="container">
+            @using (Html.BeginForm("Register", "Login", FormMethod.Post, new { @id = "form-register" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="container-fluid form-horizontal">
@@ -46,22 +45,22 @@
                             <div class="col-12">
                                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                <fieldset>
+                                <fieldset id="RegisterLoginInfo">
                                     <legend>Login Information</legend>
                                     <div class="offset-md-1">
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.UserName, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3 required font-weight-bold" })
+                                            @Html.LabelFor(model => model.UserName, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3 required font-weight-bold" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" } })
-                                                @Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" } })
+                                                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Password, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3 required font-weight-bold" })
+                                            @Html.LabelFor(model => model.Password, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3 required font-weight-bold" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.PasswordFor(model => model.User.Password, new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" })
-                                                @Html.ValidationMessageFor(model => model.User.Password, "", new { @class = "text-danger" })
+                                                @Html.PasswordFor(model => model.Password, new { @class = "form-control", required = "required", style = "border: 1px solid #d9534f;" })
+                                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
@@ -79,39 +78,39 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <fieldset>
+                                <fieldset id="RegisterPersonalInfo">
                                     <legend>Personal Information</legend>
 
                                     <div class="offset-md-1">
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.FirstName, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3" })
+                                            @Html.LabelFor(model => model.FirstName, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.User.FirstName, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.LastName, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3" })
+                                            @Html.LabelFor(model => model.LastName, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                                                @Html.ValidationMessageFor(model => model.User.LastName, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Email, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3 required font-weight-bold" })
+                                            @Html.LabelFor(model => model.Email, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3 required font-weight-bold" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control", type = "email", placeholder = "someone@gmail.com", required = "required", style = "border: 1px solid #d9534f;" } })
-                                                @Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", type = "email", placeholder = "someone@gmail.com", required = "required", style = "border: 1px solid #d9534f;" } })
+                                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Birthday, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3" })
+                                            @Html.LabelFor(model => model.Birthday, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3 offset-lg-1 col-lg-3" })
                                             <div class="col-12 col-sm-6 col-md-5 col-lg-3">
-                                                @Html.EditorFor(model => model.User.Birthday, new { htmlAttributes = new { @class = "form-control", type = "date" } })
-                                                @Html.ValidationMessageFor(model => model.User.Birthday, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Birthday, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                                                @Html.ValidationMessageFor(model => model.Birthday, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -121,68 +120,68 @@
 
                         <div class="row">
                             <div class="col-12">
-                                <fieldset>
+                                <fieldset id="RegisterContactInfo">
                                     <legend>Contact Information</legend>
 
                                     <div class="offset-md-1">
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Address1, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
+                                            @Html.LabelFor(model => model.Address1, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.Address1, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 1" } })
+                                                @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 1" } })
                                                 <small class="form-text text-muted">Street address, P.O. box, company name, c/o</small>
-                                                @Html.ValidationMessageFor(model => model.User.Address1, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.Address1, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Address2, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
+                                            @Html.LabelFor(model => model.Address2, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.Address2, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 2" } })
+                                                @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control", placeholder = "Address Line 2" } })
                                                 <small class="form-text text-muted">Apartment, suite, unit, building, floor, etc.</small>
-                                                @Html.ValidationMessageFor(model => model.User.Address2, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.Address2, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.City, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
+                                            @Html.LabelFor(model => model.City, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.City, new { htmlAttributes = new { @class = "form-control", placeholder = "City or Town" } })
-                                                @Html.ValidationMessageFor(model => model.User.City, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", placeholder = "City or Town" } })
+                                                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.State, new { @class = "col-form-label col-sm-4 col-md-4 offset-lg-1 col-lg-3" })
+                                            @Html.LabelFor(model => model.State, new { @class = "col-form-label col-sm-4 col-md-4 offset-lg-1 col-lg-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.State, new { htmlAttributes = new { @class = "form-control", placeholder = "State, Province, Region" } })
+                                                @Html.EditorFor(model => model.State, new { htmlAttributes = new { @class = "form-control", placeholder = "State, Province, Region" } })
                                                 <small class="form-text text-muted">If from US, please enter 2-letter abbreviation (ex. MA)</small>
-                                                @Html.ValidationMessageFor(model => model.User.State, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Zip, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
+                                            @Html.LabelFor(model => model.Zip, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
                                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                                @Html.EditorFor(model => model.User.Zip, new { htmlAttributes = new { @class = "form-control", placeholder = "ZIP or Postal Code" } })
-                                                @Html.ValidationMessageFor(model => model.User.Zip, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.Zip, new { htmlAttributes = new { @class = "form-control", placeholder = "ZIP or Postal Code" } })
+                                                @Html.ValidationMessageFor(model => model.Zip, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.Country, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
+                                            @Html.LabelFor(model => model.Country, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
                                             <div class="col-12 col-md-6 col-lg-5">
-                                                @Html.EditorFor(model => model.User.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Country" } })
+                                                @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Country" } })
                                                 <!-- implement cool drop down -->
-                                                @Html.ValidationMessageFor(model => model.User.Country, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            @Html.LabelFor(model => model.User.PhoneNumber, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
+                                            @Html.LabelFor(model => model.PhoneNumber, new { @class = "col-form-label col-sm-4 offset-md-1 col-md-3" })
                                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                                                <input type="tel" name="@Html.NameFor(model => model.User.PhoneNumber)" value="@Model.User.PhoneNumber" id="PhoneNumber" pattern="[\(]\d{3}[\)]\d{3}[\-]\d{4}" class="form-control" placeholder="(123)456-7890" />
-                                                <small class="form-text text-muted">US based Phone Number format: (123)456-7890</small>
-                                                @Html.ValidationMessageFor(model => model.User.PhoneNumber, "", new { @class = "text-danger" })
+                                                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", type = "tel", @id = "PhoneNumber" } })
+                                                <small class="form-text text-muted">US based Phone Number format: (123) 456-7890</small>
+                                                @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
@@ -201,3 +200,13 @@
         </div>
     </section>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#PhoneNumber').usPhoneFormat({
+                format: '(xxx) xxx-xxxx',
+            });
+        });
+    </script>
+}

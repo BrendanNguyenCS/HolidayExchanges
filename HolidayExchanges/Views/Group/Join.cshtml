@@ -1,4 +1,4 @@
-﻿@model HolidayExchanges.Models.Group
+﻿@model HolidayExchanges.ViewModels.JoinViewModel
 
 @{
     ViewBag.Title = "Join a Group";
@@ -8,29 +8,28 @@
     <section id="JoinGroupTitle">
         <div class="row">
             <div class="page-header col-12">
-                <h1 class="text-center display-5">Join This Group</h1>
+                <h1 class="text-center display-4">Join This Group</h1>
                 <hr />
             </div>
         </div>
     </section>
 
     <section id="JoinDetails">
-        <div class="container body-content">
-            @using (Html.BeginForm("Join", "Group", FormMethod.Post))
+        <div class="container">
+            @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
 
                 <div class="container-fluid form-horizontal">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.GroupID)
-                    @Html.HiddenFor(model => model.HasBeenPaired)
 
                     <dl class="row">
                         <dt class="offset-md-1 col-md-2">
-                            @Html.DisplayNameFor(model => model.Name)
+                            @Html.DisplayNameFor(model => model.GroupName)
                         </dt>
                         <dd class="col-md-9">
-                            @Html.DisplayFor(model => model.Name)
+                            @Html.DisplayFor(model => model.GroupName)
                         </dd>
 
                         <dt class="offset-md-1 col-md-2">
@@ -61,31 +60,33 @@
 
 @section Scripts {
     <!-- #region AJAX addition -->
-    @*<script type="text/javascript">
-            $(document).ready(function () {
-                $('#JoinSubmit').click(function (e) {
-                    e.preventDefault();
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#JoinSubmit').click(function (e) {
+                e.preventDefault();
+                if (confirm("Are you sure you want to join this group?")) {
                     $.ajax({
-                        url: '@Url.Action("AjaxJoin", "Group")',
+                        url: '@Url.Action("AjaxJoin")',
                         async = false,
-                        method: 'GET',
-                        data: {id: @Model.GroupID },
+                        method: 'POST',
+                        data: { id: @Model.GroupID },
                         dataType: 'json',
                         processData: false,
                         success: function (response) {
                             if (response.success) {
-                                if (confirm("Are you sure you want to join this group?")) {
-                                    window.location.href = '@Url.Action("GetGroup", "Group", new { id = Model.GroupID })';
-                                }
+                                window.location.href = '@Url.Action("Details", new { id = Model.GroupID })';
                             }
                             else {
                                 alert(response.ex);
                             }
                         }
                     });
-                });
+                }
+                else {
+                    return false;
+                }
             });
-        </script>
-    *@
+        });
+    </script>
     <!-- #endregion -->
 }

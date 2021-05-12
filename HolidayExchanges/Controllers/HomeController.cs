@@ -1,4 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using HolidayExchanges.ViewModels;
+using System;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
 {
@@ -11,25 +15,45 @@ namespace HolidayExchanges.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
             return View();
         }
 
+        [HttpGet]
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
 
-        public ActionResult Error()
+        [HttpPost]
+        public async Task<ActionResult> Contact(ContactViewModel model)
         {
-            return View();
-        }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var message = new MailMessage
+                    {
+                        From = new MailAddress(model.Email),
+                        Subject = model.Subject,
+                        Body = model.Message,
+                        IsBodyHtml = false
+                    };
+                    message.To.Add("holidayexchanges.ma@gmail.com");
+                    using (var smtp = new SmtpClient())
+                    {
+                        await smtp.SendMailAsync(message);
+                    }
 
-        public ActionResult Success()
-        {
-            return View();
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (Exception e)
+                {
+                    ViewBag.ErrorMessage = $"Error. Please try again later.\n{e.Message}";
+                    return View("Error");
+                }
+            }
+
+            return View(model);
         }
     }
 }

@@ -21,7 +21,14 @@ namespace HolidayExchanges.ViewModels
         [Required(ErrorMessage = "This field is required.")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "This field must be between 3 and 50 characters long.")]
         [Display(Name = "Username")]
+        [Remote("IsUsernameAvailableOnEdit", "Login", AdditionalFields = "OriginalUserName", ErrorMessage = "This username is taken.")]
         public string UserName { get; set; }
+
+        /// <summary>
+        /// A property used for username availability validation.
+        /// </summary>
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "This field must be between 3 and 50 characters long.")]
+        public string OriginalUserName { get; set; }
 
         /// <summary>
         /// The user's first name.
@@ -84,8 +91,8 @@ namespace HolidayExchanges.ViewModels
         /// </summary>
         [StringLength(128)]
         [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "You must enter an email.")]
         [EmailAddress(ErrorMessage = "Email is invalid")]
-        [Column(Order = 4)]
         [Remote("IsEmailAvailableOnEdit", "Login", ErrorMessage = "This email is associated with another user already.", AdditionalFields = "OriginalEmail")]
         public string Email { get; set; }
 

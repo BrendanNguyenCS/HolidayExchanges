@@ -1,0 +1,78 @@
+﻿<nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
+    <div class="container">
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand">Holiday Exchanges</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                </li>
+                @if (Session["UserName"] == null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("About", "Home")">About</a>
+                    </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                </li>
+                @if (Session["UserName"] != null)
+                {
+                    <li>
+                        <a class="nav-link" href="@Url.Action("Create", "Group")">Create an event</a>
+                    </li>
+                }
+            </ul>
+            <ul class=" navbar-nav ml-auto">
+                @if (Session["UserName"] == null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Register", "Login")">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Login", "Login")">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </a>
+                    </li>
+                    <li class="nav-item" style="color: white;">
+                        <a class="nav-link" href="#">
+                            @{
+                                string username = Session["UserName"] != null ? Session["UserName"].ToString() : "Account";
+                            }
+                            <i class="far fa-user-circle"></i>
+                            @username
+                        </a>
+                    </li>
+
+                }
+                @if (Session["UserName"] != null)
+                {
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+                            @{
+                                string username = Session["UserName"].ToString();
+                            }
+                            <i class="fas fa-user-circle"></i>
+                            @username
+                        </a>
+
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="@Url.Action("DetailsByUsername", "User", new { username = Session["UserName"].ToString() })">Profile</a>
+                            <a class="dropdown-item" href="@Url.Action("WishlistByUsername", "User", new { username = Session["UserName"].ToString() })">Wishlist</a>
+                            <a class="dropdown-item" href="@Url.Action("SignOut", "Login")">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Sign Out
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

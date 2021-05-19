@@ -1,4 +1,36 @@
-﻿body {
+﻿/* #region load font files */
+@font-face {
+    font-family: "UniSansDemo-HeavyCAPS";
+    src: url('../Fonts/UniSansDemo-HeavyCAPS.otf') format('opentype');
+}
+
+@font-face {
+    font-family: "Fontspring-DEMO-blue_vinyl_regular_ps_ot";
+    src: url('../Fonts/Fontspring-DEMO-blue_vinyl_regular_ps_ot.otf') format('opentype');
+}
+
+@font-face {
+    font-family: "ufonts.com_klavika-bold-opentype";
+    src: url('../Fonts/ufonts.com_klavika-bold-opentype.otf') format('opentype');
+}
+
+/* #endregion load font files */
+
+/* #region Font CSS classes */
+.DiscordText {
+    font-family: UniSansDemo-HeavyCAPS;
+}
+
+.InstaText {
+    font-family: Fontspring-DEMO-blue_vinyl_regular_ps_ot;
+}
+
+.FBText {
+    font-family: "ufonts.com_klavika-bold-opentype";
+}
+/* #endregion Font CSS classes */
+
+body {
     padding-top: 56px;
     padding-bottom: 56px;
 }

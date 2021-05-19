@@ -12,9 +12,6 @@
                 alert("Thank you for your response. You will be redirected to the main page when you close this window.");
                 window.location.href = successRedirect;
             }
-        },
-        error: function () {
-            return false;
         }
     });
 }

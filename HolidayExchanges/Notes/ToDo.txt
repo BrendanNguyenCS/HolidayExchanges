@@ -19,3 +19,8 @@
 6. Custom alert boxes with html which jquery can show with the id selector (https://getbootstrap.com/docs/4.0/components/alerts/)
 
 7. Custom checkboxes/radio buttons (https://codepen.io/jpI/pen/OwgppV)
+
+8. Implement tabs for the user administration pages (user details, change password)
+https://getbootstrap.com/docs/4.1/components/navs/
+https://www.w3schools.com/bootstrap4/bootstrap_navs.asp (Toggleable/Dynamic Pills section)
+REFER to test view

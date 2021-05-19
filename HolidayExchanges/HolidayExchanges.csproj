@@ -320,6 +320,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="gulpfile.js" />
     <Content Include="Images\cartoon-gift-exchange.jpg" />
     <Content Include="Notes\Email.txt" />
     <Content Include="Notes\HelpfulPages.txt" />
@@ -341,6 +342,10 @@
     <Content Include="Fonts\UniSansDemo-HeavyCAPS.otf" />
     <Content Include="Fonts\Fontspring-DEMO-blue_vinyl_regular_ps_ot.otf" />
     <Content Include="Fonts\ufonts.com_klavika-bold-opentype.otf" />
+    <Content Include="Resources\HolidayExchanges\js\components\footer.js" />
+    <Content Include="Resources\HolidayExchanges\js\main.js" />
+    <Content Include="Resources\HolidayExchanges\sass\base.scss" />
+    <Content Include="Resources\HolidayExchanges\sass\layouts\_layout.scss" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-3.5.1-vsdoc.js" />
     <Content Include="Scripts\About.js" />
@@ -393,9 +398,14 @@
     <Content Include="Views\Login\ChangePassword.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Test\TestVertPillNav.cshtml" />
+    <Content Include="Views\Shared\_Navbar.cshtml" />
+    <Content Include="Views\Shared\_PageTitle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Resources\HolidayExchanges\sass\components\" />
+    <Folder Include="Resources\HolidayExchanges\sass\global\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

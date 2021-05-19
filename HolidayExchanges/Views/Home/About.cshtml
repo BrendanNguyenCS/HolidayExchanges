@@ -6,14 +6,7 @@
 
 <div class="container">
 
-    <section id="AboutTitle">
-        <div class="row">
-            <div class="col-12 page-header">
-                <h1 class="text-center display-4">About</h1>
-                <hr />
-            </div>
-        </div>
-    </section>
+    @Html.Partial("_PageTitle", "About")
 
     <section id="AboutMain">
         <div class="row d-flex align-items-center">
@@ -21,7 +14,7 @@
                 <div class="row">
                     <div class="col-12">
                         <figure class="figure">
-                            <img src="https://via.placeholder.com/150" class="figure-img img-fluid shadow-sm rounded" style="width: 150px" id="AuthorFig" />
+                            <img src="https://via.placeholder.com/150" class="figure-img img-fluid shadow-sm rounded" style="width: 150px" id="AuthorFig" alt="Founder image placeholder" />
                             <figcaption class="figure-caption">Brendan Nguyen, Founder</figcaption>
                         </figure>
                     </div>
@@ -37,22 +30,22 @@
             <div class="offset-sm-5 col-sm-7" id="LargeSocialIcons">
                 <p>If you want to follow any of our socials to keep up to date with the latest news and updates, those links are below:</p>
 
-                <a href="https://github.com/BrendanNguyenCS" class="btn btn-link github">
+                <a href="https://github.com/BrendanNguyenCS" class="btn btn-link github" aria-label="Founder's GitHub profile">
                     <i class="fab fa-github mr-1"></i>
                     GitHub
                 </a>
 
-                <a href="https://www.facebook.com" class="btn btn-link fb">
+                <a href="https://www.facebook.com" class="btn btn-link fb" aria-label="Facebook home page">
                     <i class="fab fa-facebook-f mr-1"></i>
                     Facebook
                 </a>
 
-                <a href="https://www.discord.com" class="btn btn-link discord">
+                <a href="https://www.discord.com" class="btn btn-link discord" aria-label="Discord main page">
                     <i class="fab fa-discord mr-1"></i>
                     Discord
                 </a>
 
-                <a href="https://www.instagram.com/" class="btn btn-link insta">
+                <a href="https://www.instagram.com/" class="btn btn-link insta" aria-label="Instagram home page">
                     <i class="fab fa-instagram mr-1"></i>
                     Instagram
                 </a>
@@ -61,21 +54,21 @@
         <!-- mobile-only social section -->
         <div class="d-flex d-sm-none justify-content-center mb-3">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12" id="SmallSocialIcons">
                     <div class="container-fluid">
-                        <button type="button" class="btn btn-sm btn-secondary btn-block github" id="GitHubBtn">
+                        <button type="button" class="btn btn-sm btn-block github" id="GitHubBtn">
                             <i class="fab fa-github mr-1"></i>
                             Click here for news and updates on <strong>GitHub</strong>
                         </button>
-                        <button type="button" class="btn btn-sm btn-secondary btn-block fb" id="FBBtn">
+                        <button type="button" class="btn btn-sm  btn-block fb" id="FBBtn">
                             <i class="fab fa-facebook-f mr-1"></i>
                             Follow us on <span class="FBText">Facebook</span>
                         </button>
-                        <button type="button" class="btn btn-sm btn-secondary btn-block discord" id="DiscordBtn">
+                        <button type="button" class="btn btn-sm  btn-block discord" id="DiscordBtn">
                             <i class="fab fa-discord mr-1"></i>
                             Follow on <span class="DiscordText">Discord</span> for quick help or hang out
                         </button>
-                        <button type="button" class="btn btn-sm btn-secondary btn-block insta" id="InstaBtn">
+                        <button type="button" class="btn btn-sm btn-block insta" id="InstaBtn">
                             <i class="fab fa-instagram mr-1"></i>
                             Follow us on <span class="InstaText">Instagram</span>
                         </button>

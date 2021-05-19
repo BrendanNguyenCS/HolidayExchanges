@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holiday Exchanges</title>
 
-    <!-- TODO: do i need to do anything with BundleConfig (https://stackoverflow.com/questions/33692688/how-to-use-cdn-javascript-files-on-mvc-5) -->
-    <!-- CDNs -->
+    <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
@@ -15,36 +14,19 @@
     <link rel="stylesheet"
           href="~/Content/Site.css"
           type="text/css" />
+</head>
+<body>
+    @{
+        Html.RenderPartial("_Navbar");
+    }
+    <div class="body-content">
+        @RenderBody()
+    </div>
+    @{
+        Html.RenderPartial("_Footer");
+    }
 
-    <style type="text/css">
-        @@font-face {
-            font-family: "UniSansDemo-HeavyCAPS";
-            src: url('../Fonts/UniSansDemo-HeavyCAPS.otf') format('opentype');
-        }
-
-        @@font-face {
-            font-family: "Fontspring-DEMO-blue_vinyl_regular_ps_ot";
-            src: url('../Fonts/Fontspring-DEMO-blue_vinyl_regular_ps_ot.otf') format('opentype');
-        }
-
-        @@font-face {
-            font-family: "ufonts.com_klavika-bold-opentype";
-            src: url('../Fonts/ufonts.com_klavika-bold-opentype.otf') format('opentype');
-        }
-
-        .DiscordText {
-            font-family: UniSansDemo-HeavyCAPS;
-        }
-
-        .InstaText {
-            font-family: Fontspring-DEMO-blue_vinyl_regular_ps_ot;
-        }
-
-        .FBText {
-            font-family: "ufonts.com_klavika-bold-opentype";
-        }
-    </style>
-
+    <!-- Javascript CDNs -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
             crossorigin="anonymous"></script>
@@ -66,104 +48,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/jquery-input-mask-phone-number@1.0.14/dist/jquery-input-mask-phone-number.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" integrity="sha512-3n19xznO0ubPpSwYCRRBgHh63DrV+bdZfHK52b1esvId4GsfwStQNPJFjeQos2h3JwCmZl0/LgLxSKMAI55hgw==" crossorigin="anonymous"></script>
 
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" integrity="sha512-3n19xznO0ubPpSwYCRRBgHh63DrV+bdZfHK52b1esvId4GsfwStQNPJFjeQos2h3JwCmZl0/LgLxSKMAI55hgw==" crossorigin="anonymous"></script>*@
-    <!-- TODO: what about modernizr -->
     <!-- TODO: also i should probably uninstall the jquery nuget packages https://stackoverflow.com/questions/23273996/using-cdn-in-asp-net-mvc-bundles -->
     <!-- icons -->
     <script src="https://kit.fontawesome.com/9a3845859f.js" crossorigin="anonymous"></script>
-
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://unpkg.com/jquery-input-mask-phone-number@1.0.14/dist/jquery-input-mask-phone-number.js"></script>
 
     @RenderSection("scripts", required: false)
-</head>
-<body>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-md fixed-top">
-        <div class="container">
-            <a href="@Url.Action("Index", "Home")" class="navbar-brand">Holiday Exchanges</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Index", "Home")">
-                            <i class="fas fa-home mr-1"></i>Home
-                        </a>
-                    </li>
-                    @if (Session["UserName"] == null)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("About", "Home")">About</a>
-                        </li>
-                    }
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
-                    </li>
-                    @if (Session["UserName"] != null)
-                    {
-                        <li>
-                            <a class="nav-link" href="@Url.Action("Create", "Group")">Create an event</a>
-                        </li>
-                    }
-                </ul>
-                <ul class=" navbar-nav ml-auto">
-                    @if (Session["UserName"] == null)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Register", "Login")">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Login", "Login")">
-                                <i class="fas fa-sign-in-alt"></i>
-                                Login
-                            </a>
-                        </li>
-                        <li class="nav-item" style="color: white;">
-                            <a class="nav-link" href="#">
-                                @{
-                                    string username = Session["UserName"] != null ? Session["UserName"].ToString() : "Account";
-                                }
-                                <i class="far fa-user-circle"></i>
-                                @username
-                            </a>
-                        </li>
-
-                    }
-                    @if (Session["UserName"] != null)
-                    {
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
-                                @{
-                                    string username = Session["UserName"].ToString();
-                                }
-                                <i class="fas fa-user-circle"></i>
-                                @username
-                            </a>
-
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="@Url.Action("DetailsByUsername", "User", new { username = Session["UserName"].ToString() })">Profile</a>
-                                <a class="dropdown-item" href="@Url.Action("WishlistByUsername", "User", new { username = Session["UserName"].ToString() })">Wishlist</a>
-                                <a class="dropdown-item" href="@Url.Action("SignOut", "Login")">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    Sign Out
-                                </a>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="body-content">
-        @RenderBody()
-        <!-- TODO: Finish footer (do i need to change the structure of the site to flexbox?) -->
-    </div>
-    @{
-        Html.RenderPartial("_Footer");
-    }
 </body>
 </html>

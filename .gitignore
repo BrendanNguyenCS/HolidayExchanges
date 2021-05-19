@@ -354,3 +354,6 @@ MigrationBackup/
 /HolidayExchanges/Testing/TestController.cs
 /HolidayExchanges/Views/Test/Index.cshtml
 /HolidayExchanges/Web.config
+/HolidayExchanges/Views/Test/TestVertPillNav.cshtml
+/HolidayExchanges/package-lock.json
+/HolidayExchanges/dist/*

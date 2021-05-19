@@ -1,4 +1,8 @@
-﻿div#LargeSocialIcons a {
+﻿div#SmallSocialIcons button {
+    color: white;
+}
+
+div#LargeSocialIcons a {
     text-decoration: none;
 }
 
@@ -11,21 +15,53 @@
     }
 
 @media (max-width: 575.98px) {
-    .github {
+    button.github {
         background-color: #6e5494;
     }
 
-    .fb {
+        button.github:hover {
+            background-color: #604983;
+        }
+
+        button.github:active {
+            background-color: #544072;
+        }
+
+    button.fb {
         background-color: #3b5998;
     }
 
-    .discord {
+        button.fb:hover {
+            background-color: #334d84;
+        }
+
+        button.fb:active {
+            background-color: #2c4272;
+        }
+
+    button.discord {
         background-color: #7289da;
     }
 
-    .insta {
+        button.discord:hover {
+            background-color: #5e77d4;
+        }
+
+        button.discord:active {
+            background-color: #4a67cf;
+        }
+
+    button.insta {
         background-color: #e1306c;
     }
+
+        button.insta:hover {
+            background-color: #db1f5e;
+        }
+
+        button.insta:active {
+            background-color: #cd1d58;
+        }
 }
 
 @media (min-width: 576px) {

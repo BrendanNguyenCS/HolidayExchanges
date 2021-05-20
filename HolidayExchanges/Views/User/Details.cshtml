@@ -11,6 +11,8 @@
 </style>
 
 <div class="container">
+
+    @* 
     <section id="UserDetailsTitle">
         <div class="row">
             <div class="page-header col-12">
@@ -19,6 +21,9 @@
             </div>
         </div>
     </section>
+    *@
+
+    @Html.Partial("_PageTitle", "Details for " + @Model.User.UserName)
 
     <section id="UserDetailsList">
         <div class="container offset-md-1">
@@ -28,25 +33,6 @@
                 </div>
             </div>
             <dl class="row">
-
-                <!-- #region RemovePWSalt-->
-                @*<dt>
-                        @Html.DisplayNameFor(model => model.Password)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Password)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Salt)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Salt)
-                    </dd>
-                *@
-                <!-- #endregion -->
 
                 <dt class="col-5 offset-md-1 col-md-3 col-xl-3">
                     @Html.DisplayNameFor(model => model.User.FirstName)
@@ -99,6 +85,8 @@
                         else
                         {
                             var zip = Model.User.Zip == null ? Model.User.Zip : "";
+                            <!-- TODO: change below to address tag -->
+                            @*
                             <p translate="no">
                                 @Model.User.Address1<br />
                                 @if (Model.User.Address2 != null)
@@ -108,59 +96,20 @@
                                 @Model.User.City, @Model.User.State @zip<br />
                                 @Model.User.Country
                             </p>
+                            *@
+
+                            <address style="text-decoration: none; font-style: normal;" id="UserAddress">
+                                @Model.User.Address1<br />
+                                @if (Model.User.Address2 != null) 
+                                {
+                                    @Model.User.Address2<br />
+                                }
+                                @Model.User.City, @Model.User.State @zip<br />
+                                @Model.User.Country
+                            </address>
                         }
                     }
                 </dd>
-
-                <!-- #region Long Address (with all fields in its own row) -->
-                @*<dt>
-                        @Html.DisplayNameFor(model => model.User.Address1)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.User.Address1)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.User.Address2)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.User.Address2)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.User.City)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.User.City)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.User.State)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.User.State)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.User.Zip)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.User.Zip)
-                    </dd>
-
-                    <dt>
-                        @Html.DisplayNameFor(model => model.User.Country)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.User.Country)
-                    </dd>*@
-                <!-- #endregion -->
 
                 <dt class="col-5 offset-md-1 col-md-3 col-xl-3">
                     @Html.DisplayNameFor(model => model.User.Email)

@@ -4,35 +4,13 @@
     ViewBag.Title = "Wishlist";
 }
 
-<style>
-    details {
-        border: 1px solid black;
-        border-radius: 4px;
-        padding: .5em .5em 0;
-        margin: 1em;
-    }
-
-    summary {
-        font-weight: bold;
-        margin: -.5em -.5em 0;
-        padding: 0.5em;
-    }
-
-    details[open] {
-        padding: 0.5em;
-    }
-
-        details[open] summary {
-            border-bottom: 1px solid black;
-            margin-bottom: 0.5em;
-        }
-
-    details summary:focus {
-        outline: none;
-    }
-</style>
+<link href="~/Content/Wishlist.css"
+      rel="stylesheet"
+      type="text/css" />
 
 <div class="container">
+
+    @*
     <section id="WishlistTitle">
         <div class="row">
             <div class="page-header col-12">
@@ -41,6 +19,9 @@
             </div>
         </div>
     </section>
+    *@
+
+    @Html.Partial("_PageTitle", "Wishlist for " + @Model.UserName)
 
     <section id="Wishlist">
         <div class="container">

@@ -4,35 +4,13 @@
     ViewBag.Title = "Register";
 }
 
-<style>
-    #RegisterTitle {
-        margin-bottom: 10px;
-    }
-
-    legend {
-        font-weight: 600;
-        text-align: center;
-        padding: 0 0.5rem 0 0.5rem;
-        width: auto;
-    }
-
-    fieldset {
-        border: 1px solid black;
-        padding-left: 0.25rem;
-        margin-bottom: 20px;
-        padding: 10px 0 10px 0;
-    }
-</style>
+<link href="~/Content/Register.css"
+      rel="stylesheet"
+      type="text/css" />
 
 <div class="container">
 
-    <section id="RegisterTitle">
-        <div class="row">
-            <div class="page-header col-12">
-                <h1 class="text-center display-4">Register</h1>
-            </div>
-        </div>
-    </section>
+    @Html.Partial("_PageTitle", "Register")
 
     <section id="RegisterForm">
         <div class="container">

@@ -163,6 +163,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Components\HtmlExtensionButton.cs" />
+    <Compile Include="Components\HtmlHelpers.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -310,6 +311,9 @@
     <Content Include="bin\System.Web.WebPages.xml" />
     <Content Include="bin\WebGrease.dll" />
     <Content Include="Content\About.css" />
+    <Content Include="Content\Grouplist.css" />
+    <Content Include="Content\Register.css" />
+    <Content Include="Content\Wishlist.css" />
     <Content Include="Diagrams\Infrastructure3-1-21.png" />
     <Content Include="Diagrams\Infrastructure3-12-21.png" />
     <Content Include="Diagrams\Infrastructure3-16-21.png" />

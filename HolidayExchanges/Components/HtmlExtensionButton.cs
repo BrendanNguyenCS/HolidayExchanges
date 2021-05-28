@@ -83,7 +83,7 @@ namespace HolidayExchanges
             }
 
             // Creates button object
-            return MvcHtmlString.Create(tb.ToString());
+            return MvcHtmlString.Create(tb.ToString(TagRenderMode.SelfClosing));
         }
     }
 }

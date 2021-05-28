@@ -137,4 +137,71 @@ public static class HtmlHelpers
         builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         return MvcHtmlString.Create(builder.ToString(TagRenderMode.SelfClosing));
     }
+
+    /// <summary>
+    /// A custom date picker input field.
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="name">The name of the date picker.</param>
+    /// <param name="value">Optional value of the date picker.</param>
+    /// <returns>An input field (date picker with UI)</returns>
+    public static MvcHtmlString DatePicker(this HtmlHelper helper, string name, DateTime value)
+    {
+        TagBuilder builder = new TagBuilder("input");
+        builder.MergeAttribute("name", name);
+        builder.GenerateId(name);
+        if (value != null)
+            builder.MergeAttribute("value", value.ToString("yyyy-MM-dd"));
+        else
+            builder.MergeAttribute("value", String.Empty);
+
+        builder.MergeAttribute("type", "date");
+        return MvcHtmlString.Create(builder.ToString(TagRenderMode.SelfClosing));
+    }
+
+    /// <summary>
+    /// A custom time picker input field.
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="name">The name of the time picker.</param>
+    /// <param name="value">Optional value of the time picker.</param>
+    /// <returns>An input field (time picker with UI)</returns>
+    public static MvcHtmlString TimePicker(this HtmlHelper helper, string name, DateTime value)
+    {
+        TagBuilder builder = new TagBuilder("input");
+        builder.MergeAttribute("name", name);
+        builder.GenerateId(name);
+        if (value != null)
+            builder.MergeAttribute("value", value.ToString("h:mmttTK"));
+        else
+            builder.MergeAttribute("value", String.Empty);
+
+        builder.MergeAttribute("type", "time");
+        return MvcHtmlString.Create(builder.ToString(TagRenderMode.SelfClosing));
+    }
+
+    /// <summary>
+    /// A custom helper for redirect links in forms (mainly for the forgot password page).
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="text">The link text.</param>
+    /// <param name="actionName">The target action name for the link.</param>
+    /// <param name="controllerName">The target controller name for the link.</param>
+    /// <returns>A redirect link within a paragraph element.</returns>
+    public static MvcHtmlString FormHelpTextLink(this HtmlHelper helper, string text, string actionName, string controllerName)
+    {
+        TagBuilder outer = new TagBuilder("p");
+        outer.AddCssClass("form-text");
+        outer.AddCssClass("text-muted");
+
+        TagBuilder inner = new TagBuilder("a");
+        inner.MergeAttribute("style", "text-decoration: none;");
+        var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+        var url = urlHelper.Action(actionName, controllerName);
+        inner.MergeAttribute("href", url);
+        inner.InnerHtml = text;
+
+        outer.InnerHtml = inner.ToString(TagRenderMode.Normal);
+        return MvcHtmlString.Create(outer.ToString(TagRenderMode.Normal));
+    }
 }

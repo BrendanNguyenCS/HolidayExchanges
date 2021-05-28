@@ -2,8 +2,11 @@
 using HolidayExchanges.Services;
 using HolidayExchanges.ViewModels;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace HolidayExchanges.Controllers
@@ -23,39 +26,12 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                #region Replaced by remote validation logic
-
-                /*
-                    var user = db.Users.SingleOrDefault(u => u.UserName == model.UserName);
-
-                    if (user == null) // Username doesn't exist in the db
-                    {
-                        ModelState.AddModelError("UserName", "Incorrect username");
-                        return View(model);
-                    }
-                    else
-                    {
-                        // Check if entered password matches user's password in db
-                        var IsAUser = hasher.VerifyPassword(model.Password, user.Password, user.Salt);
-
-                        if (!IsAUser) // Incorrect password
-                        {
-                            // Replaced using remote validation? https://docs.microsoft.com/en-us/previous-versions/aspnet/gg508808(v=vs.98)?redirectedfrom=MSDN#adding-custom-remote-validation
-                            //ModelState.AddModelError("Password", "The password you entered is incorrect.");
-
-                            return View(model);
-                        }
-                    }
-                */
-
-                #endregion Replaced by remote validation logic
+                // username & password checking here has been replaced by data annotations in view model
 
                 Session["UserName"] = model.UserName;
 
                 if (Session["RedirectLink"] != null)
-                {
                     return Redirect(Session["RedirectLink"].ToString());
-                }
 
                 return RedirectToAction("Index", "Home");
             }
@@ -74,38 +50,10 @@ namespace HolidayExchanges.Controllers
         {
             if (ModelState.IsValid)
             {
-                #region Has been replaced by data annotations compare and remote validation attributes
-
-                /*
-                    var user = model.User;
-                    var existingUserName = db.Users.SingleOrDefault(l => l.UserName == user.UserName);
-                    if (existingUserName != null) //an account already exists with username
-                    {
-                        ModelState.AddModelError("User.UserName", "This username already exists. Please try another username.");
-                        return View(model);
-                    }
-
-                    var existingEmail = db.Users.SingleOrDefault(l => l.Email == user.Email);
-                    if (existingEmail != null)
-                    {
-                        ModelState.AddModelError("User.Email", "Sorry, there's already an account associated with this email. Please try again.");
-                        return View(model);
-                    }
-
-                    var confirmPassword = model.ConfirmPassword;
-                    if (!model.ValidatePassword())
-                    {
-                        ModelState.AddModelError("ConfirmPassword", "The ConfirmPassword field must match the Password field.");
-                        return View(model);
-                    }
-                */
-
-                #endregion Has been replaced by data annotations compare and remote validation attributes
+                // username & password checking here has been replaced by data annotations in view model
 
                 if (model.Birthday == null)
-                {
                     model.Birthday = DateTime.UtcNow.Date; // set to default value of date of registration
-                }
 
                 var user = new User
                 {
@@ -141,9 +89,7 @@ namespace HolidayExchanges.Controllers
 
                 Session["UserName"] = user.UserName;
                 if (Session["RedirectLink"] != null)
-                {
                     return Redirect(Session["RedirectLink"].ToString());
-                }
 
                 return RedirectToAction("Index", "Home");
             }
@@ -183,6 +129,41 @@ namespace HolidayExchanges.Controllers
             }
         }
 
+        // just a discovery method for sending emails with Razor template
+        public async Task<ActionResult> SendForgotPWEmail(User user)
+        {
+            string body = string.Empty;
+            using (StreamReader reader = new StreamReader("~/Views/EmailTemplates/ForgotPWEMail.cshtml"))
+            {
+                body = reader.ReadToEnd();
+                body = body.Replace("{Username}", user.UserName);
+            }
+
+            var message = new MailMessage
+            {
+                From = new MailAddress("holidayexchanges.ma@gmail.com", "Holiday Exchanges"),
+                Subject = "Forgot your password?",
+                Body = body,
+                IsBodyHtml = true
+            };
+            message.To.Add(user.Email);
+
+            try
+            {
+                using (var smtp = new SmtpClient())
+                {
+                    await smtp.SendMailAsync(message);
+                }
+            }
+            catch (Exception e)
+            {
+                ViewBag.ErrorMessage = $"Error. Please try again later.\n{e.Message}";
+                return View("Error");
+            }
+
+            return new EmptyResult();
+        }
+
         [HttpGet]
         public ActionResult ChangePassword(int? id)
         {
@@ -192,47 +173,61 @@ namespace HolidayExchanges.Controllers
             if (!IsLoggedIn("ChangePassword", "User", id))
                 return RedirectToAction("Login", "Login");
 
-            if (!IsOwnerOfPage(id))
+            var currentUser = GetCurrentUser();
+            var model = new ChangePasswordVM()
             {
-                var currentUser = GetCurrentUser();
-                return RedirectToAction("Details", "User", new { id = currentUser.UserID });
-            }
-
-            var model = new ChangePasswordVM();
+                Username = currentUser.UserName
+            };
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult ChangePassword(ChangePasswordVM model)
         {
-            var user = GetCurrentUser();
-            db.Entry(user).Property(u => u.Password).IsModified = true;
-            db.Entry(user).Property(u => u.Salt).IsModified = true;
-            var salt = hasher.GenerateSalt();
-            var hash = hasher.ComputeHash(model.NewPassword, salt);
-            user.Password = Convert.ToBase64String(hash);
-            user.Salt = Convert.ToBase64String(salt);
+            if (ModelState.IsValid)
+            {
+                var user = GetCurrentUser();
+                db.Entry(user).Property(u => u.Password).IsModified = true;
+                db.Entry(user).Property(u => u.Salt).IsModified = true;
+                var salt = hasher.GenerateSalt();
+                var hash = hasher.ComputeHash(model.NewPassword, salt);
+                user.Password = Convert.ToBase64String(hash);
+                user.Salt = Convert.ToBase64String(salt);
 
-            try
-            {
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "Home");
+                }
+                catch (Exception e)
+                {
+                    ViewBag.ErrorMessage = e.Message + e.StackTrace + e.InnerException;
+                    return View("Error");
+                }
             }
-            catch (Exception e)
-            {
-                ViewBag.ErrorMessage = e.Message + e.StackTrace + e.InnerException;
-                return View("Error");
-            }
+
+            return View(model);
         }
 
         #region Remote Validation Methods
 
+        /// <summary>
+        /// Remote validation method that checks the existence of the desired username in the database.
+        /// </summary>
+        /// <param name="UserName">The desired username.</param>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult IsAValidUser(string UserName)
         {
             return Json(db.Users.Any(u => u.UserName == UserName), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Remote validation method that checks if the entered password is correct for the given username.
+        /// </summary>
+        /// <param name="Password">The entered password.</param>
+        /// <param name="UserName">The entered username.</param>
+        /// <remarks>Assumes that the IsAValidUser method has returned true.</remarks>
         [HttpGet]
         public JsonResult IsPasswordCorrect(string Password, string UserName)
         {
@@ -240,30 +235,64 @@ namespace HolidayExchanges.Controllers
             return Json(hasher.VerifyPassword(Password, user.Password, user.Salt), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Remote validation method that checks if the username has not been taken by another user
+        /// in the database.
+        /// </summary>
+        /// <param name="UserName">The desired username.</param>
+        /// <returns>
+        /// <see langword="true"/> if the username doesn't exist in the database. <see
+        /// langword="false"/> otherwise.
+        /// </returns>
         [HttpGet]
         public JsonResult IsUsernameAvailable(string UserName)
         {
             return Json(!db.Users.Any(u => u.UserName == UserName), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Remote validation method that checks if the desired email is already associated with
+        /// another user in the database.
+        /// </summary>
+        /// <param name="Email">The desired email.</param>
+        /// <returns>
+        /// <see langword="true"/> if the email doesn't exist. <see langword="false"/> otherwise.
+        /// </returns>
         [HttpGet]
         public JsonResult IsEmailAvailable(string Email)
         {
             return Json(!db.Users.Any(u => u.Email == Email), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Remote validation method that checks if the desired email is already associated with
+        /// another user in the database when editing a user profile.
+        /// </summary>
+        /// <param name="Email">The desired email.</param>
+        /// <param name="OriginalEmail">The user's original email.</param>
+        /// <returns>
+        /// <see langword="true"/> if the email doesn't exist OR the email hasn't been changed. <see
+        /// langword="false"/> otherwise.
+        /// </returns>
         [HttpGet]
         public JsonResult IsEmailAvailableOnEdit(string Email, string OriginalEmail)
         {
             if (Email.Equals(OriginalEmail))
-            {
-                // validates field if unchanged
                 return Json(true, JsonRequestBehavior.AllowGet);
-            }
 
             return Json(!db.Users.Any(u => u.Email == Email), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Remote validation method that checks if the username has not been taken by another user
+        /// in the database when editing a user profile.
+        /// </summary>
+        /// <param name="UserName">The desired username.</param>
+        /// <param name="OriginalUserName">The user's original username.</param>
+        /// <returns>
+        /// <see langword="true"/> if the username doesn't exist in the database OR the username
+        /// hasn't been changed. <see langword="false"/> otherwise.
+        /// </returns>
         [HttpGet]
         public JsonResult IsUsernameAvailableOnEdit(string UserName, string OriginalUserName)
         {

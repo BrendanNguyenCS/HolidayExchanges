@@ -7,8 +7,7 @@ namespace HolidayExchanges
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            /* TODO: if want to use these bundles, how do i use the integrity hashes?
-             *
+            /*
              * BundleTable.EnableOptimizations = true;
              * bundles.UseCdn = true;
              *

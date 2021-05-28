@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "ForgotPWEmail";
+}
+
+<div class="container bg-white p-15">
+    <div class="row">
+        <div class="col-12 bg-warning text-center">
+            <h1 class="display-4 text-dark p-3">Important!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="offset-1 col-10 my-3">
+            <p class="lead">Hello {Username},</p>
+            <br />
+            <p class="lead">According to our systems, you have forgotten your password. If you have gotten this by mistake, please ignore this email.</p>
+            <p class="lead">If this is the case, click <a class="text-decoration-none" href="@Url.Action("ForgotPassword", "Login")">here</a> to set a new password.</p>
+            <br />
+            <p class="lead">From your friends,<br />Holiday Exchanges, Inc.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 bg-warning text-center justify-content-center">
+            <div class="flex-center">
+                <a href="https://github.com/BrendanNguyenCS">
+                    <i class="fab fa-github px-1 py-2 mr-1 text-dark text-decoration-none"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fab fa-facebook-f px-1 py-2 mr-1 text-dark text-decoration-none"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fab fa-instagram px-1 py-2 mr-1 text-dark text-decoration-none"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fab fa-discord px-1 py-2 text-dark text-decoration-none"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

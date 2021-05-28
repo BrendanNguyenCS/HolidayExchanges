@@ -2,6 +2,7 @@
 using HolidayExchanges.ViewModels;
 using System;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -25,11 +26,7 @@ namespace HolidayExchanges.Controllers
             if (group == null)
                 return HttpNotFound();
             var users = _santaMgr.GetAllUsersInGroup(id);
-            var model = new GroupViewModel
-            {
-                Group = group,
-                Users = users
-            };
+            var model = new GroupViewModel { Group = group, Users = users };
             model.IsCreator = IsOwnerOfPage(id);
             return View(model);
         }
@@ -358,6 +355,56 @@ namespace HolidayExchanges.Controllers
             }
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        // just a discovery method for sending emails with Razor template
+        public async Task<ActionResult> SendAssignmentEmails(int id)
+        {
+            var list = _santaMgr.GetUserGroupsForGroup(id);
+            foreach (var ug in list)
+            {
+                try
+                {
+                    var user = ug.User;
+                    var group = ug.Group;
+                    var recipient = db.Users.Find(ug.RecipientUserID);
+
+                    string body = string.Empty;
+                    using (StreamReader reader = new StreamReader("~/Views/Templates/AssignmentsEmail.cshtml"))
+                    {
+                        body = reader.ReadToEnd();
+                        body = body.Replace("{Username}", user.UserName);
+                        body = body.Replace("{GroupName}", group.Name);
+                        body = body.Replace("{RecipientUsername}", recipient.UserName);
+                    }
+
+                    var message = new MailMessage
+                    {
+                        From = new MailAddress("holidayexchanges.ma@gmail.com", "Holiday Exchanges MA"),
+                        Subject = "Your assignment for " + group.Name,
+                        IsBodyHtml = true,
+                        Body = body
+                    };
+                    message.To.Add(user.Email);
+
+                    using (var smtp = new SmtpClient())
+                    {
+                        await smtp.SendMailAsync(message);
+                    }
+                }
+                catch (SmtpException ex)
+                {
+                    string msg = "Email cannot be sent:";
+                    msg += ex.Message;
+                    throw new Exception(msg);
+                }
+                catch (ArgumentNullException ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return RedirectToAction("Details", id);
         }
 
         #endregion Administrative Actions

@@ -27,7 +27,7 @@
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "col-form-label col-sm-3 offset-md-1 col-md-2 offset-lg-2 col-lg-2" })
                                 <div class="col-12 col-md-7 col-lg-5">
-                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @autocomplete = "on" } })
                                     @Html.ValidationMessageFor(model => model.UserName, "", htmlAttributes: new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -35,9 +35,9 @@
                             <div class="form-group row">
                                 @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "col-form-label col-sm-3 offset-md-1 col-md-2 offset-lg-2 col-lg-2" })
                                 <div class="col-12 col-md-7 col-lg-5">
-                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", @autocomplete = "on" })
                                     @Html.ValidationMessageFor(model => model.Password, "", htmlAttributes: new { @class = "text-danger" })
-                                    <p class="form-text text-muted"><a style="text-decoration: none;" href="@Url.Action("ForgotPassword")">Forgot your password?</a></p>
+                                    <small class="form-text text-muted"><a class="text-decoration-none" href="@Url.Action("ForgotPassword")">Forgot your password?</a></small>
                                 </div>
                             </div>
 

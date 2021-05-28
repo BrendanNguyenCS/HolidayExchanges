@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="Methods SendEmail() in HomeController, SendForgotPWEmail() in LoginController, and SendAssignmentEmails() in GroupController are both discovery methods for the possibility of sending emails with HTML using Razor views as templates.">
+    <Position X="3.586" Y="0.667" Height="1.081" Width="2.711" />
+  </Comment>
+  <Comment CommentText="There are also a few AJAX API endpoints in a couple of the controllers. They are complete but not functional due to learning purposes.">
+    <Position X="3.594" Y="1.978" Height="0.75" Width="2.722" />
+  </Comment>
   <Class Name="HolidayExchanges.Controllers.BaseController">
     <Position X="7.25" Y="0.5" Width="2.5" />
     <TypeIdentifier>
@@ -10,21 +16,21 @@
   <Class Name="HolidayExchanges.Controllers.GroupController">
     <Position X="5.5" Y="4.25" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAQAgBABiAgAAAAAAAAAEACEACAAAAAAAAQAA=</HashCode>
+      <HashCode>AAQAAAAAQAgBABqAgAAAAAAAAAEACEACAAAAAAAAQAA=</HashCode>
       <FileName>Controllers\GroupController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HolidayExchanges.Controllers.HomeController">
-    <Position X="11.5" Y="0.75" Width="2" />
+    <Position X="11.5" Y="0.75" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAEACAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAEACAAAAAAAAgAAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>Controllers\HomeController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="HolidayExchanges.Controllers.LoginController">
     <Position X="1.75" Y="4.25" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAAACABAAYAgAAAAAAEAAAAAAABAACCAAAQAAAAwAA=</HashCode>
+      <HashCode>AAAAACABAAYAgAAAAAAEAAAAAAABAACCAAAQAAAAwAE=</HashCode>
       <FileName>Controllers\LoginController.cs</FileName>
     </TypeIdentifier>
   </Class>

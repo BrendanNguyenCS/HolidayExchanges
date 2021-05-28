@@ -56,7 +56,7 @@ body {
 .required::after {
     content: "*";
     font-weight: bold;
-    color: #d9534f;
+    color: #dc3545;
     display: inline;
 }
 

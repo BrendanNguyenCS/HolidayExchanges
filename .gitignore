@@ -357,3 +357,5 @@ MigrationBackup/
 /HolidayExchanges/Views/Test/TestVertPillNav.cshtml
 /HolidayExchanges/package-lock.json
 /HolidayExchanges/dist/*
+/HolidayExchanges/ViewModels/ContactEmailVM.cs
+/HolidayExchanges/Views/Home/ContactEmail.cshtml

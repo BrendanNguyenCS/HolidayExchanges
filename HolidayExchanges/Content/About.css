@@ -40,15 +40,15 @@ div#LargeSocialIcons a {
         }
 
     button.discord {
-        background-color: #7289da;
+        background-color: #5865F2;
     }
 
         button.discord:hover {
-            background-color: #5e77d4;
+            background-color: #3F4CD9;
         }
 
         button.discord:active {
-            background-color: #4a67cf;
+            background-color: #0C19A6;
         }
 
     button.insta {
@@ -86,11 +86,11 @@ div#LargeSocialIcons a {
 
     a.discord, a.discord:hover {
         font-family: UniSansDemo-HeavyCAPS, sans;
-        color: #7289da;
+        color: #5865F2;
     }
 
         a.discord:active {
-            border: 1px solid #7289da;
+            border: 1px solid #5865F2;
         }
 
     a.insta, a.insta:hover {

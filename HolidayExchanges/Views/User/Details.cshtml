@@ -12,15 +12,15 @@
 
 <div class="container">
 
-    @* 
-    <section id="UserDetailsTitle">
-        <div class="row">
-            <div class="page-header col-12">
-                <h1 class="display-4 text-center">Details for @Model.User.UserName</h1>
-                <hr />
+    @*
+        <section id="UserDetailsTitle">
+            <div class="row">
+                <div class="page-header col-12">
+                    <h1 class="display-4 text-center">Details for @Model.User.UserName</h1>
+                    <hr />
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     *@
 
     @Html.Partial("_PageTitle", "Details for " + @Model.User.UserName)
@@ -87,20 +87,20 @@
                             var zip = Model.User.Zip == null ? Model.User.Zip : "";
                             <!-- TODO: change below to address tag -->
                             @*
-                            <p translate="no">
-                                @Model.User.Address1<br />
-                                @if (Model.User.Address2 != null)
-                                {
-                                    @Model.User.Address2<br />
-                                }
-                                @Model.User.City, @Model.User.State @zip<br />
-                                @Model.User.Country
-                            </p>
+                                <p translate="no">
+                                    @Model.User.Address1<br />
+                                    @if (Model.User.Address2 != null)
+                                    {
+                                        @Model.User.Address2<br />
+                                    }
+                                    @Model.User.City, @Model.User.State @zip<br />
+                                    @Model.User.Country
+                                </p>
                             *@
 
-                            <address style="text-decoration: none; font-style: normal;" id="UserAddress">
+                            <address class="font-weight-normal" style="text-decoration: none;" id="UserAddress">
                                 @Model.User.Address1<br />
-                                @if (Model.User.Address2 != null) 
+                                @if (Model.User.Address2 != null)
                                 {
                                     @Model.User.Address2<br />
                                 }

@@ -16,10 +16,7 @@ namespace HolidayExchanges.Controllers
         public HashManager hasher = new HashManager();
 
         [HttpGet]
-        public ActionResult Login()
-        {
-            return View();
-        }
+        public ActionResult Login() => View();
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
@@ -40,10 +37,7 @@ namespace HolidayExchanges.Controllers
         }
 
         [HttpGet]
-        public ActionResult Register()
-        {
-            return View();
-        }
+        public ActionResult Register() => View();
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
@@ -209,6 +203,12 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
+        public ActionResult SignOut()
+        {
+            Session["UserName"] = null;
+            return RedirectToAction("Index", "Home");
+        }
+
         #region Remote Validation Methods
 
         /// <summary>
@@ -303,11 +303,5 @@ namespace HolidayExchanges.Controllers
         }
 
         #endregion Remote Validation Methods
-
-        public ActionResult SignOut()
-        {
-            Session["UserName"] = null;
-            return RedirectToAction("Index", "Home");
-        }
     }
 }

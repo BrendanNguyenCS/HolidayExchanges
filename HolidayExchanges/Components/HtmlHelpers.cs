@@ -49,7 +49,7 @@ public static class HtmlHelpers
     /// <param name="ajaxOptions">Additional AJAX options for the link.</param>
     /// <param name="htmlAttributes">Additional HTML attributes for the link.</param>
     /// <returns>An actionlink</returns>
-    public static MvcHtmlString ActionLinkHtml(this AjaxHelper ajaxHelper, string linkText, string actionName, string controllerName, object routeValues, AjaxOptions ajaxOptions, object htmlAttributes)
+    public static MvcHtmlString ActionLinkAjax(this AjaxHelper ajaxHelper, string linkText, string actionName, string controllerName, object routeValues, AjaxOptions ajaxOptions, object htmlAttributes = null)
     {
         var repID = Guid.NewGuid().ToString();
         var lnk = ajaxHelper.ActionLink(repID, actionName, controllerName, ajaxOptions, htmlAttributes);
@@ -100,8 +100,9 @@ public static class HtmlHelpers
     /// <param name="sortField">The target controller name for the link.</param>
     /// <param name="currentSort">The current sorting type.</param>
     /// <param name="currentDesc">The current sorting direction.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the element.</param>
     /// <returns>An actionlink with an icon within</returns>
-    public static MvcHtmlString ActionLinkSortable(this HtmlHelper helper, string linkText, string actionName, string sortField, string currentSort, object currentDesc)
+    public static MvcHtmlString ActionLinkSortable(this HtmlHelper helper, string linkText, string actionName, string sortField, string currentSort, object currentDesc, object htmlAttributes = null)
     {
         bool desc = (currentDesc == null) ? false : Convert.ToBoolean(currentDesc);
         // get link route values
@@ -117,6 +118,7 @@ public static class HtmlHelpers
         var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
         var url = urlHelper.Action(actionName, routeValues);
         tagBuilder.MergeAttribute("href", url);
+        tagBuilder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         // put it all together
         return MvcHtmlString.Create(tagBuilder.ToString(TagRenderMode.Normal));
     }
@@ -133,6 +135,7 @@ public static class HtmlHelpers
     {
         TagBuilder builder = new TagBuilder("input");
         builder.MergeAttribute("type", "file");
+        builder.AddCssClass("form-control");
         builder.AddCssClass(@class);
         builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         return MvcHtmlString.Create(builder.ToString(TagRenderMode.SelfClosing));
@@ -144,11 +147,13 @@ public static class HtmlHelpers
     /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
     /// <param name="name">The name of the date picker.</param>
     /// <param name="value">Optional value of the date picker.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the element.</param>
     /// <returns>An input field (date picker with UI)</returns>
-    public static MvcHtmlString DatePicker(this HtmlHelper helper, string name, DateTime value)
+    public static MvcHtmlString DatePicker(this HtmlHelper helper, string name, DateTime value, object htmlAttributes = null)
     {
         TagBuilder builder = new TagBuilder("input");
         builder.MergeAttribute("name", name);
+        builder.AddCssClass("form-control");
         builder.GenerateId(name);
         if (value != null)
             builder.MergeAttribute("value", value.ToString("yyyy-MM-dd"));
@@ -156,6 +161,7 @@ public static class HtmlHelpers
             builder.MergeAttribute("value", String.Empty);
 
         builder.MergeAttribute("type", "date");
+        builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         return MvcHtmlString.Create(builder.ToString(TagRenderMode.SelfClosing));
     }
 
@@ -165,11 +171,13 @@ public static class HtmlHelpers
     /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
     /// <param name="name">The name of the time picker.</param>
     /// <param name="value">Optional value of the time picker.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the element.</param>
     /// <returns>An input field (time picker with UI)</returns>
-    public static MvcHtmlString TimePicker(this HtmlHelper helper, string name, DateTime value)
+    public static MvcHtmlString TimePicker(this HtmlHelper helper, string name, DateTime value, object htmlAttributes = null)
     {
         TagBuilder builder = new TagBuilder("input");
         builder.MergeAttribute("name", name);
+        builder.AddCssClass("form-control");
         builder.GenerateId(name);
         if (value != null)
             builder.MergeAttribute("value", value.ToString("h:mmttTK"));
@@ -177,6 +185,7 @@ public static class HtmlHelpers
             builder.MergeAttribute("value", String.Empty);
 
         builder.MergeAttribute("type", "time");
+        builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         return MvcHtmlString.Create(builder.ToString(TagRenderMode.SelfClosing));
     }
 
@@ -187,8 +196,9 @@ public static class HtmlHelpers
     /// <param name="text">The link text.</param>
     /// <param name="actionName">The target action name for the link.</param>
     /// <param name="controllerName">The target controller name for the link.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the element.</param>
     /// <returns>A redirect link within a paragraph element.</returns>
-    public static MvcHtmlString FormHelpTextLink(this HtmlHelper helper, string text, string actionName, string controllerName)
+    public static MvcHtmlString FormHelpTextLink(this HtmlHelper helper, string text, string actionName, string controllerName, object htmlAttributes = null)
     {
         TagBuilder outer = new TagBuilder("p");
         outer.AddCssClass("form-text");
@@ -200,8 +210,93 @@ public static class HtmlHelpers
         var url = urlHelper.Action(actionName, controllerName);
         inner.MergeAttribute("href", url);
         inner.InnerHtml = text;
-
         outer.InnerHtml = inner.ToString(TagRenderMode.Normal);
+        outer.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
         return MvcHtmlString.Create(outer.ToString(TagRenderMode.Normal));
+    }
+
+    /// <summary>
+    /// A custom helper for redirect links in forms (mainly for the forgot password page).
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="linktext">The link text.</param>
+    /// <param name="text">The other text text.</param>
+    /// <param name="url">The redirect url.</param>
+    /// <param name="innerhtmlAttributes">Additional HTML attributes for the inner link element.</param>
+    /// <param name="outerhtmlAttributes">Additional HTML attributes for the outer paragraph element.</param>
+    /// <returns>A redirect link within a paragraph element.</returns>
+    public static MvcHtmlString FormHelpTextLink(this HtmlHelper helper, string text, string linktext, string url, object innerhtmlAttributes = null, object outerhtmlAttributes = null)
+    {
+        TagBuilder outer = new TagBuilder("p");
+        outer.AddCssClass("form-text");
+        outer.AddCssClass("text-muted");
+
+        TagBuilder inner = new TagBuilder("a");
+        inner.MergeAttribute("style", "text-decoration: none;");
+        inner.MergeAttribute("href", url);
+        inner.SetInnerText(linktext);
+        inner.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(innerhtmlAttributes));
+        outer.InnerHtml = inner.ToString(TagRenderMode.Normal);
+        outer.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(outerhtmlAttributes));
+        return MvcHtmlString.Create(outer.ToString(TagRenderMode.Normal));
+    }
+
+    /// <summary>
+    /// A custom helper for a link.
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="text">The link text.</param>
+    /// <param name="url">The redirect url.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the element.</param>
+    /// <returns>A link.</returns>
+    public static MvcHtmlString Link(this HtmlHelper helper, string text, string url, object htmlAttributes = null)
+    {
+        TagBuilder builder = new TagBuilder("a");
+        builder.AddCssClass("text-decoration-none");
+        builder.SetInnerText(text);
+        builder.MergeAttribute("href", url);
+        builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
+    }
+
+    /// <summary>
+    /// A custom helper for a link.
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="text">The link text.</param>
+    /// <param name="controllerName">The targeted controller.</param>
+    /// <param name="actionName">The targeted action within the targeted controller.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the element.</param>
+    /// <returns>A link.</returns>
+    public static MvcHtmlString Link(this HtmlHelper helper, string text, string controllerName, string actionName, object htmlAttributes = null)
+    {
+        TagBuilder builder = new TagBuilder("a");
+        builder.AddCssClass("text-decoration-none");
+        builder.SetInnerText(text);
+        var urlHelper = new UrlHelper();
+        var url = urlHelper.Action(actionName, controllerName);
+        builder.MergeAttribute("href", url);
+        builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
+    }
+
+    /// <summary>
+    /// A custom helper for a email link.
+    /// </summary>
+    /// <param name="helper">The current <see cref="HtmlHelper"/> instance.</param>
+    /// <param name="email">The receiving email address</param>
+    /// <param name="text">The link inner text.</param>
+    /// <param name="cssClasses">Any CSS/Bootstrap classes.</param>
+    /// <param name="htmlAttributes">Additional HTML attributes for the link element.</param>
+    /// <returns></returns>
+    public static MvcHtmlString EmailLink(this HtmlHelper helper, string email, string text = null, string cssClasses = null, object htmlAttributes = null)
+    {
+        TagBuilder builder = new TagBuilder("a");
+        if (!string.IsNullOrEmpty(cssClasses))
+            builder.AddCssClass(cssClasses);
+        builder.SetInnerText(text);
+        builder.MergeAttribute("href", "mailto:" + email);
+        builder.MergeAttributes(HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+        return MvcHtmlString.Create(builder.ToString(TagRenderMode.Normal));
     }
 }

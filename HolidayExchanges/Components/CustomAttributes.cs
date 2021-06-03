@@ -57,23 +57,36 @@ namespace HolidayExchanges.Components
         }
     }
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class ValidDate : ValidationAttribute
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public class ValidBirthDate : ValidationAttribute, IClientValidatable
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            DateTime _dateJoin = Convert.ToDateTime(value);
-            if (_dateJoin < DateTime.Now)
+            DateTime _dateBirth = Convert.ToDateTime(value);
+            if (_dateBirth < DateTime.Now)
                 return ValidationResult.Success;
             else
             {
-                return new ValidationResult("Join date cannot be greater than current date.");
+                return new ValidationResult("The date must be before the current date.");
             }
+        }
+
+        public override string FormatErrorMessage(string name) => string.Format("{0} is not a valid date, must be before today's date.", name);
+
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
+            var rule = new ModelClientValidationRule()
+            {
+                ValidationType = "validbirthdate",
+                ErrorMessage = FormatErrorMessage(metadata.GetDisplayName())
+            };
+
+            yield return rule;
         }
     }
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class ExcludeChar : ValidationAttribute
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public class ExcludeChar : ValidationAttribute, IClientValidatable
     {
         private readonly string _chars;
 
@@ -99,6 +112,47 @@ namespace HolidayExchanges.Components
             }
 
             return ValidationResult.Success;
+        }
+
+        public override string FormatErrorMessage(string name) => string.Format("{0} has an invalid character.", name);
+
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
+            var rule = new ModelClientValidationRule
+            {
+                ValidationType = "excludechar",
+                ErrorMessage = FormatErrorMessage(metadata.GetDisplayName())
+            };
+
+            yield return rule;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    public class ValidExchangeDate : ValidationAttribute, IClientValidatable
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            DateTime _dateExchange = Convert.ToDateTime(value);
+            if (_dateExchange > DateTime.Now)
+                return ValidationResult.Success;
+            else
+            {
+                return new ValidationResult("The date must be after the current date.");
+            }
+        }
+
+        public override string FormatErrorMessage(string name) => string.Format("{0} is not a valid date, must be after today's date.", name);
+
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
+            var rule = new ModelClientValidationRule
+            {
+                ValidationType = "validexchangedate",
+                ErrorMessage = FormatErrorMessage(metadata.GetDisplayName())
+            };
+
+            yield return rule;
         }
     }
 }

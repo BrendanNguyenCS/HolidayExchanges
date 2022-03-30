@@ -311,8 +311,6 @@
     <Compile Include="Services\HashManager.cs" />
     <Compile Include="Services\SecretSantaManager.cs" />
     <Compile Include="Services\ShuffleManager.cs" />
-    <Compile Include="Testing\TestClass.cs" />
-    <Compile Include="Testing\TestController.cs" />
     <Compile Include="ViewModels\ChangePasswordVM.cs" />
     <Compile Include="ViewModels\ContactViewModel.cs" />
     <Compile Include="ViewModels\ForgotPasswordVM.cs" />
@@ -496,9 +494,7 @@
     <Content Include="Views\User\Grouplist.cshtml" />
     <Content Include="Views\Login\ForgotPassword.cshtml" />
     <Content Include="Views\Login\ChangePassword.cshtml" />
-    <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
-    <Content Include="Views\Test\TestVertPillNav.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
     <Content Include="Views\Shared\_PageTitle.cshtml" />
     <Content Include="Views\EmailTemplates\ContactEmail.cshtml" />

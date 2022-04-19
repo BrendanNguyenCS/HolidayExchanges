@@ -197,7 +197,7 @@ namespace HolidayExchanges.Controllers
             Wish wish = db.Wishes.Find(id);
             db.Wishes.Remove(wish);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         // AJAX call

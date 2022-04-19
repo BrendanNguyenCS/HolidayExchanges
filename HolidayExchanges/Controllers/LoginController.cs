@@ -78,7 +78,7 @@ namespace HolidayExchanges.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction("Error", "Home");
+                    return View("Error");
                 }
 
                 Session["UserName"] = user.UserName;

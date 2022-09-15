@@ -359,3 +359,5 @@ MigrationBackup/
 /HolidayExchanges/dist/*
 /HolidayExchanges/ViewModels/ContactEmailVM.cs
 /HolidayExchanges/Views/Home/ContactEmail.cshtml
+
+/.idea/

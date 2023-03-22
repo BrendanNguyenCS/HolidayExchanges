@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using JetBrains.Annotations;
 
 namespace HolidayExchanges.Controllers
 {
@@ -114,7 +115,7 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet, AspMvcSuppressViewError]
         public ActionResult NewEdit(int? id)
         {
             if (id == null)
@@ -143,7 +144,7 @@ namespace HolidayExchanges.Controllers
             return View(model);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, AspMvcSuppressViewError]
         public ActionResult NewEdit(WishEditVM model)
         {
             if (ModelState.IsValid)

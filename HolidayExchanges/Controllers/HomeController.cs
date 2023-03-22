@@ -87,7 +87,7 @@ namespace HolidayExchanges.Controllers
                 return new EmptyResult();
             }
 
-            return View(model);
+            return View("Error");
         }
     }
 }
